@@ -57,19 +57,21 @@ export async function getETHBalance(address: string): Promise<ProviderSource> {
   }
 }
 
-const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f"
-
-export async function getDaiBalance(address: string): Promise<ProviderSource> {
+export async function getERC20onEthereumMainnetBalance(
+  tokenAddress: string,
+  accountAddress: string,
+  decimals?: number
+) {
   try {
     const response = await fetch(
-      `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${DAI_TOKEN_ADDRESS}&address=${address}&tag=latest&apikey=${API_KEY}`
+      `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${tokenAddress}&address=${accountAddress}&tag=latest&apikey=${API_KEY}`
     )
     const time = Date.now()
     const data = await response.json()
     return {
       hasError: data.status === "0",
       source: Providers.etherscan,
-      value: formatNumber(data.result),
+      value: formatNumber(data.result, decimals),
       time,
     }
   } catch (error) {
@@ -77,6 +79,10 @@ export async function getDaiBalance(address: string): Promise<ProviderSource> {
   }
 }
 
-function formatNumber(value) {
-  return new BigNumber(value).dividedBy(1_000_000_000_000_000_000).toNumber()
+function formatNumber(value, decimals?: number) {
+  if (decimals) {
+    return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals)).toNumber()
+  } else {
+    return new BigNumber(value).dividedBy(1_000_000_000_000_000_000).toNumber()
+  }
 }
