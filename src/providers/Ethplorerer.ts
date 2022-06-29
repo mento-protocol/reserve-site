@@ -59,7 +59,6 @@ export async function getETHBalance(address: string): Promise<ProviderSource> {
     return errorResult(error, Providers.ethplorer)
   }
 }
-const WEI_PER_DAI = 1_000_000_000_000_000_000
 
 export async function getERC20OnEthereumBalance(
   tokenAddress: string,
@@ -69,12 +68,14 @@ export async function getERC20OnEthereumBalance(
     const response = await fetch(`${BASE_URL}/getAddressInfo/${address}?apiKey=${API_KEY}`)
     const time = Date.now()
     const data = (await response.json()) as AcountInfo
-    const dai = data.tokens?.find((token) => token?.tokenInfo?.address === tokenAddress)
-    const balance = new BigNumber(dai.balance)
+    const token = data.tokens?.find((token) => token?.tokenInfo?.address === tokenAddress)
+    const balance = new BigNumber(token.balance)
+    const exp = new BigNumber(10).pow(token.tokenInfo.decimals)
+
     return {
       hasError: !!data.error,
       source: Providers.ethplorer,
-      value: balance.dividedBy(WEI_PER_DAI).toNumber(),
+      value: balance.dividedBy(exp).toNumber(),
       time,
     }
   } catch (error) {

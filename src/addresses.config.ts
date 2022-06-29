@@ -5,6 +5,7 @@ export interface ReserveCrypto {
   label: string
   addresses: string[]
   tokenAddress?: string
+  decimals?: number
 }
 
 const ADDRESSES: ReserveCrypto[] = [
@@ -30,6 +31,7 @@ const ADDRESSES: ReserveCrypto[] = [
   {
     label: "USDC",
     token: "USDC",
+    decimals: 6,
     addresses: ["0x26ac3A7b8a675b741560098fff54F94909bE5E73"],
     tokenAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   },

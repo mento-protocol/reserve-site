@@ -55,7 +55,11 @@ function fetchERC20OnEthereumBalance(token: Tokens) {
   const tokenOnEthereum = addressesConfig.find((coin) => coin.token === token)
   return getSumBalance(token, (address) => {
     return duel(
-      etherscan.getERC20onEthereumMainnetBalance(tokenOnEthereum.tokenAddress, address),
+      etherscan.getERC20onEthereumMainnetBalance(
+        tokenOnEthereum.tokenAddress,
+        address,
+        tokenOnEthereum.decimals
+      ),
       ethplorer.getERC20OnEthereumBalance(tokenOnEthereum.tokenAddress, address)
     )
   })

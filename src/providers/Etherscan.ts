@@ -59,7 +59,8 @@ export async function getETHBalance(address: string): Promise<ProviderSource> {
 
 export async function getERC20onEthereumMainnetBalance(
   tokenAddress: string,
-  accountAddress: string
+  accountAddress: string,
+  decimals?: number
 ) {
   try {
     const response = await fetch(
@@ -70,7 +71,7 @@ export async function getERC20onEthereumMainnetBalance(
     return {
       hasError: data.status === "0",
       source: Providers.etherscan,
-      value: formatNumber(data.result),
+      value: formatNumber(data.result, decimals),
       time,
     }
   } catch (error) {
@@ -78,6 +79,10 @@ export async function getERC20onEthereumMainnetBalance(
   }
 }
 
-function formatNumber(value) {
-  return new BigNumber(value).dividedBy(1_000_000_000_000_000_000).toNumber()
+function formatNumber(value, decimals?: number) {
+  if (decimals) {
+    return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals)).toNumber()
+  } else {
+    return new BigNumber(value).dividedBy(1_000_000_000_000_000_000).toNumber()
+  }
 }
