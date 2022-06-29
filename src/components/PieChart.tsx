@@ -9,11 +9,12 @@ enum KeyAsHuman {
 }
 
 enum TokenColor {
-  BTC = colors.blue,
-  ETH = colors.red,
+  BTC = colors.orange,
+  ETH = colors.purpleGray,
   CELO = colors.gold,
-  "stable-value" = colors.violet,
-  DAI = colors.violet,
+  "stable-value" = colors.blue,
+  DAI = colors.blue,
+  USDC = colors.lightBlue,
   "natural-capital" = colors.green,
   cMCO2 = colors.green,
 }
