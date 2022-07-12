@@ -55,10 +55,6 @@ export function calculateTargetAllocation(
     }
   })
 
-  for (let index = 0; index < targetAllocation.length; index++) {
-    targetAllocation[index]
-  }
-
   return targetAllocation
 }
 
