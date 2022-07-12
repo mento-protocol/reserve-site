@@ -13,7 +13,7 @@ export function calculateTargetAllocation(
   outstandingStablesUSD: number,
   totalReserveUSD: number
 ): Allocation[] {
-  const targetAllocation: Allocation[] = EMPTY_TARGETS
+  const targetAllocation: Allocation[] = JSON.parse(JSON.stringify(EMPTY_TARGETS))
 
   let celoTarget: number
   let stablesTarget: number
