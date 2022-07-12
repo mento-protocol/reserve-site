@@ -1,7 +1,10 @@
 import useSWR from "swr"
 import { fetcher } from "src/utils/fetcher"
-import ProviderSource from "src/providers/ProviderSource"
 import Allocation from "src/interfaces/allocation"
+import StableValueTokensAPI from "src/interfaces/stable-value-tokens"
+import useHoldings from "./useHoldings"
+import { HoldingsApi } from "src/service/holdings"
+import { calculateTargetAllocation } from "src/functions/calculateTargetAllocation"
 
 const EMPTY_TARGETS: Allocation[] = [
   { type: "celo-native-asset" as const, token: "CELO", percent: 0 },
@@ -11,12 +14,25 @@ const EMPTY_TARGETS: Allocation[] = [
 ]
 
 export default function useTargets() {
-  const targetAllocation = useSWR<ProviderSource<Allocation[]>>("/api/targets", fetcher, {
+  const stablesData = useSWR<StableValueTokensAPI>("/api/stable-value-tokens", fetcher, {
     shouldRetryOnError: true,
   })
-  const values = targetAllocation?.data?.value
 
-  return { data: values ? group(values) : EMPTY_TARGETS, isLoading: targetAllocation.isValidating }
+  const holdingsApi = useHoldings()
+
+  if (stablesData.error || holdingsApi.error || !stablesData.data) {
+    return { data: EMPTY_TARGETS, isLoading: true }
+  }
+
+  const allocationData = calculateTargetAllocation(
+    stablesData.data.totalStableValueInUSD,
+    getTotalReserveUSD(holdingsApi.data)
+  )
+
+  return {
+    data: group(allocationData),
+    isLoading: false,
+  }
 }
 
 function group(list: Allocation[]) {
@@ -36,4 +52,16 @@ function group(list: Allocation[]) {
     }
   })
   return Array.from(map.values())
+}
+
+function getTotalReserveUSD(reserveHoldings: HoldingsApi): number {
+  const { custody, frozen, unfrozen } = reserveHoldings.celo
+  const totalCelo = custody.value + unfrozen.value + frozen.value
+
+  const totalOtherAssets = reserveHoldings.otherAssets.reduce(
+    (prev, current) => current.value + prev,
+    0
+  )
+
+  return totalOtherAssets + totalCelo
 }
