@@ -1,22 +1,21 @@
-# Celo Reserve Website
+# Mento Reserve Website
 
-Code for [celoreserve.org](https://celoreserve.org)
+Code for [reserve.mento.org](https://reserve.mento.org)
 
 _For more information about the Reserve itself please refer to:_
 
-- [celoreserve.org](https://celoreserve.org)
-- [Celo Docs](https://docs.celo.org/developer-guide/sdk-code-reference/summary-2/classes/_wrappers_reserve_.reservewrapper)
+- [reserve.mento.org](https://reserve.mento.org)
 - [Stability WhitePaper](https://celo.org/papers/stability)
 
 ## Updating Reserve
 
-- To Add new cStables see [adding-stablecoins.md](./adding-stablecoins.md)
-- To Add or update Addresses see [adding-addresses.md](/adding-addresses.md)
-- To Add new crypto tokens to the reserve see [adding-reserve-assets.md](src/adding-reserve-assets.md)
+- To Add new cStables see [adding stablecoins](/adding-stablecoins.md)
+- To Add or update Addresses see [adding addresses](/adding-reserve-addresses.md)
+- To Add new crypto tokens to the reserve see [adding reserve assets](adding-reserve-assets.md)
 
 ## Data Integrity
 
-The following is where the numbers displayed on celoreserve.org comes from. These are not used by the reserve itself.
+The following is where the numbers displayed on reserve.mento.org comes from. These are not used by the reserve itself.
 
 ### Update Frequency
 
@@ -41,7 +40,7 @@ For CELO the on change exchange price (which itself is an aggregation of the pri
 
 For other crypto assets two data providers are used. If one provider fails to respond then the other is used and if both fail a cache of the last successful fetch is used until new data is fetched.
 For BTC thse are [blockchain.com's getAccountByTypeAndCurrency](https://api.blockchain.com/v3/#/payments/getAccountByTypeAndCurrency) and [Coinbase's Data Api spot price](https://developers.coinbase.com/api/v2#exchange-rates).
-For ETH these are [Etherscan.io ETHER Last Price](https://etherscan.io/apis#stats) and [Coinbase's Data Api spot price](https://developers.coinbase.com/api/v2#exchange-rates). For CMCO2, coinmarketcap api and ubeswaps subgrap are used for the price.
+For ETH these are [Etherscan.io ETHER Last Price](https://etherscan.io/apis#stats) and [Coinbase's Data Api spot price](https://developers.coinbase.com/api/v2#exchange-rates). For CMCO2, coinmarketcap api and ubeswaps subgraph are used for the price.
 
 ### Stable Assets Outstanding
 
@@ -75,4 +74,4 @@ next.js with [emotion](http://emotion.sh/) for styles.
 
 ## Deployment
 
-see [release.md](release.md)
+see [release.md](/RELEASE.MD)
