@@ -30,28 +30,9 @@ export default function useTargets() {
   )
 
   return {
-    data: group(allocationData),
+    data: allocationData,
     isLoading: false,
   }
-}
-
-function group(list: Allocation[]) {
-  const map = new Map<string, Allocation>()
-
-  list.forEach((item) => {
-    const key = item.type
-    if (key === "stable-value" || key === "natural-capital") {
-      const collection = map.get(key)
-      if (!collection) {
-        map.set(key, { ...item, token: key })
-      } else {
-        map.set(key, { ...collection, percent: collection.percent + item.percent })
-      }
-    } else {
-      map.set(item.token, item)
-    }
-  })
-  return Array.from(map.values())
 }
 
 function getTotalReserveUSD(reserveHoldings: HoldingsApi): number {

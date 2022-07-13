@@ -52,10 +52,11 @@ export default function PieChart({ slices, label, showFinePrint, isLoading }: Pr
           <>
             <br />
             <small>
-              * Crypto Assets with low volatility. Candidates are decentralised stablecoins e.g. DAI
+              Target allocation is dynamic and a function of cStables in circulation.{" "}
+              <a href="https://celo.stake.id/#/proposal/62" target="_blank">
+                More info
+              </a>
             </small>
-            <br />
-            <small>** Includes cMCO2</small>
           </>
         )}
       </figcaption>

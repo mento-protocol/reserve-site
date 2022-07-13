@@ -6,7 +6,7 @@ const EMPTY_TARGETS: Allocation[] = [
   { type: "other-crypto-assets" as const, token: "ETH", percent: 0 },
   { type: "stable-value" as const, token: "DAI", percent: 0 },
   { type: "stable-value" as const, token: "USDC", percent: 0 },
-  { type: "natural-capital" as const, token: "cMC02", percent: 0 },
+  { type: "natural-capital" as const, token: "cMCO2", percent: 0 },
 ]
 
 export function calculateTargetAllocation(
