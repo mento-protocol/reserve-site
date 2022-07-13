@@ -25,7 +25,7 @@ export function calculateTargetAllocation(
   if (ratio >= 2) {
     stablesTarget = outstandingStablesUSD / totalReserveUSD
     celoTarget = 0.5
-    otherCryptoTarget = 1 - stablesTarget - celoTarget
+    otherCryptoTarget = (1 - stablesTarget - celoTarget) * 0.98
     natCapTarget = (1 - stablesTarget - celoTarget) * 0.02
   } else if (ratio < 2 && ratio >= 1) {
     stablesTarget = outstandingStablesUSD / totalReserveUSD
