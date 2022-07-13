@@ -6,4 +6,4 @@ Celo Addresses are kept on the reserve contract and are fetch here with the `get
 
 ## For Assets on Other chains
 
-Assets like ETH and BTC which live on other chains can be kept up to date by modifying the [addresses.config.ts file](addresses.config.ts)
+Assets like ETH and BTC which live on other chains can be kept up to date by modifying the [addresses.config.ts file](/src/addresses.config.ts)

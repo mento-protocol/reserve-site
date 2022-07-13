@@ -1,4 +1,4 @@
-# Release Process for CeloReserve.org
+# Release Process for reserve.mento.org
 
 ## Versioning
 
