@@ -1,4 +1,4 @@
-import { getCStableSupply } from "src/providers/Celo"
+import { getCStableSupply, getMobiusCUSD } from "src/providers/Celo"
 import { fiatPrices } from "src/service/rates"
 import { TokenModel } from "src/service/Data"
 import { getOrSave } from "src/service/cache"
@@ -10,6 +10,10 @@ import { STABLES } from "../stables.config"
 
 async function cStableSupply(token: StableToken) {
   return getOrSave(`cSTABLE-${token}-supply`, () => getCStableSupply(token), 5 * SECOND)
+}
+
+async function mobiusCUSD() {
+  return getOrSave("mobiusPoolCusd", () => getMobiusCUSD(), 5 * SECOND)
 }
 
 interface Circulation {
@@ -38,11 +42,18 @@ async function getCirculations(): Promise<Circulation[]> {
 
 export default async function stables(): Promise<TokenModel[]> {
   const [prices, circulations] = await Promise.all([fiatPrices(), getCirculations()])
+  const mobiusCUSDAmount = await mobiusCUSD()
+
   return circulations.map((tokenData) => {
     let value = 0
 
     try {
       value = prices.value[tokenData.iso4217] * tokenData.units.value
+
+      if (tokenData.symbol === StableToken.cUSD) {
+        value -= mobiusCUSDAmount.value * prices.value[tokenData.iso4217]
+        tokenData.units.value -= mobiusCUSDAmount.value
+      }
     } catch (e) {
       // for those times when there isnt any value yet
     }
