@@ -12,7 +12,11 @@ const ADDRESSES: ReserveCrypto[] = [
   {
     label: "BTC",
     token: "BTC",
-    addresses: ["38EPdP4SPshc5CiUCzKcLP9v7Vqo5u1HBL", "3AKvfpb3Yqc3hLkziyudM2ByEqYDUFGy1D"],
+    addresses: [
+      "38EPdP4SPshc5CiUCzKcLP9v7Vqo5u1HBL",
+      "3AKvfpb3Yqc3hLkziyudM2ByEqYDUFGy1D",
+      "3Jcfje9bLFPuhZqaQkSs4GBfTmtpie43Dg",
+    ],
   },
   {
     label: "ETH",
