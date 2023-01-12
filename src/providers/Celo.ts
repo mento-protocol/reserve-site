@@ -177,6 +177,22 @@ export async function getMobiusCUSD(): Promise<ProviderSource> {
   }
 }
 
+export async function getCurveCUSD(): Promise<ProviderSource> {
+  try {
+    // TODO:
+    // - Get balance of governance LP tokens from the curver pool contract
+    // - Get the total supply of LP tokens from the curve pool contract
+    // - Calculate the percentage of total supply that the governance holds
+    // - Calculate the value of the governance LP tokens in USD
+
+    const poolcUSDBalance = new BigNumber(10_000_000 * 1e18)
+    const time = Date.now()
+    return { hasError: false, value: formatNumber(poolcUSDBalance), source: Providers.forno, time }
+  } catch (error) {
+    return errorResult(error, Providers.forno)
+  }
+}
+
 export const WEI_PER = 1_000_000_000_000_000_000
 
 function formatNumber(value: BigNumber) {
