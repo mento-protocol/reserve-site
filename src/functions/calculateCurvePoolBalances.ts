@@ -12,8 +12,7 @@ import { CURVE_FACTORY_POOL_ABI, USDC_ABI, CUSD_ABI } from "src/constants/abis"
 const celoProvider = new JsonRpcProvider("https://forno.celo.org")
 
 /**
- * @returns This function returns the total number of CUSD tokens owned by governance
- *          that is deployed in the Curve pool.
+ * @returns The total amount of CUSD in the Curve pool owned by governance
  */
 export async function calculateCurveCUSD(): Promise<number> {
   // Init contracts
