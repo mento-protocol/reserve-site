@@ -5,6 +5,7 @@ import { CMCO2_ADDRESS, RESERVE_CMCO2_ADDRESS, MOBIUS_POOL_ADDRESS } from "src/c
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import ProviderSource, { errorResult, Providers } from "./ProviderSource"
 import { ReserveCrypto } from "src/addresses.config"
+import { calculateCurveCUSD } from "src/functions/calculateCurvePoolBalances"
 const MIN_ABI_FOR_GET_BALANCE = [
   // balanceOf
   {
@@ -179,13 +180,7 @@ export async function getMobiusCUSD(): Promise<ProviderSource> {
 
 export async function getCurveCUSD(): Promise<ProviderSource> {
   try {
-    // TODO:
-    // - Get balance of governance LP tokens from the curver pool contract
-    // - Get the total supply of LP tokens from the curve pool contract
-    // - Calculate the percentage of total supply that the governance holds
-    // - Calculate the value of the governance LP tokens in USD
-
-    const poolcUSDBalance = new BigNumber(10_000_000 * 1e18)
+    const poolcUSDBalance = new BigNumber(await calculateCurveCUSD())
     const time = Date.now()
     return { hasError: false, value: formatNumber(poolcUSDBalance), source: Providers.forno, time }
   } catch (error) {
