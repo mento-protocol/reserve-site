@@ -26,4 +26,3 @@ handlers:
 
 automatic_scaling:
   max_instances: 4
-

@@ -9,15 +9,20 @@ class FakeCurvePoolProvider implements ICurvePoolProvider {
   public usdcBalanceOf = BigNumber.from(1000)
   public usdcDecimals = BigNumber.from(0)
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async getLPBalanceOf(address: string): Promise<any> {
     return this.lpBalanceOf
   }
   public async getTotalLPSupply(): Promise<any> {
     return this.lpSupply
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async getCUSDBalanceOf(address: string): Promise<any> {
     return this.cusdBalanceOF
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async getUSDCBalanceOf(address: string): Promise<any> {
     return this.usdcBalanceOf
   }
