@@ -141,6 +141,15 @@ function toCeloShape(
   } as const
 }
 
+export async function getCurvePoolUSDC(): Promise<number> {
+  // TODO:
+  // - Get balance of governance LP tokens from the curver pool contract
+  // - Get the total supply of LP tokens from the curve pool contract
+  // - Calculate the percentage of total supply that the governance holds
+  // - Calculate the value of the governance LP tokens in USD
+  return 10_000_000
+}
+
 export async function getHoldingsOther() {
   try {
     const [rates, btcHeld, ethHeld, daiHeld, usdcHeld, cmco2Held] = await Promise.all([
