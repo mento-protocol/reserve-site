@@ -5,7 +5,7 @@ import { CMCO2_ADDRESS, RESERVE_CMCO2_ADDRESS, MOBIUS_POOL_ADDRESS } from "src/c
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import ProviderSource, { errorResult, Providers } from "./ProviderSource"
 import { ReserveCrypto } from "src/addresses.config"
-import { calculateCurveCUSD } from "src/functions/calculateCurvePoolBalances"
+import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
 const MIN_ABI_FOR_GET_BALANCE = [
   // balanceOf
   {
@@ -22,6 +22,7 @@ const MIN_ABI_FOR_GET_BALANCE = [
 ]
 
 const kit = newKit("https://forno.celo.org")
+const curveBalanceCalculator = CurvePoolBalanceCalculator.Instance
 
 export async function getCeloPrice(): Promise<ProviderSource> {
   try {
@@ -180,9 +181,19 @@ export async function getMobiusCUSD(): Promise<ProviderSource> {
 
 export async function getCurveCUSD(): Promise<ProviderSource> {
   try {
-    const poolcUSDBalance = new BigNumber(await calculateCurveCUSD())
+    const poolcUSDBalance = new BigNumber(await curveBalanceCalculator.calculateCurveCUSD())
     const time = Date.now()
     return { hasError: false, value: formatNumber(poolcUSDBalance), source: Providers.forno, time }
+  } catch (error) {
+    return errorResult(error, Providers.forno)
+  }
+}
+
+export async function getCurveUSDC(): Promise<ProviderSource> {
+  try {
+    const poolUSDCBalance = await curveBalanceCalculator.calculateCurveUSDC()
+    const time = Date.now()
+    return { hasError: false, value: poolUSDCBalance, source: Providers.forno, time }
   } catch (error) {
     return errorResult(error, Providers.forno)
   }

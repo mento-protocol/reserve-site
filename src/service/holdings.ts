@@ -16,6 +16,7 @@ import { TokenModel, Tokens } from "./Data"
 import ProviderSource from "src/providers/ProviderSource"
 import { Token } from "@celo/contractkit"
 import addressesConfig from "src/addresses.config"
+import { getCurveUSDC } from "src/providers/Celo"
 
 export async function getGroupedNonCeloAddresses() {
   const groupedByToken = addressesConfig.reduce((groups, current) => {
@@ -85,6 +86,10 @@ export async function celoUnfrozenBalance() {
   return getOrSave<ProviderSource>("celo-unfrozen-balance", getUnFrozenBalance, 2 * MINUTE)
 }
 
+export async function getCurvePoolUSDC() {
+  return getOrSave<ProviderSource>("curve-pool-usdc", getCurveUSDC, 5 * MINUTE)
+}
+
 export interface HoldingsApi {
   celo: {
     unfrozen: TokenModel
@@ -136,15 +141,6 @@ function toCeloShape(
   } as const
 }
 
-export async function getCurvePoolUSDC(): Promise<number> {
-  // TODO:
-  // - Get balance of governance LP tokens from the curver pool contract
-  // - Get the total supply of LP tokens from the curve pool contract
-  // - Calculate the percentage of total supply that the governance holds
-  // - Calculate the value of the governance LP tokens in USD
-  return 10_000_000
-}
-
 export async function getHoldingsOther() {
   try {
     const [rates, btcHeld, ethHeld, daiHeld, usdcHeld, cmco2Held] = await Promise.all([
@@ -156,8 +152,7 @@ export async function getHoldingsOther() {
       cMC02Balance(),
     ])
 
-    // TODO: implement function to correctly retrieve the value of the governance LP tokens
-    usdcHeld.value += await getCurvePoolUSDC()
+    usdcHeld.value += (await getCurvePoolUSDC()).value
 
     const otherAssets: TokenModel[] = [
       toToken("BTC", btcHeld, rates.btc),
@@ -186,6 +181,8 @@ export default async function getHoldings(): Promise<HoldingsApi> {
       celoUnfrozenBalance(),
       cMC02Balance(),
     ])
+
+  usdcHeld.value += (await getCurvePoolUSDC()).value
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),

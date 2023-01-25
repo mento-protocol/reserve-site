@@ -59,13 +59,8 @@ export default async function stables(): Promise<TokenModel[]> {
         value -= mobiusCUSDAmount.value * prices.value[tokenData.iso4217]
         tokenData.units.value -= mobiusCUSDAmount.value
 
-        // TODO: add curveCUSDAmount back in
-
-        // value -= curveCUSDAmount.value * prices.value[tokenData.iso4217]
-        // tokenData.units.value -= curveCUSDAmount.value
-
-        value -= 10_000_000
-        tokenData.units.value -= 10_000_000
+        value -= curveCUSDAmount.value * prices.value[tokenData.iso4217]
+        tokenData.units.value -= curveCUSDAmount.value
       }
     } catch (e) {
       // for those times when there isnt any value yet
