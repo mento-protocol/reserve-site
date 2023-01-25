@@ -1,7 +1,7 @@
 import { newKit, StableToken } from "@celo/contractkit"
 import BigNumber from "bignumber.js"
 import { Tokens } from "src/service/Data"
-import { CMCO2_ADDRESS, RESERVE_CMCO2_ADDRESS, MOBIUS_POOL_ADDRESS } from "src/contract-addresses"
+import { CMCO2_ADDRESS, RESERVE_CMCO2_ADDRESS } from "src/contract-addresses"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import ProviderSource, { errorResult, Providers } from "./ProviderSource"
 import { ReserveCrypto } from "src/addresses.config"
@@ -165,17 +165,6 @@ export async function getTargetAllocations(): Promise<ProviderSource<Allocation[
     return { value, source: Providers.forno, time: Date.now(), hasError: false }
   } catch (error) {
     return { hasError: true, source: Providers.forno, value: [], time: 0 }
-  }
-}
-
-export async function getMobiusCUSD(): Promise<ProviderSource> {
-  try {
-    const cUSD = await kit.contracts.getStableToken(StableToken.cUSD)
-    const poolcUSDBalance = await cUSD.balanceOf(MOBIUS_POOL_ADDRESS)
-    const time = Date.now()
-    return { hasError: false, value: formatNumber(poolcUSDBalance), source: Providers.forno, time }
-  } catch (error) {
-    return errorResult(error, Providers.forno)
   }
 }
 
