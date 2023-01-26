@@ -7,7 +7,6 @@ import ProviderSource, { errorResult, Providers } from "./ProviderSource"
 import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
 const MIN_ABI_FOR_GET_BALANCE = [
-  // balanceOf
   {
     constant: true,
 
