@@ -55,7 +55,6 @@ export class CurvePoolBalanceCalculator {
       CURVE_FACTORY_POOL_ADDRESS
     )
 
-    // Get decimal places of USDC
     const decimals = await this.curvePoolProvider.getUSDCDecimals()
 
     const lpTokenFraction = await this.getGovernancePoolFraction()
