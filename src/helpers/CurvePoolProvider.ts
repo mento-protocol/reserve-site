@@ -4,14 +4,7 @@ import { JsonRpcProvider } from "@ethersproject/providers"
 import { CURVE_FACTORY_POOL_ADDRESS, CUSD_ADDRESS, USDC_ADDRESS } from "src/contract-addresses"
 import { CURVE_FACTORY_POOL_ABI, ERC20_ABI } from "src/constants/abis"
 import { Providers } from "src/providers/ProviderSource"
-
-export interface ICurvePoolProvider {
-  getLPBalanceOf: (address: string) => Promise<BigNumber>
-  getTotalLPSupply: () => Promise<BigNumber>
-  getCUSDBalanceOf: (address: string) => Promise<BigNumber>
-  getUSDCBalanceOf: (address: string) => Promise<BigNumber>
-}
-
+import { ICurvePoolProvider } from "./ICurvePoolProvider"
 export class CurvePoolProvider implements ICurvePoolProvider {
   private celoProvider: JsonRpcProvider
   private CUSDContract: Contract
