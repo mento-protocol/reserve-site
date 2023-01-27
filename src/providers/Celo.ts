@@ -1,12 +1,12 @@
 import { newKit, StableToken } from "@celo/contractkit"
 import BigNumber from "bignumber.js"
 import { Tokens } from "src/service/Data"
-import { CMCO2_ADDRESS, RESERVE_CMCO2_ADDRESS, MOBIUS_POOL_ADDRESS } from "src/contract-addresses"
+import { CMCO2_ADDRESS, RESERVE_CMCO2_ADDRESS } from "src/contract-addresses"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import ProviderSource, { errorResult, Providers } from "./ProviderSource"
 import { ReserveCrypto } from "src/addresses.config"
+import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
 const MIN_ABI_FOR_GET_BALANCE = [
-  // balanceOf
   {
     constant: true,
 
@@ -21,6 +21,7 @@ const MIN_ABI_FOR_GET_BALANCE = [
 ]
 
 const kit = newKit("https://forno.celo.org")
+const curveBalanceCalculator = CurvePoolBalanceCalculator.Instance
 
 export async function getCeloPrice(): Promise<ProviderSource> {
   try {
@@ -166,10 +167,9 @@ export async function getTargetAllocations(): Promise<ProviderSource<Allocation[
   }
 }
 
-export async function getMobiusCUSD(): Promise<ProviderSource> {
+export async function getCurveCUSD(): Promise<ProviderSource> {
   try {
-    const cUSD = await kit.contracts.getStableToken(StableToken.cUSD)
-    const poolcUSDBalance = await cUSD.balanceOf(MOBIUS_POOL_ADDRESS)
+    const poolcUSDBalance = new BigNumber(await curveBalanceCalculator.calculateCurveCUSD())
     const time = Date.now()
     return { hasError: false, value: formatNumber(poolcUSDBalance), source: Providers.forno, time }
   } catch (error) {
@@ -177,17 +177,11 @@ export async function getMobiusCUSD(): Promise<ProviderSource> {
   }
 }
 
-export async function getCurveCUSD(): Promise<ProviderSource> {
+export async function getCurveUSDC(): Promise<ProviderSource> {
   try {
-    // TODO:
-    // - Get balance of governance LP tokens from the curver pool contract
-    // - Get the total supply of LP tokens from the curve pool contract
-    // - Calculate the percentage of total supply that the governance holds
-    // - Calculate the value of the governance LP tokens in USD
-
-    const poolcUSDBalance = new BigNumber(10_000_000 * 1e18)
+    const poolUSDCBalance = await curveBalanceCalculator.calculateCurveUSDC()
     const time = Date.now()
-    return { hasError: false, value: formatNumber(poolcUSDBalance), source: Providers.forno, time }
+    return { hasError: false, value: poolUSDCBalance, source: Providers.forno, time }
   } catch (error) {
     return errorResult(error, Providers.forno)
   }
