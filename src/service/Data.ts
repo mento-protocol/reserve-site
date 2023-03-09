@@ -1,6 +1,15 @@
 import { StableToken, Token } from "@celo/contractkit"
 
-export type Tokens = "BTC" | "DAI" | "ETH" | "cMCO2" | "USDC" | StableToken | Token
+export type Tokens =
+  | "BTC"
+  | "DAI"
+  | "ETH"
+  | "cMCO2"
+  | "USDC"
+  | StableToken
+  | Token
+  | "cUSD in Curve Pool"
+  | "USDC in Curve Pool"
 export interface Address {
   address: string
   label: string
