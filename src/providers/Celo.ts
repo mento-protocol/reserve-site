@@ -1,7 +1,11 @@
 import { newKit, StableToken } from "@celo/contractkit"
 import BigNumber from "bignumber.js"
 import { Tokens } from "src/service/Data"
-import { CMCO2_ADDRESS, RESERVE_CMCO2_ADDRESS } from "src/contract-addresses"
+import {
+  CMCO2_ADDRESS,
+  CURVE_FACTORY_POOL_ADDRESS,
+  RESERVE_CMCO2_ADDRESS,
+} from "src/contract-addresses"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import ProviderSource, { errorResult, Providers } from "./ProviderSource"
 import { ReserveCrypto } from "src/addresses.config"
@@ -133,6 +137,16 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
       value: [
         { label: "Celo Reserve", token: "CELO" as Tokens, addresses: [reserve.address] },
         { label: "CELO with Custodian", token: "CELO" as Tokens, addresses: addresses },
+        {
+          label: "USDC in Curve Pool",
+          token: "USDC in Curve Pool" as Tokens,
+          addresses: [CURVE_FACTORY_POOL_ADDRESS],
+        },
+        {
+          label: "cUSD in Curve Pool",
+          token: "cUSD in Curve Pool" as Tokens,
+          addresses: [CURVE_FACTORY_POOL_ADDRESS],
+        },
       ],
     }
   } catch {

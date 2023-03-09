@@ -51,5 +51,8 @@ export function generateLink(token: Tokens, address: string) {
     case "USDC":
     case "DAI":
       return `https://etherscan.io/address/${address}`
+    case "cUSD in Curve Pool":
+    case "USDC in Curve Pool":
+      return `https://explorer.celo.org/mainnet/address/${address}/tokens#address-tabs`
   }
 }
