@@ -57,15 +57,11 @@ export default async function stables(): Promise<TokenModel[]> {
       value = prices.value[tokenData.iso4217] * tokenData.units.value
 
       if (tokenData.symbol === StableToken.cUSD) {
-        console.log(`cusd before deducting curve: ${value}`)
         value -= curveCUSDAmount.value * prices.value[tokenData.iso4217]
         tokenData.units.value -= curveCUSDAmount.value
 
-        console.log(`cusd before deducting multisig: ${value}`)
         value -= multisigCUSDAmount.value * prices.value[tokenData.iso4217]
         tokenData.units.value -= multisigCUSDAmount.value
-
-        console.log(`final cusd: ${value}`)
       }
     } catch (e) {
       // for those times when there isnt any value yet
