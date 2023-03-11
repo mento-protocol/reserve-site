@@ -5,6 +5,7 @@ import {
   getInCustodyBalance,
   getUnFrozenBalance,
   getcMC02Balance,
+  getMultisigUSDC,
 } from "src/providers/Celo"
 import * as etherscan from "src/providers/Etherscan"
 import * as ethplorer from "src/providers/Ethplorerer"
@@ -90,6 +91,10 @@ export async function getCurvePoolUSDC() {
   return getOrSave<ProviderSource>("curve-pool-usdc", getCurveUSDC, 5 * MINUTE)
 }
 
+export async function multisigUSDC() {
+  return getOrSave<ProviderSource>("multisig-usdc", getMultisigUSDC, 5 * MINUTE)
+}
+
 export interface HoldingsApi {
   celo: {
     unfrozen: TokenModel
@@ -153,6 +158,7 @@ export async function getHoldingsOther() {
     ])
 
     usdcHeld.value += (await getCurvePoolUSDC()).value
+    usdcHeld.value += (await multisigUSDC()).value
 
     const otherAssets: TokenModel[] = [
       toToken("BTC", btcHeld, rates.btc),
@@ -183,6 +189,7 @@ export default async function getHoldings(): Promise<HoldingsApi> {
     ])
 
   usdcHeld.value += (await getCurvePoolUSDC()).value
+  usdcHeld.value += (await multisigUSDC()).value
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),

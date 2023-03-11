@@ -4,7 +4,10 @@ import { Tokens } from "src/service/Data"
 import {
   CMCO2_ADDRESS,
   CURVE_FACTORY_POOL_ADDRESS,
+  CUSD_ADDRESS,
+  GOVERNANCE_SAFE_CELO,
   RESERVE_CMCO2_ADDRESS,
+  USDC_ADDRESS,
 } from "src/contract-addresses"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import ProviderSource, { errorResult, Providers } from "./ProviderSource"
@@ -133,6 +136,7 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
     const reserve = await kit.contracts.getReserve()
     const addresses = await reserve.getOtherReserveAddresses()
 
+    // TODO: clean up these hard coded inclusions (curve pool & multisig)
     return {
       value: [
         { label: "Celo Reserve", token: "CELO" as Tokens, addresses: [reserve.address] },
@@ -146,6 +150,16 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
           label: "cUSD in Curve Pool",
           token: "cUSD in Curve Pool" as Tokens,
           addresses: [CURVE_FACTORY_POOL_ADDRESS],
+        },
+        {
+          label: "cUSD in Multisig",
+          token: "cUSD in Curve Pool" as Tokens,
+          addresses: [GOVERNANCE_SAFE_CELO],
+        },
+        {
+          label: "USDC in Multisig",
+          token: "cUSD in Curve Pool" as Tokens,
+          addresses: [GOVERNANCE_SAFE_CELO],
         },
       ],
     }
@@ -196,6 +210,24 @@ export async function getCurveUSDC(): Promise<ProviderSource> {
     const poolUSDCBalance = await curveBalanceCalculator.calculateCurveUSDC()
     const time = Date.now()
     return { hasError: false, value: poolUSDCBalance, source: Providers.forno, time }
+  } catch (error) {
+    return errorResult(error, Providers.forno)
+  }
+}
+
+export async function getMultisigCUSD(): Promise<ProviderSource> {
+  try {
+    const multisigCUSD = await getERC20Balance(CUSD_ADDRESS, GOVERNANCE_SAFE_CELO)
+    return multisigCUSD
+  } catch (error) {
+    return errorResult(error, Providers.forno)
+  }
+}
+
+export async function getMultisigUSDC(): Promise<ProviderSource> {
+  try {
+    const multisigUSDC = await getERC20Balance(USDC_ADDRESS, GOVERNANCE_SAFE_CELO)
+    return multisigUSDC
   } catch (error) {
     return errorResult(error, Providers.forno)
   }

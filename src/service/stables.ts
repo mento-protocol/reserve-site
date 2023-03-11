@@ -1,4 +1,4 @@
-import { getCStableSupply, getCurveCUSD } from "src/providers/Celo"
+import { getCStableSupply, getCurveCUSD, getMultisigCUSD } from "src/providers/Celo"
 import { fiatPrices } from "src/service/rates"
 import { TokenModel } from "src/service/Data"
 import { getOrSave } from "src/service/cache"
@@ -7,6 +7,7 @@ import { StableToken } from "@celo/contractkit"
 import { ISO427SYMBOLS } from "src/interfaces/ISO427SYMBOLS"
 import ProviderSource from "src/providers/ProviderSource"
 import { STABLES } from "../stables.config"
+import { Console } from "console"
 
 async function cStableSupply(token: StableToken) {
   return getOrSave(`cSTABLE-${token}-supply`, () => getCStableSupply(token), 5 * SECOND)
@@ -14,6 +15,10 @@ async function cStableSupply(token: StableToken) {
 
 async function curveCUSD() {
   return getOrSave("curvePoolCusd", () => getCurveCUSD(), 5 * SECOND)
+}
+
+async function multisigCUSD() {
+  return getOrSave("multisigCUSD", () => getMultisigCUSD(), 5 * SECOND)
 }
 
 interface Circulation {
@@ -43,6 +48,7 @@ async function getCirculations(): Promise<Circulation[]> {
 export default async function stables(): Promise<TokenModel[]> {
   const [prices, circulations] = await Promise.all([fiatPrices(), getCirculations()])
   const curveCUSDAmount = await curveCUSD()
+  const multisigCUSDAmount = await multisigCUSD()
 
   return circulations.map((tokenData) => {
     let value = 0
@@ -51,8 +57,15 @@ export default async function stables(): Promise<TokenModel[]> {
       value = prices.value[tokenData.iso4217] * tokenData.units.value
 
       if (tokenData.symbol === StableToken.cUSD) {
+        console.log(`cusd before deducting curve: ${value}`)
         value -= curveCUSDAmount.value * prices.value[tokenData.iso4217]
         tokenData.units.value -= curveCUSDAmount.value
+
+        console.log(`cusd before deducting multisig: ${value}`)
+        value -= multisigCUSDAmount.value * prices.value[tokenData.iso4217]
+        tokenData.units.value -= multisigCUSDAmount.value
+
+        console.log(`final cusd: ${value}`)
       }
     } catch (e) {
       // for those times when there isnt any value yet
