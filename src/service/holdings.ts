@@ -157,8 +157,8 @@ export async function getHoldingsOther() {
     const otherAssets: TokenModel[] = [
       toToken("BTC", btcHeld, rates.btc),
       toToken("ETH", ethHeld, rates.eth),
-      toToken("DAI", daiHeld),
-      toToken("USDC", usdcHeld),
+      toToken("DAI", daiHeld, rates.dai),
+      toToken("USDC", usdcHeld, rates.usdc),
       toToken("cMCO2", cmco2Held, rates.cmco2),
     ]
 
@@ -187,8 +187,8 @@ export default async function getHoldings(): Promise<HoldingsApi> {
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
     toToken("ETH", ethHeld, rates.eth),
-    toToken("DAI", daiHeld),
-    toToken("USDC", usdcHeld),
+    toToken("DAI", daiHeld, rates.dai),
+    toToken("USDC", usdcHeld, rates.usdc),
     toToken("cMCO2", cmco2Held, rates.cmco2),
   ]
 

@@ -29,6 +29,18 @@ export async function getETHInUSD(): Promise<ProviderSource> {
   }
 }
 
+export async function getDAIInUSD(): Promise<ProviderSource> {
+  try {
+    const response = await fetch("https://api.coinbase.com/v2/prices/DAI-USD/spot")
+    const time = Date.now()
+    const data = (await response.json()) as CBResponse
+    const value = Number(data.data.amount)
+    return { hasError: !value, source: Providers.coinbase, value, time }
+  } catch (error) {
+    return errorResult(error, Providers.coinbase)
+  }
+}
+
 export async function getCELOPrice(): Promise<ProviderSource> {
   try {
     const response = await fetch("https://api.coinbase.com/v2/prices/CGLD-USD/spot")
