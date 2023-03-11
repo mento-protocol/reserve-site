@@ -215,22 +215,12 @@ export async function getCurveUSDC(): Promise<ProviderSource> {
   }
 }
 
-export async function getMultisigCUSD(): Promise<ProviderSource> {
-  try {
-    const multisigCUSD = await getERC20Balance(CUSD_ADDRESS, GOVERNANCE_SAFE_CELO)
-    return multisigCUSD
-  } catch (error) {
-    return errorResult(error, Providers.forno)
-  }
+export async function getMultisigCUSD() {
+  return getERC20Balance(CUSD_ADDRESS, GOVERNANCE_SAFE_CELO)
 }
 
-export async function getMultisigUSDC(): Promise<ProviderSource> {
-  try {
-    const multisigUSDC = await getERC20Balance(USDC_ADDRESS, GOVERNANCE_SAFE_CELO)
-    return multisigUSDC
-  } catch (error) {
-    return errorResult(error, Providers.forno)
-  }
+export async function getMultisigUSDC() {
+  return getERC20Balance(USDC_ADDRESS, GOVERNANCE_SAFE_CELO)
 }
 
 export const WEI_PER = 1_000_000_000_000_000_000
