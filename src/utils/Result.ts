@@ -2,9 +2,9 @@ export interface ResultBase {
   hasError: boolean
 }
 
-export interface ResultOk<TValue> extends ResultBase {
+export interface ResultOk<T> extends ResultBase {
   hasError: false
-  value: TValue
+  value: T
   time: number
 }
 
@@ -13,10 +13,10 @@ export interface ResultError extends ResultBase {
   error: Error
 }
 
-export type Result<TValue> = ResultOk<TValue> | ResultError
+export type Result<T> = ResultOk<T> | ResultError
 
-export type Ok<TResult extends Result<any>> = TResult extends ResultOk<infer TValue>
-  ? ResultOk<TValue>
+export type Ok<TResult extends Result<any>> = TResult extends ResultOk<infer T>
+  ? ResultOk<T>
   : never
 
 export function valueOrThrow<T>(result: Result<T>): T {

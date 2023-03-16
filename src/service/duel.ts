@@ -1,7 +1,7 @@
 import { ProviderResult } from "src/utils/ProviderResult"
 import { DuelResult, duelError, duelOk } from "src/utils/DuelResult"
 
-export type ProviderPromise<TValue = number> = Promise<ProviderResult<TValue>>
+export type ProviderPromise<T = number> = Promise<ProviderResult<T>>
 
 export function providerToDuel(result: ProviderResult): DuelResult {
   if (result.hasError === true) {
