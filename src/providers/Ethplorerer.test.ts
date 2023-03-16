@@ -5,7 +5,7 @@ describe("getEthBalance", () => {
     const balance = await getETHBalance("0x00000000000000000")
     expect(balance).toEqual({
       hasError: false,
-      metadata: { source: "ethplorer" },
+      source: "ethplorer",
       time: 1587686400000,
       value: 23247.01826569,
     })
@@ -22,7 +22,7 @@ describe("getERC20OnEthereumBalance", () => {
     )
     expect(balance).toEqual({
       hasError: false,
-      metadata: { source: "ethplorer" },
+      source: "ethplorer",
       time: 1587686400000,
       value: 2095536.31747404,
     })

@@ -1,19 +1,23 @@
 import { Providers } from "src/providers/Providers"
-import { Result, okResult, errorResult } from "./Result"
+import { Result, ResultOk, ResultError, okResult, errorResult } from "./Result"
 
-export interface DuelMetadata {
+interface DuelResultOk extends ResultOk<number> {
   sources: Providers[]
 }
 
-export type DuelResult = Result<number, DuelMetadata>
+interface DuelError extends ResultError {
+  sources: Providers[]
+}
+
+export type DuelResult = DuelResultOk | DuelError
 
 export function duelOk(value: number, sources: Providers[], time = Date.now()) {
-  return okResult(value, { sources }, time)
+  return { ...okResult(value, time), sources }
 }
 
 export function duelError(error: Error, sources: Providers[]) {
   console.info("ERROR", sources, error)
-  return errorResult(error, { sources })
+  return { ...errorResult(error), sources }
 }
 
 export function sumMerge(acc: DuelResult, current: DuelResult): DuelResult {
@@ -28,6 +32,6 @@ export function sumMerge(acc: DuelResult, current: DuelResult): DuelResult {
     ...acc,
     value: acc.value + current.value,
     time: current.time,
-    metadata: current.metadata,
+    sources: current.sources,
   }
 }

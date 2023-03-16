@@ -4,7 +4,7 @@ describe("getBTCInUSD", () => {
   it("returns current price of BTC", async () => {
     const price = await getBTCInUSD()
     expect(price).toEqual({
-      metadata: { source: "coinbase" },
+      source: "coinbase",
       time: 1587686400000,
       value: 50000.0,
       hasError: false,
@@ -16,7 +16,7 @@ describe("getETHInUSD", () => {
   it("returns current price of ETH", async () => {
     const price = await getETHInUSD()
     expect(price).toEqual({
-      metadata: { source: "coinbase" },
+      source: "coinbase",
       time: 1587686400000,
       value: 1500.0,
       hasError: false,
@@ -28,7 +28,7 @@ describe("getCELOPrice", () => {
   it("returns current price of CELO", async () => {
     const price = await getCELOPrice()
     expect(price).toEqual({
-      metadata: { source: "coinbase" },
+      source: "coinbase",
       time: 1587686400000,
       value: 3.9619,
       hasError: false,

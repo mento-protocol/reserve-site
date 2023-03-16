@@ -1,21 +1,24 @@
 import { Providers } from "src/providers/Providers"
 import { Result, ResultOk, ResultError, okResult, errorResult } from "./Result"
 
-interface ProviderMetadata {
+interface ProviderResultOk<T> extends ResultOk<T> {
   source: Providers
 }
 
-export type ProviderResult<TValue = number> = Result<TValue, ProviderMetadata>
-
-export function providerOk<TValue>(
-  value: TValue,
-  source: Providers,
-  time = Date.now()
-): ResultOk<TValue, ProviderMetadata> {
-  return okResult(value, { source }, time)
+interface ProviderError extends ResultError {
+  source: Providers
 }
 
-export function providerError(error: Error, source: Providers): ResultError<ProviderMetadata> {
+export type ProviderResult<T = number> = ProviderResultOk<T> | ProviderError
+
+export function providerOk<T>(value: T, source: Providers, time = Date.now()): ProviderResultOk<T> {
+  return {
+    ...okResult(value, time),
+    source,
+  }
+}
+
+export function providerError(error: Error, source: Providers): ProviderError {
   console.info("ERROR", source, error)
-  return errorResult(error, { source })
+  return { ...errorResult(error), source }
 }

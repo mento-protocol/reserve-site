@@ -1,60 +1,50 @@
-export interface ResultBase<TMetadata> {
+export interface ResultBase {
   hasError: boolean
-  metadata: TMetadata
 }
 
-export interface ResultOk<TValue, TMetadata> extends ResultBase<TMetadata> {
+export interface ResultOk<TValue> extends ResultBase {
   hasError: false
   value: TValue
   time: number
 }
 
-export interface ResultError<TMetadata> extends ResultBase<TMetadata> {
+export interface ResultError extends ResultBase {
   hasError: true
   error: Error
 }
 
-export type Result<TValue, TMetadata> = ResultOk<TValue, TMetadata> | ResultError<TMetadata>
+export type Result<TValue> = ResultOk<TValue> | ResultError
 
-export type Ok<TResult extends Result<any, any>> = TResult extends ResultOk<
-  infer TValue,
-  infer TMetadata
->
-  ? ResultOk<TValue, TMetadata>
+export type Ok<TResult extends Result<any>> = TResult extends ResultOk<infer TValue>
+  ? ResultOk<TValue>
   : never
 
-export function valueOrThrow<TValue>(result: Result<TValue, any>): TValue {
+export function valueOrThrow<T>(result: Result<T>): T {
   if (result.hasError == true) {
     throw result.error
   }
   return result.value
 }
 
-export function okOrThrow<TValue, TMetadata>(
-  result: Result<TValue, TMetadata>
-): ResultOk<TValue, TMetadata> {
+export function okOrThrow<T>(result: Result<T>): ResultOk<T> {
   if (result.hasError == true) {
     throw result.error
   }
   return result
 }
 
-export function allOkOrThrow<TResult extends Result<any, any>>(results: TResult[]): Ok<TResult>[] {
-  const resultWithError = results.find((r) => r.hasError === true) as ResultError<any>
+export function allOkOrThrow<TResult extends Result<any>>(results: TResult[]): Ok<TResult>[] {
+  const resultWithError = results.find((r) => r.hasError === true) as ResultError
   if (resultWithError) {
     throw resultWithError.error
   }
   return results as unknown as Ok<TResult>[]
 }
 
-export function okResult<TValue, TMetadata>(
-  value: TValue,
-  metadata: TMetadata,
-  time = Date.now()
-): ResultOk<TValue, TMetadata> {
-  return { hasError: false as const, metadata, value, time }
+export function okResult<T>(value: T, time = Date.now()): ResultOk<T> {
+  return { hasError: false as const, value, time }
 }
 
-export function errorResult<TMetadata>(error: Error, metadata: TMetadata): ResultError<TMetadata> {
-  return { hasError: true as const, metadata, error }
+export function errorResult(error: Error): ResultError {
+  return { hasError: true as const, error }
 }

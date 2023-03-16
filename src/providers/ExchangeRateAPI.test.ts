@@ -5,7 +5,7 @@ describe("currencyInUSD", () => {
     const price = await currencyInUSD()
     expect(price).toEqual(
       expect.objectContaining({
-        metadata: { source: "exchangeratesapi.io" },
+        source: "exchangeratesapi.io",
         time: 1614211200000,
         hasError: false,
       })

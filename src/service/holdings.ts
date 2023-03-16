@@ -127,10 +127,10 @@ export async function getHoldingsCelo() {
 }
 
 function toCeloShape(
-  frozen: ResultOk<number, any>,
-  unfrozen: ResultOk<number, any>,
-  celoCustodied: ResultOk<number, any>,
-  celoRate: ResultOk<number, any>
+  frozen: ResultOk<number>,
+  unfrozen: ResultOk<number>,
+  celoCustodied: ResultOk<number>,
+  celoRate: ResultOk<number>
 ): {
   frozen: TokenModel
   unfrozen: TokenModel
@@ -202,11 +202,7 @@ export default async function getHoldings(): Promise<HoldingsApi> {
   }
 }
 
-function toToken(
-  token: Tokens,
-  units: ResultOk<number, any>,
-  rate?: ResultOk<number, any>
-): TokenModel {
+function toToken(token: Tokens, units: ResultOk<number>, rate?: ResultOk<number>): TokenModel {
   let rateValue = 1
   if (rate) {
     rateValue = rate.value

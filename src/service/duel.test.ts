@@ -24,7 +24,7 @@ describe(`duel()`, () => {
       const result = await duel(Alfie(), Bormier())
       expect(result).toEqual({
         hasError: false,
-        metadata: { sources: ["etherscan", "blockstream"] },
+        sources: ["etherscan", "blockstream"],
         time: 1614121843634,
         value: 100,
       })
@@ -47,7 +47,7 @@ describe(`duel()`, () => {
       )
       expect(result).toEqual({
         hasError: false,
-        metadata: { sources: ["coinbase"] },
+        sources: ["coinbase"],
         time: 1614121843684,
         value: 102,
       })
@@ -69,9 +69,7 @@ describe(`duel()`, () => {
         const result = await duel(Bormier(), Erros())
         expect(result).toEqual({
           hasError: false,
-          metadata: {
-            sources: ["blockstream"],
-          },
+          sources: ["blockstream"],
           time: 1614121843634,
           value: 100,
         })
@@ -87,7 +85,7 @@ describe(`duel()`, () => {
         expect(result).toEqual({
           error: new Error("Error"),
           hasError: true,
-          metadata: { sources: [] },
+          sources: [],
         })
       })
     })
