@@ -19,7 +19,7 @@ import { ProviderResult } from "src/utils/ProviderResult"
 import { Token } from "@celo/contractkit"
 import addressesConfig from "src/addresses.config"
 import { getCurveUSDC } from "src/providers/Celo"
-import { allOkOrThrow, okOrThrow, ResultOk, valueOrThrow, Ok } from "src/utils/Result"
+import { allOkOrThrow, ResultOk, valueOrThrow } from "src/utils/Result"
 
 export async function getGroupedNonCeloAddresses() {
   const groupedByToken = addressesConfig.reduce((groups, current) => {
@@ -155,8 +155,8 @@ export async function getHoldingsOther() {
     ])
   )
 
-  usdcHeld.value += okOrThrow(await getCurvePoolUSDC()).value
-  usdcHeld.value += okOrThrow(await multisigUSDC()).value
+  usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
+  usdcHeld.value += valueOrThrow(await multisigUSDC())
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
