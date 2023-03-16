@@ -19,13 +19,6 @@ export type Ok<TResult extends Result<any>> = TResult extends ResultOk<infer T>
   ? ResultOk<T>
   : never
 
-export function valueOrThrow<T>(result: Result<T>): T {
-  if (result.hasError == true) {
-    throw result.error
-  }
-  return result.value
-}
-
 export function okOrThrow<T>(result: Result<T>): ResultOk<T> {
   if (result.hasError == true) {
     throw result.error
@@ -33,11 +26,12 @@ export function okOrThrow<T>(result: Result<T>): ResultOk<T> {
   return result
 }
 
+export function valueOrThrow<T>(result: Result<T>): T {
+  return okOrThrow(result).value
+}
+
 export function allOkOrThrow<TResult extends Result<any>>(results: TResult[]): Ok<TResult>[] {
-  const resultWithError = results.find((r) => r.hasError === true) as ResultError
-  if (resultWithError) {
-    throw resultWithError.error
-  }
+  results.forEach(okOrThrow)
   return results as unknown as Ok<TResult>[]
 }
 
