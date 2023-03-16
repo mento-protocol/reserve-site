@@ -216,7 +216,6 @@ function toToken(
     token,
     units: units.value,
     value: units.value * rateValue,
-    hasError: false,
     updated: units.time,
   }
 }

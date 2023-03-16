@@ -22,5 +22,4 @@ export interface TokenModel {
   units: number | null
   value: number | null
   updated: number | null
-  hasError: boolean
 }
