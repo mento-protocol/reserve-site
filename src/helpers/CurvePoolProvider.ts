@@ -3,7 +3,6 @@ import { JsonRpcProvider } from "@ethersproject/providers"
 
 import { CURVE_FACTORY_POOL_ADDRESS, CUSD_ADDRESS, USDC_ADDRESS } from "src/contract-addresses"
 import { CURVE_FACTORY_POOL_ABI, ERC20_ABI } from "src/constants/abis"
-import { Providers } from "src/providers/ProviderSource"
 import { ICurvePoolProvider } from "./ICurvePoolProvider"
 export class CurvePoolProvider implements ICurvePoolProvider {
   private celoProvider: JsonRpcProvider
@@ -12,7 +11,7 @@ export class CurvePoolProvider implements ICurvePoolProvider {
   private CurvePoolContract: Contract
 
   constructor() {
-    this.celoProvider = new JsonRpcProvider(`https://${Providers.forno}`)
+    this.celoProvider = new JsonRpcProvider(process.env.CELO_NODE_RPC_URL)
     this.CUSDContract = new Contract(CUSD_ADDRESS, ERC20_ABI, this.celoProvider)
     this.USDCContract = new Contract(USDC_ADDRESS, ERC20_ABI, this.celoProvider)
     this.CurvePoolContract = new Contract(

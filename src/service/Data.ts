@@ -19,8 +19,8 @@ export interface Address {
 
 export interface TokenModel {
   token: Tokens
-  units: number
-  value: number
-  updated: number
+  units: number | null
+  value: number | null
+  updated: number | null
   hasError: boolean
 }

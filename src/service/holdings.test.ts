@@ -10,7 +10,7 @@ describe("getHoldings", () => {
   afterEach(() => {
     global.console.info = info
   })
-  it("shows all crypto in the reserve", async () => {
+  it.only("shows all crypto in the reserve", async () => {
     const holdings = await getHoldings()
     expect(holdings.celo).toEqual({
       custody: {

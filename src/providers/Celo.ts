@@ -10,7 +10,8 @@ import {
   USDC_ADDRESS,
 } from "src/contract-addresses"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
-import ProviderSource, { errorResult, Providers } from "./ProviderSource"
+import { Providers } from "./Providers"
+import { ProviderResult, providerError, providerOk } from "src/utils/ProviderResult"
 import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
 const MIN_ABI_FOR_GET_BALANCE = [
@@ -27,21 +28,20 @@ const MIN_ABI_FOR_GET_BALANCE = [
   },
 ]
 
-const kit = newKit("https://forno.celo.org")
+const kit = newKit(process.env.CELO_NODE_RPC_URL)
 const curveBalanceCalculator = CurvePoolBalanceCalculator.Instance
 
-export async function getCeloPrice(): Promise<ProviderSource> {
+export async function getCeloPrice(): Promise<ProviderResult> {
   try {
     const exchange = await kit.contracts.getExchange()
     const rate = await exchange.quoteGoldSell(WEI_PER)
-    const time = Date.now()
-    return { hasError: false, value: formatNumber(rate), source: Providers.forno, time }
+    return providerOk(formatNumber(rate), Providers.celoNode)
   } catch (error) {
-    return errorResult(error, Providers.forno)
+    return providerError(error, Providers.celoNode)
   }
 }
 
-export async function getFrozenBalance(): Promise<ProviderSource> {
+export async function getFrozenBalance(): Promise<ProviderResult> {
   try {
     const [reserve, nativeToken] = await Promise.all([
       kit.contracts.getReserve(),
@@ -52,15 +52,9 @@ export async function getFrozenBalance(): Promise<ProviderSource> {
       reserve.getUnfrozenBalance(),
     ])
 
-    const time = Date.now()
-    return {
-      hasError: false,
-      value: formatNumber(total.minus(unfrozen)),
-      source: Providers.forno,
-      time,
-    }
+    return providerOk(formatNumber(total.minus(unfrozen)), Providers.celoNode)
   } catch (error) {
-    return errorResult(error, Providers.forno)
+    return providerError(error, Providers.celoNode)
   }
 }
 
@@ -69,10 +63,9 @@ export async function getUnFrozenBalance() {
     const reserve = await kit.contracts.getReserve()
     const balance = await reserve.getUnfrozenBalance()
 
-    const time = Date.now()
-    return { hasError: false, value: formatNumber(balance), source: Providers.forno, time }
+    return providerOk(formatNumber(balance), Providers.celoNode)
   } catch (error) {
-    return errorResult(error, Providers.forno)
+    return providerError(error, Providers.celoNode)
   }
 }
 
@@ -86,19 +79,14 @@ async function getERC20Balance(contractAddress: string, walletAddress: string) {
 
     const balance: string = await erc20.methods.balanceOf(walletAddress).call()
 
-    return {
-      hasError: false,
-      value: formatNumber(new BigNumber(balance)),
-      source: Providers.forno,
-      time: Date.now(),
-    }
+    return providerOk(formatNumber(new BigNumber(balance)), Providers.celoNode)
   } catch (error) {
     console.error(error)
-    return errorResult(error, Providers.forno)
+    return providerError(error, Providers.celoNode)
   }
 }
 
-export async function getInCustodyBalance(): Promise<ProviderSource> {
+export async function getInCustodyBalance(): Promise<ProviderResult> {
   try {
     const [reserve, nativeToken] = await Promise.all([
       kit.contracts.getReserve(),
@@ -107,27 +95,21 @@ export async function getInCustodyBalance(): Promise<ProviderSource> {
     const contractBalance = await nativeToken.balanceOf(reserve.address)
     const totalBalance = await reserve.getReserveCeloBalance()
 
-    const time = Date.now()
     // reserveCeloBalance includes both in contract and other address balances. need to subtract out
-    return {
-      hasError: false,
-      value: formatNumber(totalBalance.minus(contractBalance)),
-      source: Providers.forno,
-      time,
-    }
+    return providerOk(formatNumber(totalBalance.minus(contractBalance)), Providers.celoNode)
   } catch (error) {
-    return errorResult(error, Providers.forno)
+    return providerError(error, Providers.celoNode)
   }
 }
 
-export async function getCStableSupply(token: StableToken): Promise<ProviderSource> {
+export async function getCStableSupply(token: StableToken): Promise<ProviderResult> {
   try {
     const stableToken = await kit.contracts.getStableToken(token)
     const totalSupply = await stableToken.totalSupply()
     const time = Date.now()
-    return { hasError: false, value: formatNumber(totalSupply), source: Providers.forno, time }
+    return providerOk(formatNumber(totalSupply), Providers.celoNode)
   } catch (error) {
-    return errorResult(error, Providers.forno)
+    return providerError(error, Providers.celoNode)
   }
 }
 
@@ -168,7 +150,7 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
   }
 }
 
-export async function getTargetAllocations(): Promise<ProviderSource<Allocation[]>> {
+export async function getTargetAllocations(): Promise<ProviderResult<Allocation[]>> {
   try {
     const reserve = await kit.contracts.getReserve()
 
@@ -189,29 +171,27 @@ export async function getTargetAllocations(): Promise<ProviderSource<Allocation[
       }
     })
 
-    return { value, source: Providers.forno, time: Date.now(), hasError: false }
+    return providerOk(value, Providers.celoNode)
   } catch (error) {
-    return { hasError: true, source: Providers.forno, value: [], time: 0 }
+    return providerError(error, Providers.celoNode)
   }
 }
 
-export async function getCurveCUSD(): Promise<ProviderSource> {
+export async function getCurveCUSD(): Promise<ProviderResult> {
   try {
     const poolcUSDBalance = new BigNumber(await curveBalanceCalculator.calculateCurveCUSD())
-    const time = Date.now()
-    return { hasError: false, value: formatNumber(poolcUSDBalance), source: Providers.forno, time }
+    return providerOk(formatNumber(poolcUSDBalance), Providers.celoNode)
   } catch (error) {
-    return errorResult(error, Providers.forno)
+    return providerError(error, Providers.celoNode)
   }
 }
 
-export async function getCurveUSDC(): Promise<ProviderSource> {
+export async function getCurveUSDC(): Promise<ProviderResult> {
   try {
     const poolUSDCBalance = await curveBalanceCalculator.calculateCurveUSDC()
-    const time = Date.now()
-    return { hasError: false, value: poolUSDCBalance, source: Providers.forno, time }
+    return providerOk(poolUSDCBalance, Providers.celoNode)
   } catch (error) {
-    return errorResult(error, Providers.forno)
+    return providerError(error, Providers.celoNode)
   }
 }
 

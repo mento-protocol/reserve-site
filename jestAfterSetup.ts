@@ -25,3 +25,5 @@ afterAll(() => {
   MockDate.reset()
   server.close()
 })
+
+require("dotenv").config({ path: ".env.local" })

@@ -1,4 +1,5 @@
-import ProviderSource, { Providers, errorResult } from "./ProviderSource"
+import { Providers } from "./Providers"
+import { ProviderResult, providerOk, providerError } from "src/utils/ProviderResult"
 import normalizeBTCvalue from "src/utils/normalizeBTCValue"
 
 //usage limits unknown
@@ -20,18 +21,15 @@ interface BlockstreamAddress {
   }
 }
 
-export default async function getBTCBalance(address: string): Promise<ProviderSource> {
+export default async function getBTCBalance(address: string): Promise<ProviderResult<number>> {
   try {
     const response = await fetch(`https://blockstream.info/api/address/${address}`)
-    const time = Date.now()
     const data = (await response.json()) as BlockstreamAddress
-    return {
-      hasError: false,
-      source: Providers.blockstream,
-      value: normalizeBTCvalue(data.chain_stats.funded_txo_sum - data.chain_stats.spent_txo_sum),
-      time,
-    }
+    return providerOk(
+      normalizeBTCvalue(data.chain_stats.funded_txo_sum - data.chain_stats.spent_txo_sum),
+      Providers.blockstream
+    )
   } catch (error) {
-    return errorResult(error, Providers.blockchainDotCom)
+    return providerError(error, Providers.blockchainDotCom)
   }
 }

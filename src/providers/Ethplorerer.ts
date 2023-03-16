@@ -1,5 +1,6 @@
-import ProviderSource, { Providers, errorResult } from "./ProviderSource"
+import { Providers } from "./Providers"
 import BigNumber from "bignumber.js"
+import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
 
 // usage limits 4,762,800 req/week | 35,000req /hour
 
@@ -44,42 +45,30 @@ const API_KEY = process.env.ETHPLORER_KEY
 
 const BASE_URL = "https://api.ethplorer.io"
 
-export async function getETHBalance(address: string): Promise<ProviderSource> {
+export async function getETHBalance(address: string): Promise<ProviderResult<number>> {
   try {
     const response = await fetch(`${BASE_URL}/getAddressInfo/${address}?apiKey=${API_KEY}`)
-    const time = Date.now()
     const data = (await response.json()) as AcountInfo
-    return {
-      hasError: !!data.error,
-      source: Providers.ethplorer,
-      value: formatETHBalance(data?.ETH?.balance),
-      time,
-    }
+    return providerOk(formatETHBalance(data?.ETH?.balance), Providers.ethplorer)
   } catch (error) {
-    return errorResult(error, Providers.ethplorer)
+    return providerError(error, Providers.ethplorer)
   }
 }
 
 export async function getERC20OnEthereumBalance(
   tokenAddress: string,
   address: string
-): Promise<ProviderSource> {
+): Promise<ProviderResult<number>> {
   try {
     const response = await fetch(`${BASE_URL}/getAddressInfo/${address}?apiKey=${API_KEY}`)
-    const time = Date.now()
     const data = (await response.json()) as AcountInfo
     const token = data.tokens?.find((token) => token?.tokenInfo?.address === tokenAddress)
     const balance = new BigNumber(token.balance)
     const exp = new BigNumber(10).pow(token.tokenInfo.decimals)
 
-    return {
-      hasError: !!data.error,
-      source: Providers.ethplorer,
-      value: balance.dividedBy(exp).toNumber(),
-      time,
-    }
+    return providerOk(balance.dividedBy(exp).toNumber(), Providers.ethplorer)
   } catch (error) {
-    return errorResult(error, Providers.ethplorer)
+    return providerError(error, Providers.ethplorer)
   }
 }
 

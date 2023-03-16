@@ -1,54 +1,58 @@
-import ProviderSource, { Providers } from "src/providers/ProviderSource"
-type ProviderPromise = Promise<ProviderSource>
+import { ProviderResult } from "src/utils/ProviderResult"
+import { DuelResult, duelError, duelOk } from "src/utils/DuelResult"
 
-export interface Duel {
-  value: number
-  sources: Providers[]
-  time: number
+export type ProviderPromise<TValue = number> = Promise<ProviderResult<TValue>>
+
+export function providerToDuel(result: ProviderResult): DuelResult {
+  if (result.hasError === true) {
+    return duelError(result.error, [result.metadata.source])
+  } else {
+    return duelOk(result.value, [result.metadata.source], result.time)
+  }
 }
 
-export default async function duel(alef: ProviderPromise, bet: ProviderPromise): Promise<Duel> {
+export async function duel(alef: ProviderPromise, bet: ProviderPromise): Promise<DuelResult> {
   const results = await Promise.all([alef, bet])
   const sourceA = results[0]
   const sourceB = results[1]
-  if (sourceA.hasError && sourceB.hasError) {
-    console.warn(`Error ${sourceA.source} & ${sourceB.source} could not get new data`)
-    return { value: null, time: 0, sources: [] }
+  if (sourceA.hasError == true && sourceB.hasError == true) {
+    console.warn(
+      `Error ${sourceA.metadata.source} & ${sourceB.metadata.source} could not get new data`
+    )
+    return duelError(sourceA.error, [])
   }
 
-  if (sourceA.hasError && !sourceB.hasError) {
-    console.warn(`Error with: ${sourceA.source}`)
-    return { value: sourceB.value, time: sourceB.time, sources: [sourceB.source] }
+  if (sourceA.hasError == true && sourceB.hasError == false) {
+    console.warn(`Error with: ${sourceA.metadata.source}`)
+    return duelOk(sourceB.value, [sourceB.metadata.source], sourceB.time)
   }
 
-  if (sourceB.hasError && !sourceA.hasError) {
-    console.warn(`Error with: ${sourceB.source}`)
-    return { value: sourceA.value, time: sourceA.time, sources: [sourceA.source] }
+  if (sourceB.hasError == true && sourceA.hasError == false) {
+    console.warn(`Error with: ${sourceB.metadata.source}`)
+    return duelOk(sourceA.value, [sourceA.metadata.source], sourceA.time)
   }
 
-  if (sourceA.value === sourceB.value) {
-    return {
-      value: sourceA.value,
-      time: Math.max(sourceA.time, sourceB.time),
-      sources: results.map((result) => result.source),
-    }
-  }
-
-  if (sourceA.value !== sourceB.value) {
-    const recent = sourceA.time > sourceB.time ? sourceA : sourceB
-    if (percentDif(sourceA.value, sourceB.value) > 0.6) {
-      console.info(
-        `Sources: ${sourceA.source} (${sourceA.value}) differs from ${sourceB.source} (${
-          sourceB.value
-        }) ${percentDif(sourceA.value, sourceB.value).toPrecision(5)}%`
+  if (sourceA.hasError == false && sourceB.hasError == false) {
+    if (sourceA.value === sourceB.value) {
+      return duelOk(
+        sourceA.value,
+        results.map((result) => result.metadata.source),
+        Math.max(sourceA.time, sourceB.time)
       )
     }
-    return { value: recent.value, time: recent.time, sources: [recent.source] }
-  }
-}
 
-export function sumMerge(acc: Duel, current: Duel) {
-  return { ...acc, value: acc.value + current.value, time: current.time, source: current.sources }
+    if (sourceA.value !== sourceB.value) {
+      const recent = sourceA.time > sourceB.time ? sourceA : sourceB
+      if (percentDif(sourceA.value, sourceB.value) > 0.6) {
+        console.info(
+          `Sources: ${sourceA.metadata.source} (${sourceA.value}) differs from ${
+            sourceB.metadata.source
+          } (${sourceB.value}) ${percentDif(sourceA.value, sourceB.value).toPrecision(5)}%`
+        )
+      }
+      return duelOk(recent.value, [recent.metadata.source], recent.time)
+    }
+  }
 }
 
 function percentDif(x: number, y: number) {

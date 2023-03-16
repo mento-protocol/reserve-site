@@ -1,20 +1,21 @@
-import { Providers } from "src/providers/ProviderSource"
-import duel from "./duel"
+import { Providers } from "src/providers/Providers"
+import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
+import { duel } from "./duel"
 
 async function Alfie() {
-  return { value: 100, time: 1614121843624, source: Providers.etherscan, hasError: false }
+  return providerOk(100, Providers.etherscan, 1614121843624)
 }
 
 async function Bormier() {
-  return { value: 100, time: 1614121843634, source: Providers.blockstream, hasError: false }
+  return providerOk(100, Providers.blockstream, 1614121843634)
 }
 
 async function Cerci() {
-  return { value: 102, time: 1614121843684, source: Providers.coinbase, hasError: false }
+  return providerOk(102, Providers.coinbase, 1614121843684)
 }
 
 async function Erros() {
-  return { hasError: true, time: 0, source: Providers.ecb, value: 0 }
+  return providerError(new Error("Error"), Providers.ecb)
 }
 
 describe(`duel()`, () => {
@@ -22,7 +23,8 @@ describe(`duel()`, () => {
     it("returns value and indicts the agreement", async () => {
       const result = await duel(Alfie(), Bormier())
       expect(result).toEqual({
-        sources: ["etherscan", "blockstream"],
+        hasError: false,
+        metadata: { sources: ["etherscan", "blockstream"] },
         time: 1614121843634,
         value: 100,
       })
@@ -44,7 +46,8 @@ describe(`duel()`, () => {
         "Sources: etherscan (100) differs from coinbase (102) 1.9608%"
       )
       expect(result).toEqual({
-        sources: ["coinbase"],
+        hasError: false,
+        metadata: { sources: ["coinbase"] },
         time: 1614121843684,
         value: 102,
       })
@@ -65,7 +68,10 @@ describe(`duel()`, () => {
       it("use the other one and indicates so", async () => {
         const result = await duel(Bormier(), Erros())
         expect(result).toEqual({
-          sources: ["blockstream"],
+          hasError: false,
+          metadata: {
+            sources: ["blockstream"],
+          },
           time: 1614121843634,
           value: 100,
         })
@@ -78,7 +84,11 @@ describe(`duel()`, () => {
         expect(global.console.warn).toHaveBeenCalledWith(
           "Error ecb.europa.eu & ecb.europa.eu could not get new data"
         )
-        expect(result).toEqual({ value: null, time: 0, sources: [] })
+        expect(result).toEqual({
+          error: new Error("Error"),
+          hasError: true,
+          metadata: { sources: [] },
+        })
       })
     })
   })

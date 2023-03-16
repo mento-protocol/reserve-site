@@ -6,7 +6,7 @@ describe("getEthPrice", () => {
     const price = await getEthPrice()
     expect(price).toEqual({
       hasError: false,
-      source: "etherscan",
+      metadata: { source: "etherscan" },
       time: 1613763975,
       value: 1400,
     })
@@ -18,7 +18,7 @@ describe("getEthBalance", () => {
     const balance = await getETHBalance("0x00000000000000000")
     expect(balance).toEqual({
       hasError: false,
-      source: "etherscan",
+      metadata: { source: "etherscan" },
       time: 1587686400000,
       value: 40891.62685493,
     })
@@ -34,7 +34,7 @@ describe("getERC20onEthereumMainnetBalance", () => {
     )
     expect(balance).toEqual({
       hasError: false,
-      source: "etherscan",
+      metadata: { source: "etherscan" },
       time: 1587686400000,
       value: 2095536.31747404,
     })

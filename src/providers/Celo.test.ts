@@ -20,7 +20,7 @@ describe("getTargetAllocation", () => {
     const allocations = await getTargetAllocations()
     expect(allocations).toEqual({
       hasError: false,
-      source: "forno.celo.org",
+      metadata: { source: "celoNode" },
       time: 1587686400000,
       value: [
         { percent: 50, token: "CELO", type: "celo-native-asset" },
@@ -38,7 +38,7 @@ describe("getCeloPrice", () => {
     const balance = await getCeloPrice()
     expect(balance).toEqual({
       hasError: false,
-      source: "forno.celo.org",
+      metadata: { source: "celoNode" },
       time: 1587686400000,
       value: 3.892,
     })
@@ -50,7 +50,7 @@ describe("getCStableSupply", () => {
     const balance = await getCStableSupply(StableToken.cUSD)
     expect(balance).toEqual({
       hasError: false,
-      source: "forno.celo.org",
+      metadata: { source: "celoNode" },
       time: 1587686400000,
       value: 41557073.455407046,
     })
@@ -62,7 +62,7 @@ describe("getInCustodyBalance", () => {
     const balance = await getInCustodyBalance()
     expect(balance).toEqual({
       hasError: false,
-      source: "forno.celo.org",
+      metadata: { source: "celoNode" },
       time: 1587686400000,
       value: 2944998.2492173747,
     })
@@ -74,7 +74,7 @@ describe("getUnFrozenBalance", () => {
     const balance = await getUnFrozenBalance()
     expect(balance).toEqual({
       hasError: false,
-      source: "forno.celo.org",
+      metadata: { source: "celoNode" },
       time: 1587686400000,
       value: 75330631.07819435,
     })
@@ -86,7 +86,7 @@ describe("getFrozenBalance", () => {
     const balance = await getFrozenBalance()
     expect(balance).toEqual({
       hasError: false,
-      source: "forno.celo.org",
+      metadata: { source: "celoNode" },
       time: 1587686400000,
       value: 41313868.61313868,
     })
