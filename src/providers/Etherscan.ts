@@ -29,6 +29,9 @@ export async function getEthPrice(): Promise<ProviderResult<number>> {
       `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${API_KEY}`
     )
     const data = (await response.json()) as EthScanPriceResponse
+    if (data.status === "0") {
+      return providerError(new Error("etherscan: status is zero"), Providers.etherscan)
+    }
     return providerOk(
       Number(data.result.ethusd),
       Providers.etherscan,
@@ -45,6 +48,9 @@ export async function getETHBalance(address: string): Promise<ProviderResult<num
       `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=${API_KEY}`
     )
     const data = (await response.json()) as EthScanBalanceResponse
+    if (data.status === "0") {
+      return providerError(new Error("etherscan: status is zero"), Providers.etherscan)
+    }
     return providerOk(formatNumber(data.result), Providers.etherscan)
   } catch (error) {
     return providerError(error, Providers.etherscan)
@@ -61,6 +67,9 @@ export async function getERC20onEthereumMainnetBalance(
       `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${tokenAddress}&address=${accountAddress}&tag=latest&apikey=${API_KEY}`
     )
     const data = await response.json()
+    if (data.status === "0") {
+      return providerError(new Error("etherscan: status is zero"), Providers.etherscan)
+    }
     return providerOk(formatNumber(data.result, decimals), Providers.etherscan)
   } catch (error) {
     return providerError(error, Providers.etherscan)
