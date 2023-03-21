@@ -38,7 +38,7 @@ export async function getBTCPrice(): Promise<ProviderResult<number>> {
     const response = await fetch(`https://api.blockchain.com/v3/exchange/tickers/BTC-USD`)
     const data = (await response.json()) as PriceResponse
     if (!data.last_trade_price) {
-      return providerError(new Error("last_trade_price missing"), Providers.blockchainDotCom)
+      throw new Error("last_trade_price missing")
     }
 
     return providerOk(data.last_trade_price, Providers.blockchainDotCom)

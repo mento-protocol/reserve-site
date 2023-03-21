@@ -30,7 +30,7 @@ export async function getEthPrice(): Promise<ProviderResult<number>> {
     )
     const data = (await response.json()) as EthScanPriceResponse
     if (data.status === "0") {
-      return providerError(new Error("etherscan: status is zero"), Providers.etherscan)
+      throw new Error("etherscan: status is zero")
     }
     return providerOk(
       Number(data.result.ethusd),
@@ -49,7 +49,7 @@ export async function getETHBalance(address: string): Promise<ProviderResult<num
     )
     const data = (await response.json()) as EthScanBalanceResponse
     if (data.status === "0") {
-      return providerError(new Error("etherscan: status is zero"), Providers.etherscan)
+      throw new Error("etherscan: status is zero")
     }
     return providerOk(formatNumber(data.result), Providers.etherscan)
   } catch (error) {
@@ -68,7 +68,7 @@ export async function getERC20onEthereumMainnetBalance(
     )
     const data = await response.json()
     if (data.status === "0") {
-      return providerError(new Error("etherscan: status is zero"), Providers.etherscan)
+      throw new Error("etherscan: status is zero")
     }
     return providerOk(formatNumber(data.result, decimals), Providers.etherscan)
   } catch (error) {
