@@ -1,5 +1,6 @@
 import { ISO427SYMBOLS } from "src/interfaces/ISO427SYMBOLS"
-import { errorResult, Providers } from "./ProviderSource"
+import { Providers } from "./Providers"
+import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
 
 // Usage Limits: max 250 a day, recommended to cache data
 
@@ -200,7 +201,9 @@ interface CachedPricesError {
 
 export type CachedPrices = CachedPricesOK | CachedPricesError
 
-export default async function currencyInUSD(): Promise<CachedPrices> {
+export default async function currencyInUSD(): Promise<
+  ProviderResult<ExchangeRatesResponse["rates"]>
+> {
   try {
     const response = await fetch(
       `http://api.exchangeratesapi.io/v1/latest?access_key=${process.env.EXCHANGE_RATE_API}`
@@ -209,14 +212,9 @@ export default async function currencyInUSD(): Promise<CachedPrices> {
     if (data.error) {
       console.warn("error exchangeratesapi", data)
     }
-    return {
-      hasError: false,
-      source: Providers.exchangeRates,
-      value: inUSD(data.rates),
-      time: new Date(data.date).valueOf(),
-    }
+    return providerOk(inUSD(data.rates), Providers.exchangeRates, new Date(data.date).valueOf())
   } catch (error) {
-    return errorResult(error, Providers.exchangeRates)
+    return providerError(error, Providers.exchangeRates)
   }
 }
 

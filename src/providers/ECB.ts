@@ -1,5 +1,6 @@
 import xml2js from "xml2js"
-import ProviderSource, { errorResult, Providers } from "./ProviderSource"
+import { Providers } from "./Providers"
+import { ProviderResult, providerOk, providerError } from "src/utils/ProviderResult"
 
 const xmlParser = new xml2js.Parser()
 
@@ -10,7 +11,7 @@ interface RateCube {
   }
 }
 
-export async function euroToUSD(): Promise<ProviderSource> {
+export async function euroToUSD(): Promise<ProviderResult<number>> {
   try {
     const response = await fetch("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml")
     const xml = await response.text()
@@ -18,13 +19,8 @@ export async function euroToUSD(): Promise<ProviderSource> {
     const cube = data["gesmes:Envelope"].Cube[0].Cube[0]
     const date = cube["$"].time
     const rate = cube.Cube.find((c: RateCube) => c["$"].currency === "USD")["$"].rate
-    return {
-      hasError: false,
-      value: Number(rate),
-      source: Providers.ecb,
-      time: new Date(date).valueOf(),
-    }
+    return providerOk(Number(rate), Providers.ecb, new Date(date).valueOf())
   } catch (error) {
-    return errorResult(error, Providers.ecb)
+    return providerError(error, Providers.ecb)
   }
 }

@@ -1,6 +1,7 @@
 import { request, gql } from "graphql-request"
 import { CMCO2_ADDRESS } from "src/contract-addresses"
-import ProviderSource, { errorResult, Providers } from "./ProviderSource"
+import { Providers } from "./Providers"
+import { ProviderResult, providerError, providerOk } from "src/utils/ProviderResult"
 
 const query = gql`
 {
@@ -19,20 +20,15 @@ interface Token {
   derivedCUSD: number
 }
 
-export async function getCMC02Price(): Promise<ProviderSource> {
+export async function getCMC02Price(): Promise<ProviderResult> {
   try {
     const { token } = await request<{ token: Token }>(
       "https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap",
       query
     )
-    return {
-      hasError: false,
-      source: Providers.ubeswap,
-      value: Number(token.derivedCUSD),
-      time: Date.now(),
-    }
+    return providerOk(Number(token.derivedCUSD), Providers.ubeswap)
   } catch (error) {
     console.error(error)
-    return errorResult(error, Providers.ubeswap)
+    return providerError(error, Providers.ubeswap)
   }
 }

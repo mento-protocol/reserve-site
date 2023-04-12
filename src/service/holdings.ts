@@ -9,15 +9,17 @@ import {
 } from "src/providers/Celo"
 import * as etherscan from "src/providers/Etherscan"
 import * as ethplorer from "src/providers/Ethplorerer"
-import duel, { Duel, sumMerge } from "./duel"
+import { duel } from "./duel"
+import { DuelResult, sumMerge } from "src/utils/DuelResult"
 import getRates, { celoPrice } from "./rates"
 import { getOrSave } from "src/service/cache"
 import { MINUTE } from "src/utils/TIME"
 import { TokenModel, Tokens } from "./Data"
-import ProviderSource from "src/providers/ProviderSource"
+import { ProviderResult } from "src/utils/ProviderResult"
 import { Token } from "@celo/contractkit"
 import addressesConfig from "src/addresses.config"
 import { getCurveUSDC } from "src/providers/Celo"
+import { allOkOrThrow, ResultOk, valueOrThrow } from "src/utils/Result"
 
 export async function getGroupedNonCeloAddresses() {
   const groupedByToken = addressesConfig.reduce((groups, current) => {
@@ -33,14 +35,17 @@ async function fetchBTCBalance() {
   })
 }
 
-async function getSumBalance(token: Tokens, balanceFetcher: (address: string) => Promise<Duel>) {
+async function getSumBalance(
+  token: Tokens,
+  balanceFetcher: (address: string) => Promise<DuelResult>
+) {
   const addresses = await getGroupedNonCeloAddresses()
   const balances = await Promise.all(addresses[token].map(balanceFetcher))
   return balances.reduce(sumMerge)
 }
 
 export async function btcBalance() {
-  return getOrSave<Duel>("btc-balance", fetchBTCBalance, 10 * MINUTE)
+  return getOrSave<DuelResult>("btc-balance", fetchBTCBalance, 10 * MINUTE)
 }
 
 async function fetchETHBalance() {
@@ -50,7 +55,7 @@ async function fetchETHBalance() {
 }
 
 export async function ethBalance() {
-  return getOrSave<Duel>("eth-balance", fetchETHBalance, 10 * MINUTE)
+  return getOrSave<DuelResult>("eth-balance", fetchETHBalance, 10 * MINUTE)
 }
 
 function fetchERC20OnEthereumBalance(token: Tokens) {
@@ -68,31 +73,35 @@ function fetchERC20OnEthereumBalance(token: Tokens) {
 }
 
 export async function erc20OnEthereumBalance(token: Tokens) {
-  return getOrSave<Duel>(`${token}-balance`, () => fetchERC20OnEthereumBalance(token), 10 * MINUTE)
+  return getOrSave<DuelResult>(
+    `${token}-balance`,
+    () => fetchERC20OnEthereumBalance(token),
+    10 * MINUTE
+  )
 }
 
 export async function celoCustodiedBalance() {
-  return getOrSave<ProviderSource>("celo-custody-balance", getInCustodyBalance, 5 * MINUTE)
+  return getOrSave<ProviderResult>("celo-custody-balance", getInCustodyBalance, 5 * MINUTE)
 }
 
 export async function cMC02Balance() {
-  return getOrSave<ProviderSource>("cmc02-balance", getcMC02Balance, 10 * MINUTE)
+  return getOrSave<ProviderResult>("cmc02-balance", getcMC02Balance, 10 * MINUTE)
 }
 
 export async function celoFrozenBalance() {
-  return getOrSave<ProviderSource>("celo-frozen-balance", getFrozenBalance, 5 * MINUTE)
+  return getOrSave<ProviderResult>("celo-frozen-balance", getFrozenBalance, 5 * MINUTE)
 }
 
 export async function celoUnfrozenBalance() {
-  return getOrSave<ProviderSource>("celo-unfrozen-balance", getUnFrozenBalance, 2 * MINUTE)
+  return getOrSave<ProviderResult>("celo-unfrozen-balance", getUnFrozenBalance, 2 * MINUTE)
 }
 
 export async function getCurvePoolUSDC() {
-  return getOrSave<ProviderSource>("curve-pool-usdc", getCurveUSDC, 5 * MINUTE)
+  return getOrSave<ProviderResult>("curve-pool-usdc", getCurveUSDC, 5 * MINUTE)
 }
 
 export async function multisigUSDC() {
-  return getOrSave<ProviderSource>("multisig-usdc", getMultisigUSDC, 5 * MINUTE)
+  return getOrSave<ProviderResult>("multisig-usdc", getMultisigUSDC, 5 * MINUTE)
 }
 
 export interface HoldingsApi {
@@ -105,91 +114,79 @@ export interface HoldingsApi {
 }
 
 export async function getHoldingsCelo() {
-  const [celoRate, celoCustodied, frozen, unfrozen] = await Promise.all([
-    celoPrice(),
-    celoCustodiedBalance(),
-    celoFrozenBalance(),
-    celoUnfrozenBalance(),
-  ])
+  const [celoRate, celoCustodied, frozen, unfrozen] = allOkOrThrow(
+    await Promise.all([
+      celoPrice(),
+      celoCustodiedBalance(),
+      celoFrozenBalance(),
+      celoUnfrozenBalance(),
+    ])
+  )
 
-  return { celo: toCeloShape(frozen, celoRate, unfrozen, celoCustodied) }
+  return { celo: toCeloShape(frozen, unfrozen, celoCustodied, celoRate) }
 }
 
 function toCeloShape(
-  frozen: ProviderSource,
-  celoRate: Duel,
-  unfrozen: ProviderSource,
-  celoCustodied: ProviderSource
-) {
+  frozen: ResultOk<number>,
+  unfrozen: ResultOk<number>,
+  celoCustodied: ResultOk<number>,
+  celoRate: ResultOk<number>
+): {
+  frozen: TokenModel
+  unfrozen: TokenModel
+  custody: TokenModel
+} {
   return {
-    frozen: {
-      token: Token.CELO,
-      units: frozen.value,
-      value: frozen.value * celoRate.value,
-      hasError: frozen.hasError,
-      updated: frozen.time,
-    },
-    unfrozen: {
-      token: Token.CELO,
-      units: unfrozen.value,
-      value: unfrozen.value * celoRate.value,
-      hasError: unfrozen.hasError,
-      updated: unfrozen.time,
-    },
-    custody: {
-      token: Token.CELO,
-      units: celoCustodied.value,
-      value: celoCustodied.value * celoRate.value,
-      hasError: celoCustodied.hasError,
-      updated: celoCustodied.time,
-    },
+    frozen: toToken(Token.CELO, frozen, celoRate),
+    unfrozen: toToken(Token.CELO, unfrozen, celoRate),
+    custody: toToken(Token.CELO, celoCustodied, celoRate),
   } as const
 }
 
 export async function getHoldingsOther() {
-  try {
-    const [rates, btcHeld, ethHeld, daiHeld, usdcHeld, cmco2Held] = await Promise.all([
-      getRates(),
+  const rates = await getRates()
+  const [btcHeld, ethHeld, daiHeld, usdcHeld, cmco2Held] = allOkOrThrow(
+    await Promise.all([
       btcBalance(),
       ethBalance(),
       erc20OnEthereumBalance("DAI"),
       erc20OnEthereumBalance("USDC"),
       cMC02Balance(),
     ])
+  )
 
-    usdcHeld.value += (await getCurvePoolUSDC()).value
-    usdcHeld.value += (await multisigUSDC()).value
+  usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
+  usdcHeld.value += valueOrThrow(await multisigUSDC())
 
-    const otherAssets: TokenModel[] = [
-      toToken("BTC", btcHeld, rates.btc),
-      toToken("ETH", ethHeld, rates.eth),
-      toToken("DAI", daiHeld, rates.dai),
-      toToken("USDC", usdcHeld, rates.usdc),
-      toToken("cMCO2", cmco2Held, rates.cmco2),
-    ]
+  const otherAssets: TokenModel[] = [
+    toToken("BTC", btcHeld, rates.btc),
+    toToken("ETH", ethHeld, rates.eth),
+    toToken("DAI", daiHeld, rates.dai),
+    toToken("USDC", usdcHeld, rates.usdc),
+    toToken("cMCO2", cmco2Held, rates.cmco2),
+  ]
 
-    return { otherAssets }
-  } catch (e) {
-    console.error(e)
-  }
+  return { otherAssets }
 }
 
 export default async function getHoldings(): Promise<HoldingsApi> {
-  const [rates, btcHeld, ethHeld, daiHeld, usdcHeld, celoCustodied, frozen, unfrozen, cmco2Held] =
-    await Promise.all([
-      getRates(),
-      btcBalance(),
-      ethBalance(),
-      erc20OnEthereumBalance("DAI"),
-      erc20OnEthereumBalance("USDC"),
-      celoCustodiedBalance(),
-      celoFrozenBalance(),
-      celoUnfrozenBalance(),
-      cMC02Balance(),
-    ])
+  const rates = await getRates()
+  let [btcHeld, ethHeld, daiHeld, usdcHeld, celoCustodied, frozen, unfrozen, cmco2Held] =
+    allOkOrThrow(
+      await Promise.all([
+        btcBalance(),
+        ethBalance(),
+        erc20OnEthereumBalance("DAI"),
+        erc20OnEthereumBalance("USDC"),
+        celoCustodiedBalance(),
+        celoFrozenBalance(),
+        celoUnfrozenBalance(),
+        cMC02Balance(),
+      ])
+    )
 
-  usdcHeld.value += (await getCurvePoolUSDC()).value
-  usdcHeld.value += (await multisigUSDC()).value
+  usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
+  usdcHeld.value += valueOrThrow(await multisigUSDC())
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
@@ -200,17 +197,21 @@ export default async function getHoldings(): Promise<HoldingsApi> {
   ]
 
   return {
-    celo: toCeloShape(frozen, rates.celo, unfrozen, celoCustodied),
+    celo: toCeloShape(frozen, unfrozen, celoCustodied, rates.celo),
     otherAssets,
   }
 }
 
-function toToken(label: Tokens, tokenData: Duel | ProviderSource, rate?: Duel): TokenModel {
+function toToken(token: Tokens, units: ResultOk<number>, rate?: ResultOk<number>): TokenModel {
+  let rateValue = 1
+  if (rate) {
+    rateValue = rate.value
+  }
+
   return {
-    token: label,
-    units: tokenData.value,
-    value: (tokenData.value || 0) * (rate?.value || 1),
-    hasError: !tokenData.value,
-    updated: tokenData.time,
+    token,
+    units: units.value,
+    value: units.value * rateValue,
+    updated: units.time,
   }
 }

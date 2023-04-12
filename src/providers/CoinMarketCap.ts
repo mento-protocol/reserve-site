@@ -1,4 +1,5 @@
-import ProviderSource, { errorResult, Providers } from "./ProviderSource"
+import { Providers } from "./Providers"
+import { ProviderResult, providerOk, providerError } from "src/utils/ProviderResult"
 
 interface CMCQuote {
   data?: Record<
@@ -44,7 +45,9 @@ interface CMCQuote {
   }
 }
 
-export default async function getCoinMarketCapPrice(symbol: string): Promise<ProviderSource> {
+export default async function getCoinMarketCapPrice(
+  symbol: string
+): Promise<ProviderResult<number>> {
   try {
     const response = await fetch(
       `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${symbol}`,
@@ -61,21 +64,14 @@ export default async function getCoinMarketCapPrice(symbol: string): Promise<Pro
 
     if (body.data?.[symbol]) {
       const data = body.data[symbol].quote.USD
-      return {
-        hasError: !data.price,
-        value: data.price,
-        source: Providers.coinmarketcap,
-        time: new Date(data.last_updated).valueOf(),
+      if (!data.price) {
+        return providerError(new Error("price not found"), Providers.coinmarketcap)
       }
+      return providerOk(data.price, Providers.coinmarketcap, new Date(data.last_updated).valueOf())
     } else {
-      return {
-        hasError: true,
-        value: 0,
-        source: Providers.coinmarketcap,
-        time: new Date(body.status.timestamp).valueOf(),
-      }
+      return providerError(new Error(body.status.error_message), Providers.coinmarketcap)
     }
   } catch (error) {
-    return errorResult(error, Providers.coinmarketcap)
+    return providerError(error, Providers.coinmarketcap)
   }
 }

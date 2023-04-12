@@ -5,7 +5,8 @@ import { getOrSave } from "src/service/cache"
 import { SECOND } from "src/utils/TIME"
 import { StableToken } from "@celo/contractkit"
 import { ISO427SYMBOLS } from "src/interfaces/ISO427SYMBOLS"
-import ProviderSource from "src/providers/ProviderSource"
+import { ProviderResult } from "src/utils/ProviderResult"
+import { valueOrThrow } from "src/utils/Result"
 import { STABLES } from "../stables.config"
 import { Console } from "console"
 
@@ -22,7 +23,7 @@ async function multisigCUSD() {
 }
 
 interface Circulation {
-  units: ProviderSource<number>
+  units: ProviderResult<number>
   symbol: StableToken
   iso4217: ISO427SYMBOLS
 }
@@ -32,12 +33,14 @@ async function getCirculations(): Promise<Circulation[]> {
     STABLES.map(async (stable) => {
       return new Promise((resolve, reject) => {
         cStableSupply(stable.symbol)
-          .then((units) =>
-            resolve({
-              units: units,
-              symbol: stable.symbol,
-              iso4217: stable.iso4217,
-            })
+          .then(
+            (units) =>
+              resolve({
+                units: units,
+                symbol: stable.symbol,
+                iso4217: stable.iso4217,
+              })
+            // reject(new Error(`error: getCirculation() provider: ${units.source}`))
           )
           .catch(reject)
       })
@@ -47,28 +50,34 @@ async function getCirculations(): Promise<Circulation[]> {
 
 export default async function stables(): Promise<TokenModel[]> {
   const [prices, circulations] = await Promise.all([fiatPrices(), getCirculations()])
-  const curveCUSDAmount = await curveCUSD()
-  const multisigCUSDAmount = await multisigCUSD()
+  const curveCUSDAmount = valueOrThrow(await curveCUSD())
+  const multisigCUSDAmount = valueOrThrow(await multisigCUSD())
 
   return circulations.map((tokenData) => {
-    let value = 0
-
-    try {
-      value = prices.value[tokenData.iso4217] * tokenData.units.value
-
-      if (tokenData.symbol === StableToken.cUSD) {
-        value -= curveCUSDAmount.value * prices.value[tokenData.iso4217]
-        tokenData.units.value -= curveCUSDAmount.value
-
-        value -= multisigCUSDAmount.value * prices.value[tokenData.iso4217]
-        tokenData.units.value -= multisigCUSDAmount.value
+    if (tokenData.units.hasError == true) {
+      return {
+        token: tokenData.symbol,
+        units: null,
+        value: null,
+        updated: null,
+        hasError: true,
       }
-    } catch (e) {
-      // for those times when there isnt any value yet
     }
+
+    let units = tokenData.units.value
+    let value = prices.value[tokenData.iso4217] * units
+
+    if (tokenData.symbol === StableToken.cUSD) {
+      value -= curveCUSDAmount * prices.value[tokenData.iso4217]
+      units -= curveCUSDAmount
+
+      value -= multisigCUSDAmount * prices.value[tokenData.iso4217]
+      units -= multisigCUSDAmount
+    }
+
     return {
       token: tokenData.symbol,
-      units: tokenData.units.value || 0,
+      units,
       value,
       updated: tokenData.units.time,
       hasError: tokenData.units.hasError,

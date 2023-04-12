@@ -1,5 +1,6 @@
 import BigNumber from "bignumber.js"
-import ProviderSource, { Providers, errorResult } from "./ProviderSource"
+import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
+import { Providers } from "./Providers"
 
 // Usage limit 5 calls per second
 
@@ -22,38 +23,37 @@ interface EthScanBalanceResponse {
 
 const API_KEY = process.env.ETHERSCAN_API
 
-export async function getEthPrice(): Promise<ProviderSource> {
+export async function getEthPrice(): Promise<ProviderResult<number>> {
   try {
     const response = await fetch(
       `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${API_KEY}`
     )
     const data = (await response.json()) as EthScanPriceResponse
-    return {
-      hasError: data.status === "0",
-      source: Providers.etherscan,
-      value: Number(data.result.ethusd),
-      time: Number(data.result.ethusd_timestamp),
+    if (data.status === "0") {
+      throw new Error("etherscan: status is zero")
     }
+    return providerOk(
+      Number(data.result.ethusd),
+      Providers.etherscan,
+      Number(data.result.ethusd_timestamp)
+    )
   } catch (error) {
-    return errorResult(error, Providers.etherscan)
+    return providerError(error, Providers.etherscan)
   }
 }
 
-export async function getETHBalance(address: string): Promise<ProviderSource> {
+export async function getETHBalance(address: string): Promise<ProviderResult<number>> {
   try {
     const response = await fetch(
       `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=${API_KEY}`
     )
-    const time = Date.now()
     const data = (await response.json()) as EthScanBalanceResponse
-    return {
-      hasError: data.status === "0",
-      source: Providers.etherscan,
-      value: formatNumber(data.result),
-      time,
+    if (data.status === "0") {
+      throw new Error("etherscan: status is zero")
     }
+    return providerOk(formatNumber(data.result), Providers.etherscan)
   } catch (error) {
-    return errorResult(error, Providers.etherscan)
+    return providerError(error, Providers.etherscan)
   }
 }
 
@@ -66,16 +66,13 @@ export async function getERC20onEthereumMainnetBalance(
     const response = await fetch(
       `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${tokenAddress}&address=${accountAddress}&tag=latest&apikey=${API_KEY}`
     )
-    const time = Date.now()
     const data = await response.json()
-    return {
-      hasError: data.status === "0",
-      source: Providers.etherscan,
-      value: formatNumber(data.result, decimals),
-      time,
+    if (data.status === "0") {
+      throw new Error("etherscan: status is zero")
     }
+    return providerOk(formatNumber(data.result, decimals), Providers.etherscan)
   } catch (error) {
-    return errorResult(error, Providers.etherscan)
+    return providerError(error, Providers.etherscan)
   }
 }
 
