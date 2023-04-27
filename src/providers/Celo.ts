@@ -128,6 +128,11 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
     return {
       value: [
         { label: "Celo Reserve", token: "CELO" as Tokens, addresses: [reserve.address] },
+        {
+          label: "Partial Reserve",
+          token: "Partial Reserve" as Tokens,
+          addresses: [PARTIAL_RESERVE_ADDRESS],
+        },
         { label: "CELO with Custodian", token: "CELO" as Tokens, addresses: addresses },
         {
           label: "USDC in Curve Pool",
