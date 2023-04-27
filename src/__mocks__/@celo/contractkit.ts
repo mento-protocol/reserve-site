@@ -5,6 +5,7 @@ const mockWEI = 1_000_000_000_000_000_000
 class Contract {
   methods = {
     balanceOf: () => () => (500000 * mockWEI).toString(),
+    decimals: () => () => 18,
   }
 }
 

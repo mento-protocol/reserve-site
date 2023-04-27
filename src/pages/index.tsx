@@ -128,7 +128,8 @@ export async function getStaticProps() {
         year: new Date().getFullYear(),
       },
     }
-  } catch {
+  } catch (e) {
+    console.error(e)
     return {
       revalidate: 1,
     }

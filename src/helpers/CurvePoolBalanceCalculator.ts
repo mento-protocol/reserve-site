@@ -1,7 +1,7 @@
 import {
   CURVE_FACTORY_POOL_ADDRESS,
   GOVERNANCE_CELO,
-  GOVERNANCE_SAFE_CELO,
+  RESERVE_MULTISIG_CELO,
 } from "src/contract-addresses"
 import { CurvePoolProvider } from "./CurvePoolProvider"
 import { ICurvePoolProvider } from "./ICurvePoolProvider"
@@ -26,7 +26,7 @@ export class CurvePoolBalanceCalculator {
    * @returns The fraction of liquidity in the pool that is owned by Mento
    */
   private async getGovernancePoolFraction(): Promise<number> {
-    const gscBalance = await this.curvePoolProvider.getLPBalanceOf(GOVERNANCE_SAFE_CELO)
+    const gscBalance = await this.curvePoolProvider.getLPBalanceOf(RESERVE_MULTISIG_CELO)
     const governanceBalance = await this.curvePoolProvider.getLPBalanceOf(GOVERNANCE_CELO)
 
     const totalLPTokens = gscBalance.add(governanceBalance)
