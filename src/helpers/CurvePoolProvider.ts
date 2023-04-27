@@ -1,7 +1,11 @@
 import { BigNumber, Contract } from "ethers"
 import { JsonRpcProvider } from "@ethersproject/providers"
 
-import { CURVE_FACTORY_POOL_ADDRESS, CUSD_ADDRESS, USDC_ADDRESS } from "src/contract-addresses"
+import {
+  CURVE_FACTORY_POOL_ADDRESS,
+  CUSD_ADDRESS,
+  WORMHOLE_USDC_ADDRESS,
+} from "src/contract-addresses"
 import { CURVE_FACTORY_POOL_ABI, ERC20_ABI } from "src/constants/abis"
 import { ICurvePoolProvider } from "./ICurvePoolProvider"
 export class CurvePoolProvider implements ICurvePoolProvider {
@@ -13,7 +17,7 @@ export class CurvePoolProvider implements ICurvePoolProvider {
   constructor() {
     this.celoProvider = new JsonRpcProvider(process.env.CELO_NODE_RPC_URL)
     this.CUSDContract = new Contract(CUSD_ADDRESS, ERC20_ABI, this.celoProvider)
-    this.USDCContract = new Contract(USDC_ADDRESS, ERC20_ABI, this.celoProvider)
+    this.USDCContract = new Contract(WORMHOLE_USDC_ADDRESS, ERC20_ABI, this.celoProvider)
     this.CurvePoolContract = new Contract(
       CURVE_FACTORY_POOL_ADDRESS,
       CURVE_FACTORY_POOL_ABI,

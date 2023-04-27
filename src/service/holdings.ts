@@ -171,7 +171,7 @@ export async function getHoldingsOther() {
 
 export default async function getHoldings(): Promise<HoldingsApi> {
   const rates = await getRates()
-  let [btcHeld, ethHeld, daiHeld, usdcHeld, celoCustodied, frozen, unfrozen, cmco2Held] =
+  const [btcHeld, ethHeld, daiHeld, usdcHeld, celoCustodied, frozen, unfrozen, cmco2Held] =
     allOkOrThrow(
       await Promise.all([
         btcBalance(),

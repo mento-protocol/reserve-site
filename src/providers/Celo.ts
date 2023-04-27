@@ -8,7 +8,7 @@ import {
   GOVERNANCE_SAFE_CELO,
   PARTIAL_RESERVE_ADDRESS,
   RESERVE_CMCO2_ADDRESS,
-  USDC_ADDRESS,
+  WORMHOLE_USDC_ADDRESS,
 } from "src/contract-addresses"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import { Providers } from "./Providers"
@@ -211,7 +211,7 @@ export async function getMultisigCUSD() {
 }
 
 export async function getMultisigUSDC() {
-  return getERC20Balance(USDC_ADDRESS, GOVERNANCE_SAFE_CELO)
+  return getERC20Balance(WORMHOLE_USDC_ADDRESS, GOVERNANCE_SAFE_CELO)
 }
 
 export const WEI_PER = 1_000_000_000_000_000_000
