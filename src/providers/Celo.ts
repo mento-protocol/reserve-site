@@ -6,6 +6,7 @@ import {
   CURVE_FACTORY_POOL_ADDRESS,
   CUSD_ADDRESS,
   GOVERNANCE_SAFE_CELO,
+  PARTIAL_RESERVE_ADDRESS,
   RESERVE_CMCO2_ADDRESS,
   USDC_ADDRESS,
 } from "src/contract-addresses"
@@ -61,7 +62,13 @@ export async function getFrozenBalance(): Promise<ProviderResult> {
 export async function getUnFrozenBalance() {
   try {
     const reserve = await kit.contracts.getReserve()
-    const balance = await reserve.getUnfrozenBalance()
+    const reserveBalance = await reserve.getUnfrozenBalance()
+
+    // Get the balance of celo in the partial reserve
+    const partialReserveBalances = await kit.celoTokens.balancesOf(PARTIAL_RESERVE_ADDRESS)
+    const partialReserveCelo = partialReserveBalances.CELO
+
+    const balance = reserveBalance.plus(partialReserveCelo)
 
     return providerOk(formatNumber(balance), Providers.celoNode)
   } catch (error) {
@@ -106,7 +113,6 @@ export async function getCStableSupply(token: StableToken): Promise<ProviderResu
   try {
     const stableToken = await kit.contracts.getStableToken(token)
     const totalSupply = await stableToken.totalSupply()
-    const time = Date.now()
     return providerOk(formatNumber(totalSupply), Providers.celoNode)
   } catch (error) {
     return providerError(error, Providers.celoNode)
