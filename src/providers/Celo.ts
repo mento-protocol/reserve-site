@@ -16,6 +16,8 @@ import { ProviderResult, providerError, providerOk } from "src/utils/ProviderRes
 import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
 import { allOkOrThrow } from "src/utils/Result"
+import { totalmem } from "os"
+import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
 const ERC20_SUBSET = [
   {
     constant: true,
@@ -98,10 +100,19 @@ export async function getInCustodyBalance(): Promise<ProviderResult> {
       kit.contracts.getGoldToken(),
     ])
     const contractBalance = await nativeToken.balanceOf(reserve.address)
-    const totalBalance = await reserve.getReserveCeloBalance()
+    const reserveCeloBalance = await reserve.getReserveCeloBalance()
+    const multisigCeloBalance = await nativeToken.balanceOf(RESERVE_MULTISIG_CELO)
+    const multisigStakedCeloAsCeloBalance = await StakedCeloProvider.Instance.getCeloBalance(
+      RESERVE_MULTISIG_CELO
+    )
+
+    const custodyBalance = reserveCeloBalance
+      .plus(multisigCeloBalance)
+      .plus(multisigStakedCeloAsCeloBalance)
+      .minus(contractBalance)
 
     // reserveCeloBalance includes both in contract and other address balances. need to subtract out
-    return providerOk(formatNumber(totalBalance.minus(contractBalance)), Providers.celoNode)
+    return providerOk(formatNumber(custodyBalance), Providers.celoNode)
   } catch (error) {
     return providerError(error, Providers.celoNode)
   }
