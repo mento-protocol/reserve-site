@@ -39,9 +39,13 @@ export class StakedCeloProvider {
     return new StakedCeloProvider()
   }
 
+  public async stCeloToCelo(stCelo: BigNumber): Promise<BigNumber> {
+    const ethersBNResult: ethers.BigNumber = await this.stakedCeloManager.toCelo(stCelo)
+    return new BigNumber(ethersBNResult.toString())
+  }
+
   public async getCeloBalance(address: string): Promise<BigNumber> {
     const stCeloBalance = await this.stakedCelo.balanceOf(address)
-    const ethersBNResult: ethers.BigNumber = await this.stakedCeloManager.toCelo(stCeloBalance)
-    return new BigNumber(ethersBNResult.toString())
+    return await this.stCeloToCelo(stCeloBalance)
   }
 }
