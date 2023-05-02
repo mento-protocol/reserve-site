@@ -236,6 +236,17 @@ export async function getMultisigUSDC() {
   return providerOk(usdcWormhole.value + usdcAxelar.value, Providers.celoNode)
 }
 
+export async function getPartialReserveUSDC() {
+  const [usdcWormhole, usdcAxelar] = allOkOrThrow(
+    await Promise.all([
+      getERC20Balance(USDC_WORMHOLE_ADDRESS, PARTIAL_RESERVE_ADDRESS),
+      getERC20Balance(USDC_AXELAR_ADDRESS, PARTIAL_RESERVE_ADDRESS),
+    ])
+  )
+
+  return providerOk(usdcWormhole.value + usdcAxelar.value, Providers.celoNode)
+}
+
 export const WEI_PER = 1_000_000_000_000_000_000
 
 function formatNumber(value: BigNumber, decimals = 18) {
