@@ -32,7 +32,7 @@ export async function getGroupedNonCeloAddresses() {
 async function fetchBTCBalance() {
   return getSumBalance("BTC", (address) => {
     return duel(getBlockChainBTCBalance(address), getBlockStreamBTCBalance(address))
-  })
+  }) // + getCeloUniV3BTCBalance(...);
 }
 
 async function getSumBalance(
@@ -51,7 +51,7 @@ export async function btcBalance() {
 async function fetchETHBalance() {
   return getSumBalance("ETH", (address) => {
     return duel(etherscan.getETHBalance(address), ethplorer.getETHBalance(address))
-  })
+  }) // + getCeloUniV3ETHBalance(...);
 }
 
 export async function ethBalance() {
@@ -103,6 +103,10 @@ export async function getCurvePoolUSDC() {
 export async function multisigUSDC() {
   return getOrSave<ProviderResult>("multisig-usdc", getMultisigUSDC, 5 * MINUTE)
 }
+/*
+export async function uniV3Holdings(address: string) {
+  return getOrSave<ProviderResult>(address, getUniV3Holdings(address), 5 * MINUTE)
+}*/
 
 export interface HoldingsApi {
   celo: {
@@ -171,7 +175,7 @@ export async function getHoldingsOther() {
 
 export default async function getHoldings(): Promise<HoldingsApi> {
   const rates = await getRates()
-  let [btcHeld, ethHeld, daiHeld, usdcHeld, celoCustodied, frozen, unfrozen, cmco2Held] =
+  const [btcHeld, ethHeld, daiHeld, usdcHeld, celoCustodied, frozen, unfrozen, cmco2Held] =
     allOkOrThrow(
       await Promise.all([
         btcBalance(),

@@ -14,6 +14,7 @@ import { Providers } from "./Providers"
 import { ProviderResult, providerError, providerOk } from "src/utils/ProviderResult"
 import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
+//import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
 const MIN_ABI_FOR_GET_BALANCE = [
   {
     constant: true,
@@ -30,6 +31,7 @@ const MIN_ABI_FOR_GET_BALANCE = [
 
 const kit = newKit(process.env.CELO_NODE_RPC_URL)
 const curveBalanceCalculator = CurvePoolBalanceCalculator.Instance
+//const uniV3BalanceCalculator = UniV3PoolBalanceCalculator.Instance
 
 export async function getCeloPrice(): Promise<ProviderResult> {
   try {
@@ -194,6 +196,15 @@ export async function getCurveUSDC(): Promise<ProviderResult> {
     return providerError(error, Providers.celoNode)
   }
 }
+/*
+export async function getUniV3Holdings(address: string): Promise<ProviderResult> {
+  try {
+    const uniV3Balance = await uniV3BalanceCalculator.calculateUniV3PoolBalance(address)
+    return providerOk(uniV3Balance, Providers.celoNode)
+  } catch (error) {
+    return providerError(error, Providers.celoNode)
+  }
+}*/
 
 export async function getMultisigCUSD() {
   return getERC20Balance(CUSD_ADDRESS, GOVERNANCE_SAFE_CELO)
