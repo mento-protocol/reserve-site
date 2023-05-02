@@ -1,4 +1,9 @@
-import { getCStableSupply, getCurveCUSD, getMultisigCUSD } from "src/providers/Celo"
+import {
+  getCStableSupply,
+  getCurveCUSD,
+  getMultisigCUSD,
+  getPartialReserveCUSD,
+} from "src/providers/Celo"
 import { fiatPrices } from "src/service/rates"
 import { TokenModel } from "src/service/Data"
 import { getOrSave } from "src/service/cache"
@@ -20,6 +25,10 @@ async function curveCUSD() {
 
 async function multisigCUSD() {
   return getOrSave("multisigCUSD", () => getMultisigCUSD(), 5 * SECOND)
+}
+
+async function partialReserveCUSD() {
+  return getOrSave("partialReserveCUSD", () => getPartialReserveCUSD(), 5 * SECOND)
 }
 
 interface Circulation {
@@ -50,8 +59,11 @@ async function getCirculations(): Promise<Circulation[]> {
 
 export default async function stables(): Promise<TokenModel[]> {
   const [prices, circulations] = await Promise.all([fiatPrices(), getCirculations()])
+
+  // We need to get the reserve owned stables that have already been minted so we can adjust the total supply displayed
   const curveCUSDAmount = valueOrThrow(await curveCUSD())
   const multisigCUSDAmount = valueOrThrow(await multisigCUSD())
+  const partialReserveCUSDAmount = valueOrThrow(await partialReserveCUSD())
 
   return circulations.map((tokenData) => {
     if (tokenData.units.hasError == true) {
@@ -67,12 +79,16 @@ export default async function stables(): Promise<TokenModel[]> {
     let units = tokenData.units.value
     let value = prices.value[tokenData.iso4217] * units
 
+    // This adjusts the total supply to account for the reserve owned CUSD that have already been minted
     if (tokenData.symbol === StableToken.cUSD) {
       value -= curveCUSDAmount * prices.value[tokenData.iso4217]
       units -= curveCUSDAmount
 
       value -= multisigCUSDAmount * prices.value[tokenData.iso4217]
       units -= multisigCUSDAmount
+
+      value -= partialReserveCUSDAmount * prices.value[tokenData.iso4217]
+      units -= partialReserveCUSDAmount
     }
 
     return {

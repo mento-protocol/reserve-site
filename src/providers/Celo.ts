@@ -2,6 +2,7 @@ import { newKit, StableToken } from "@celo/contractkit"
 import BigNumber from "bignumber.js"
 import { Tokens } from "src/service/Data"
 import {
+  AXELAR_USDC_ADDRESS,
   CMCO2_ADDRESS,
   CURVE_FACTORY_POOL_ADDRESS,
   CUSD_ADDRESS,
@@ -212,6 +213,26 @@ export async function getMultisigCUSD() {
 
 export async function getMultisigUSDC() {
   return getERC20Balance(WORMHOLE_USDC_ADDRESS, GOVERNANCE_SAFE_CELO)
+}
+
+export async function getPartialReserveCUSD() {
+  return getERC20Balance(CUSD_ADDRESS, PARTIAL_RESERVE_ADDRESS)
+}
+
+export async function getPartialReserveUSDC() {
+  try {
+    const wormholeUSDC = new kit.web3.eth.Contract(MIN_ABI_FOR_GET_BALANCE, WORMHOLE_USDC_ADDRESS)
+    const axelarUSDC = new kit.web3.eth.Contract(MIN_ABI_FOR_GET_BALANCE, AXELAR_USDC_ADDRESS)
+
+    const wormholeBalance = await wormholeUSDC.methods.balanceOf(PARTIAL_RESERVE_ADDRESS).call()
+    const axelarBalance = await axelarUSDC.methods.balanceOf(PARTIAL_RESERVE_ADDRESS).call()
+
+    const totalUSDC = wormholeBalance + axelarBalance
+
+    return providerOk(totalUSDC, Providers.celoNode)
+  } catch (error) {
+    return providerError(error, Providers.celoNode)
+  }
 }
 
 export const WEI_PER = 1_000_000_000_000_000_000
