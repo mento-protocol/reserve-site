@@ -5,9 +5,10 @@ import {
   CMCO2_ADDRESS,
   CURVE_FACTORY_POOL_ADDRESS,
   CUSD_ADDRESS,
-  GOVERNANCE_SAFE_CELO,
+  RESERVE_MULTISIG_CELO,
   RESERVE_CMCO2_ADDRESS,
-  USDC_ADDRESS,
+  USDC_WORMHOLE_ADDRESS,
+  USDC_AXELAR_ADDRESS,
 } from "src/contract-addresses"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import { Providers } from "./Providers"
@@ -15,16 +16,22 @@ import { ProviderResult, providerError, providerOk } from "src/utils/ProviderRes
 import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
 //import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
-const MIN_ABI_FOR_GET_BALANCE = [
+import { allOkOrThrow } from "src/utils/Result"
+import { totalmem } from "os"
+import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
+const ERC20_SUBSET = [
   {
     constant: true,
-
     inputs: [{ name: "_owner", type: "address" }],
-
     name: "balanceOf",
-
     outputs: [{ name: "balance", type: "uint256" }],
-
+    type: "function" as const,
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "decimals",
+    outputs: [{ name: "decimals", type: "uint256" }],
     type: "function" as const,
   },
 ]
@@ -77,11 +84,11 @@ export async function getcMC02Balance() {
 
 async function getERC20Balance(contractAddress: string, walletAddress: string) {
   try {
-    const erc20 = new kit.web3.eth.Contract(MIN_ABI_FOR_GET_BALANCE, contractAddress)
-
+    const erc20 = new kit.web3.eth.Contract(ERC20_SUBSET, contractAddress)
     const balance: string = await erc20.methods.balanceOf(walletAddress).call()
+    const decimals: number = parseInt(await erc20.methods.decimals().call())
 
-    return providerOk(formatNumber(new BigNumber(balance)), Providers.celoNode)
+    return providerOk(formatNumber(new BigNumber(balance), decimals), Providers.celoNode)
   } catch (error) {
     console.error(error)
     return providerError(error, Providers.celoNode)
@@ -95,10 +102,19 @@ export async function getInCustodyBalance(): Promise<ProviderResult> {
       kit.contracts.getGoldToken(),
     ])
     const contractBalance = await nativeToken.balanceOf(reserve.address)
-    const totalBalance = await reserve.getReserveCeloBalance()
+    const reserveCeloBalance = await reserve.getReserveCeloBalance()
+    const multisigCeloBalance = await nativeToken.balanceOf(RESERVE_MULTISIG_CELO)
+    const multisigStakedCeloAsCeloBalance = await StakedCeloProvider.Instance.getCeloBalance(
+      RESERVE_MULTISIG_CELO
+    )
+
+    const custodyBalance = reserveCeloBalance
+      .plus(multisigCeloBalance)
+      .plus(multisigStakedCeloAsCeloBalance)
+      .minus(contractBalance)
 
     // reserveCeloBalance includes both in contract and other address balances. need to subtract out
-    return providerOk(formatNumber(totalBalance.minus(contractBalance)), Providers.celoNode)
+    return providerOk(formatNumber(custodyBalance), Providers.celoNode)
   } catch (error) {
     return providerError(error, Providers.celoNode)
   }
@@ -138,12 +154,12 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
         {
           label: "cUSD in Multisig",
           token: "cUSD in Curve Pool" as Tokens,
-          addresses: [GOVERNANCE_SAFE_CELO],
+          addresses: [RESERVE_MULTISIG_CELO],
         },
         {
           label: "USDC in Multisig",
           token: "cUSD in Curve Pool" as Tokens,
-          addresses: [GOVERNANCE_SAFE_CELO],
+          addresses: [RESERVE_MULTISIG_CELO],
         },
       ],
     }
@@ -207,17 +223,24 @@ export async function getUniV3Holdings(address: string): Promise<ProviderResult>
 }*/
 
 export async function getMultisigCUSD() {
-  return getERC20Balance(CUSD_ADDRESS, GOVERNANCE_SAFE_CELO)
+  return getERC20Balance(CUSD_ADDRESS, RESERVE_MULTISIG_CELO)
 }
 
 export async function getMultisigUSDC() {
-  return getERC20Balance(USDC_ADDRESS, GOVERNANCE_SAFE_CELO)
+  const [usdcWormhole, usdcAxelar] = allOkOrThrow(
+    await Promise.all([
+      getERC20Balance(USDC_WORMHOLE_ADDRESS, RESERVE_MULTISIG_CELO),
+      getERC20Balance(USDC_AXELAR_ADDRESS, RESERVE_MULTISIG_CELO),
+    ])
+  )
+
+  return providerOk(usdcWormhole.value + usdcAxelar.value, Providers.celoNode)
 }
 
 export const WEI_PER = 1_000_000_000_000_000_000
 
-function formatNumber(value: BigNumber) {
-  return value.dividedBy(WEI_PER).toNumber()
+function formatNumber(value: BigNumber, decimals = 18) {
+  return value.dividedBy(new BigNumber(10).pow(decimals)).toNumber()
 }
 
 function getType(symbol: string): AssetTypes {
