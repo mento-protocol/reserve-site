@@ -21,6 +21,7 @@ import { ProviderResult } from "src/utils/ProviderResult"
 import { Token } from "@celo/contractkit"
 import addressesConfig from "src/addresses.config"
 import { allOkOrThrow, ResultOk, valueOrThrow } from "src/utils/Result"
+//import { BTC_AXELAR_ADDRESS, BTC_WORMHOLE_ADDRESS, CELO_ADDRESS, ETH_AXELAR_ADDRESS, ETH_WORMHOLE_ADDRESS, RESERVE_MULTISIG_CELO, STAKED_CELO_ERC20_ADDRESS } from "src/contract-addresses"
 
 export async function getGroupedNonCeloAddresses() {
   const groupedByToken = addressesConfig.reduce((groups, current) => {
@@ -33,7 +34,7 @@ export async function getGroupedNonCeloAddresses() {
 async function fetchBTCBalance() {
   return getSumBalance("BTC", (address) => {
     return duel(getBlockChainBTCBalance(address), getBlockStreamBTCBalance(address))
-  }) // + getCeloUniV3BTCBalance(...);
+  })
 }
 
 async function getSumBalance(
@@ -52,7 +53,7 @@ export async function btcBalance() {
 async function fetchETHBalance() {
   return getSumBalance("ETH", (address) => {
     return duel(etherscan.getETHBalance(address), ethplorer.getETHBalance(address))
-  }) // + getCeloUniV3ETHBalance(...);
+  })
 }
 
 export async function ethBalance() {
@@ -141,6 +142,10 @@ export async function getHoldingsCelo() {
       celoUnfrozenBalance(),
     ])
   )
+  //TODO:
+  //Uncomment and check once assets are bridged and pools are active
+  //unfrozen.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, CELO_ADDRESS)
+  //unfrozen.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, STAKED_CELO_ERC20_ADDRESS)
 
   return { celo: toCeloShape(frozen, unfrozen, celoCustodied, celoRate) }
 }
@@ -173,6 +178,12 @@ export async function getHoldingsOther() {
       cMC02Balance(),
     ])
   )
+  /*TODO:
+  Uncomment and check once assets are bridged and pools are active
+  ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_AXELAR_ADDRESS)
+  ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_WORMHOLE_ADDRESS)
+  btcHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, BTC_AXELAR_ADDRESS)
+  btcHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, BTC_WORMHOLE_ADDRESS)*/
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
