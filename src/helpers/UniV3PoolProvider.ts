@@ -12,7 +12,7 @@ import { IUniV3PoolProvider } from "./IUniV3PoolProvider"
 export class UniV3PoolProvider implements IUniV3PoolProvider {
   private celoProvider: JsonRpcProvider
   private UniV3PositionToken: Contract
-  private UniV3FatoryContract: Contract
+  private UniV3FactoryContract: Contract
 
   constructor() {
     this.celoProvider = new JsonRpcProvider(process.env.CELO_NODE_RPC_URL)
@@ -21,7 +21,7 @@ export class UniV3PoolProvider implements IUniV3PoolProvider {
       UNIV3_POSITION_TOKEN_ABI,
       this.celoProvider
     )
-    this.UniV3FatoryContract = new Contract(
+    this.UniV3FactoryContract = new Contract(
       UNIV3_FACTORY_ADDRESS,
       UNIV3_FACTORY_ABI,
       this.celoProvider
@@ -42,13 +42,13 @@ export class UniV3PoolProvider implements IUniV3PoolProvider {
     return await this.UniV3PositionToken.positions(tokenId)
   }
 
-  public async getTotalLiquidityForPool(poolAddress: string): Promise<BigNumber> {
+  public async getTotalLiquidityForPool(poolAddress: string): Promise<BigNumber[]> {
     const UniV3PoolContract: Contract = new Contract(poolAddress, UNIV3_POOL_ABI, this.celoProvider)
     return await UniV3PoolContract.liquidity()
   }
 
   public async getPoolAddress(token0: string, token1: string, fee: number): Promise<string> {
-    return await this.UniV3FatoryContract.getPool(token0, token1, fee)
+    return await this.UniV3FactoryContract.getPool(token0, token1, fee)
   }
 
   public async getPoolBalance(

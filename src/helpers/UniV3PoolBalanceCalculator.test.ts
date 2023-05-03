@@ -1,7 +1,5 @@
-import { ICurvePoolProvider } from "./ICurvePoolProvider"
 import { IUniV3PoolProvider } from "./IUniV3PoolProvider"
 import { BigNumber } from "ethers"
-import { CurvePoolBalanceCalculator } from "./CurvePoolBalanceCalculator"
 import { UniV3PoolBalanceCalculator } from "./UniV3PoolBalanceCalculator"
 
 class FakeUniV3PoolProvider implements IUniV3PoolProvider {
@@ -14,7 +12,7 @@ class FakeUniV3PoolProvider implements IUniV3PoolProvider {
     500, // fee
     -970,
     -100,
-    50, // liquidity
+    BigNumber.from(50), // liquidity
   ]
   public position2 = [
     0,
@@ -24,7 +22,7 @@ class FakeUniV3PoolProvider implements IUniV3PoolProvider {
     700, // fee
     -970,
     -100,
-    50, // liquidity
+    BigNumber.from(50), // liquidity
   ]
   public pool1Address = "pool1"
   public pool2Address = "pool2"
@@ -86,7 +84,7 @@ describe("CurvePoolBalanceCalculator", () => {
   })
   it("should correctly calculate the balance for multiple positions each 50% of total liquidity", async () => {
     const balances = await uniV3PoolBalanceCalculator.calculateUniV3PoolBalance("0x1234")
-    expect(balances.get("0x765DE816845861e75A25fCA122bb6898B8B1282a")).toEqual(1000) // (1000* 0.5 / 10 ** 0 ) * 2
-    expect(balances.get("0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73")).toEqual(1000) // (1000* 0.5 / 10 ** 0 ) * 2
+    expect(balances.get("0x765DE816845861e75A25fCA122bb6898B8B1282a").toNumber()).toEqual(1000) // (1000* 0.5 / 10 ** 0 ) * 2
+    expect(balances.get("0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73").toNumber()).toEqual(1000) // (1000* 0.5 / 10 ** 0 ) * 2
   })
 })

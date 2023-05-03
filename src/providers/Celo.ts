@@ -216,17 +216,13 @@ export async function getCurveUSDC(): Promise<ProviderResult> {
 
 export async function getUniV3Holdings(
   address: string
-): Promise<ProviderResult<Map<string, number>>> {
+): Promise<ProviderResult<Map<string, BigNumber>>> {
   try {
     const uniV3Holdings = await uniV3BalanceCalculator.calculateUniV3PoolBalance(address)
     if (uniV3Holdings.has(STAKED_CELO_ERC20_ADDRESS)) {
       uniV3Holdings.set(
         STAKED_CELO_ERC20_ADDRESS,
-        (
-          await StakedCeloProvider.Instance.stCeloToCelo(
-            new BigNumber(uniV3Holdings.get(STAKED_CELO_ERC20_ADDRESS))
-          )
-        ).toNumber()
+        await StakedCeloProvider.Instance.stCeloToCelo(uniV3Holdings.get(STAKED_CELO_ERC20_ADDRESS))
       )
     }
     return providerOk(uniV3Holdings, Providers.celoNode)

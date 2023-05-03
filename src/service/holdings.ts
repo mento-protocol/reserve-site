@@ -21,6 +21,7 @@ import { ProviderResult } from "src/utils/ProviderResult"
 import { Token } from "@celo/contractkit"
 import addressesConfig from "src/addresses.config"
 import { allOkOrThrow, ResultOk, valueOrThrow } from "src/utils/Result"
+import { BigNumber } from "bignumber.js"
 //import { BTC_AXELAR_ADDRESS, BTC_WORMHOLE_ADDRESS, CELO_ADDRESS, ETH_AXELAR_ADDRESS, ETH_WORMHOLE_ADDRESS, RESERVE_MULTISIG_CELO, STAKED_CELO_ERC20_ADDRESS } from "src/contract-addresses"
 
 export async function getGroupedNonCeloAddresses() {
@@ -107,7 +108,7 @@ export async function multisigUSDC() {
 }
 
 export async function uniV3Holdings(address: string) {
-  return getOrSave<ProviderResult<Map<string, number>>>(
+  return getOrSave<ProviderResult<Map<string, BigNumber>>>(
     address,
     async () => getUniV3Holdings(address),
     5 * MINUTE
@@ -115,13 +116,8 @@ export async function uniV3Holdings(address: string) {
 }
 
 export async function uniV3HoldingsForToken(address: string, token: string) {
-  try {
-    const univ3Holdings = valueOrThrow(await uniV3Holdings(address))
-    return univ3Holdings.get(token) || 0
-  } catch (error) {
-    console.error(error)
-    return 0
-  }
+  const univ3Holdings = valueOrThrow(await uniV3Holdings(address))
+  return univ3Holdings.get(token).toNumber() || 0
 }
 
 export interface HoldingsApi {

@@ -1,4 +1,5 @@
 import Cache from "node-cache"
+import { BigNumber } from "bignumber.js"
 import { MINUTE } from "src/utils/TIME"
 
 const DAY = 60 * 60 * 24
@@ -6,7 +7,7 @@ const DAY = 60 * 60 * 24
 const CACHE = new Cache({ stdTTL: DAY })
 
 export interface Cachable<T extends string = any> {
-  value?: number | Array<T> | Record<T, string | number> | null | Map<string, number>
+  value?: number | Array<T> | Record<T, string | number> | null | Map<string, BigNumber>
   hasError?: boolean
   updatedAt?: number
 }
