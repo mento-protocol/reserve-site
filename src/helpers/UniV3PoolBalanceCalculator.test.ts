@@ -9,24 +9,22 @@ class FakeUniV3PoolProvider implements IUniV3PoolProvider {
   public position1 = [
     0,
     "0",
-    "0x765DE816845861e75A25fCA122bb6898B8B1282a",
-    "0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73",
-    500,
+    "0x765DE816845861e75A25fCA122bb6898B8B1282a", // token0
+    "0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", // token1
+    500, // fee
     -970,
     -100,
-    50,
+    50, // liquidity
   ]
   public position2 = [
-    [
-      0,
-      "0",
-      "0x765DE816845861e75A25fCA122bb6898B8B1282a",
-      "0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73",
-      700,
-      -970,
-      -100,
-      50,
-    ],
+    0,
+    "0",
+    "0x765DE816845861e75A25fCA122bb6898B8B1282a", // token0
+    "0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", // token1
+    700, // fee
+    -970,
+    -100,
+    50, // liquidity
   ]
   public pool1Address = "pool1"
   public pool2Address = "pool2"
@@ -67,6 +65,10 @@ class FakeUniV3PoolProvider implements IUniV3PoolProvider {
     if (poolAddress === this.pool1Address) return this.pool1TotalLiqudity
     if (poolAddress === this.pool2Address) return this.pool2TotalLiqudity
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async getERC20Decimals(tokenAddress: string): Promise<number> {
+    return 0
+  }
 }
 
 let fakeUniV3PoolProvider: FakeUniV3PoolProvider
@@ -78,8 +80,13 @@ describe("CurvePoolBalanceCalculator", () => {
     uniV3PoolBalanceCalculator = new UniV3PoolBalanceCalculator(fakeUniV3PoolProvider)
   })
 
-  it("should calculate the correct balances for multiple positions", async () => {
+  it("should return the correct number of balances for multiple positions", async () => {
     const balances = await uniV3PoolBalanceCalculator.calculateUniV3PoolBalance("0x1234")
     expect(balances.size).toEqual(2)
+  })
+  it("should correctly calculate the balance for multiple positions each 50% of total liquidity", async () => {
+    const balances = await uniV3PoolBalanceCalculator.calculateUniV3PoolBalance("0x1234")
+    expect(balances.get("0x765DE816845861e75A25fCA122bb6898B8B1282a")).toEqual(1000) // (1000* 0.5 / 10 ** 0 ) * 2
+    expect(balances.get("0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73")).toEqual(1000) // (1000* 0.5 / 10 ** 0 ) * 2
   })
 })

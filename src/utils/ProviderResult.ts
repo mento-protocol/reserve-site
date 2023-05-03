@@ -9,7 +9,6 @@ interface ProviderError extends ResultError {
   source: Providers
 }
 
-//export type ProviderResult<T = number | Map<string, number>> = ProviderResultOk<T> | ProviderError
 export type ProviderResult<T = number> = ProviderResultOk<T> | ProviderError
 
 export function providerOk<T>(value: T, source: Providers, time = Date.now()): ProviderResultOk<T> {

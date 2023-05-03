@@ -62,4 +62,9 @@ export class UniV3PoolProvider implements IUniV3PoolProvider {
     const balanceAsset1 = await asset1.balanceOf(poolAddress)
     return [balanceAsset0, balanceAsset1]
   }
+
+  public async getERC20Decimals(tokenAddress: string): Promise<number> {
+    const tokenContract: Contract = new Contract(tokenAddress, ERC20_ABI, this.celoProvider)
+    return await tokenContract.decimals()
+  }
 }

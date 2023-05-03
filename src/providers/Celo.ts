@@ -9,13 +9,14 @@ import {
   RESERVE_CMCO2_ADDRESS,
   USDC_WORMHOLE_ADDRESS,
   USDC_AXELAR_ADDRESS,
+  STAKED_CELO_ERC20_ADDRESS,
 } from "src/contract-addresses"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import { Providers } from "./Providers"
 import { ProviderResult, providerError, providerOk } from "src/utils/ProviderResult"
 import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
-//import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
+import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
 import { allOkOrThrow } from "src/utils/Result"
 import { totalmem } from "os"
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
@@ -38,7 +39,7 @@ const ERC20_SUBSET = [
 
 const kit = newKit(process.env.CELO_NODE_RPC_URL)
 const curveBalanceCalculator = CurvePoolBalanceCalculator.Instance
-//const uniV3BalanceCalculator = UniV3PoolBalanceCalculator.Instance
+const uniV3BalanceCalculator = UniV3PoolBalanceCalculator.Instance
 
 export async function getCeloPrice(): Promise<ProviderResult> {
   try {
@@ -212,15 +213,27 @@ export async function getCurveUSDC(): Promise<ProviderResult> {
     return providerError(error, Providers.celoNode)
   }
 }
-/*
-export async function getUniV3Holdings(address: string): Promise<ProviderResult> {
+
+export async function getUniV3Holdings(
+  address: string
+): Promise<ProviderResult<Map<string, number>>> {
   try {
-    const uniV3Balance = await uniV3BalanceCalculator.calculateUniV3PoolBalance(address)
-    return providerOk(uniV3Balance, Providers.celoNode)
+    const uniV3Holdings = await uniV3BalanceCalculator.calculateUniV3PoolBalance(address)
+    if (uniV3Holdings.has(STAKED_CELO_ERC20_ADDRESS)) {
+      uniV3Holdings.set(
+        STAKED_CELO_ERC20_ADDRESS,
+        (
+          await StakedCeloProvider.Instance.stCeloToCelo(
+            new BigNumber(uniV3Holdings.get(STAKED_CELO_ERC20_ADDRESS))
+          )
+        ).toNumber()
+      )
+    }
+    return providerOk(uniV3Holdings, Providers.celoNode)
   } catch (error) {
     return providerError(error, Providers.celoNode)
   }
-}*/
+}
 
 export async function getMultisigCUSD() {
   return getERC20Balance(CUSD_ADDRESS, RESERVE_MULTISIG_CELO)

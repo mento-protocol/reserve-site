@@ -44,18 +44,18 @@ export class UniV3PoolBalanceCalculator {
         positionAsset0,
         positionAsset1
       )
-      holdings.has(positionAsset0)
-        ? holdings.set(
-            positionAsset0,
-            holdings.get(positionAsset0) + (poolBalances[0] * positionliquidity) / poolLiquidty
-          )
-        : holdings.set(positionAsset0, (poolBalances[0] * positionliquidity) / poolLiquidty)
-      holdings.has(positionAsset1)
-        ? holdings.set(
-            positionAsset1,
-            holdings.get(positionAsset1) + (poolBalances[1] * positionliquidity) / poolLiquidty
-          )
-        : holdings.set(positionAsset1, (poolBalances[1] * positionliquidity) / poolLiquidty)
+      const positionAsset0Decimals = await this.uniV3PoolProvider.getERC20Decimals(positionAsset0)
+      const positionAsset1Decimals = await this.uniV3PoolProvider.getERC20Decimals(positionAsset1)
+      holdings.set(
+        positionAsset0,
+        (holdings.get(positionAsset0) || 0) +
+          (poolBalances[0] * positionliquidity) / poolLiquidty / 10 ** positionAsset0Decimals
+      )
+      holdings.set(
+        positionAsset1,
+        (holdings.get(positionAsset1) || 0) +
+          (poolBalances[1] * positionliquidity) / poolLiquidty / 10 ** positionAsset1Decimals
+      )
     }
     return holdings
   }

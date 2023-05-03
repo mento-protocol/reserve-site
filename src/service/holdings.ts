@@ -6,6 +6,8 @@ import {
   getUnFrozenBalance,
   getcMC02Balance,
   getMultisigUSDC,
+  getCurveUSDC,
+  getUniV3Holdings,
 } from "src/providers/Celo"
 import * as etherscan from "src/providers/Etherscan"
 import * as ethplorer from "src/providers/Ethplorerer"
@@ -18,7 +20,6 @@ import { TokenModel, Tokens } from "./Data"
 import { ProviderResult } from "src/utils/ProviderResult"
 import { Token } from "@celo/contractkit"
 import addressesConfig from "src/addresses.config"
-import { getCurveUSDC } from "src/providers/Celo"
 import { allOkOrThrow, ResultOk, valueOrThrow } from "src/utils/Result"
 
 export async function getGroupedNonCeloAddresses() {
@@ -103,10 +104,24 @@ export async function getCurvePoolUSDC() {
 export async function multisigUSDC() {
   return getOrSave<ProviderResult>("multisig-usdc", getMultisigUSDC, 5 * MINUTE)
 }
-/*
+
 export async function uniV3Holdings(address: string) {
-  return getOrSave<ProviderResult>(address, getUniV3Holdings(address), 5 * MINUTE)
-}*/
+  return getOrSave<ProviderResult<Map<string, number>>>(
+    address,
+    async () => getUniV3Holdings(address),
+    5 * MINUTE
+  )
+}
+
+export async function uniV3HoldingsForToken(address: string, token: string) {
+  try {
+    const univ3Holdings = valueOrThrow(await uniV3Holdings(address))
+    return univ3Holdings.get(token) || 0
+  } catch (error) {
+    console.error(error)
+    return 0
+  }
+}
 
 export interface HoldingsApi {
   celo: {
