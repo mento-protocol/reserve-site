@@ -236,10 +236,6 @@ export async function getMultisigUSDC() {
   return providerOk(usdcWormhole.value + usdcAxelar.value, Providers.celoNode)
 }
 
-export async function getPartialReserveCUSD() {
-  return getERC20Balance(CUSD_ADDRESS, PARTIAL_RESERVE_ADDRESS)
-}
-
 export async function getPartialReserveUSDC() {
   const [usdcWormhole, usdcAxelar] = allOkOrThrow(
     await Promise.all([
