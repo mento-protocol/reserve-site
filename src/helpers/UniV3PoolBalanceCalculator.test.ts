@@ -84,7 +84,7 @@ describe("CurvePoolBalanceCalculator", () => {
   })
   it("should correctly calculate the balance for multiple positions each 50% of total liquidity", async () => {
     const balances = await uniV3PoolBalanceCalculator.calculateUniV3PoolBalance("0x1234")
-    expect(balances.get("0x765DE816845861e75A25fCA122bb6898B8B1282a").toNumber()).toEqual(1000) // (1000* 0.5 / 10 ** 0 ) * 2
-    expect(balances.get("0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73").toNumber()).toEqual(1000) // (1000* 0.5 / 10 ** 0 ) * 2
+    expect(balances.get("0x765DE816845861e75A25fCA122bb6898B8B1282a")).toEqual(1000) // (1000* 0.5 / 10 ** 0 ) * 2
+    expect(balances.get("0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73")).toEqual(1000) // (1000* 0.5 / 10 ** 0 ) * 2
   })
 })

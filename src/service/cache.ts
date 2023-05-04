@@ -7,7 +7,7 @@ const DAY = 60 * 60 * 24
 const CACHE = new Cache({ stdTTL: DAY })
 
 export interface Cachable<T extends string = any> {
-  value?: number | Array<T> | Record<T, string | number> | null | Map<string, BigNumber>
+  value?: number | Array<T> | Record<T, string | number> | null | Map<string, number>
   hasError?: boolean
   updatedAt?: number
 }

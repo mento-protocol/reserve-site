@@ -9,7 +9,6 @@ import {
   RESERVE_CMCO2_ADDRESS,
   USDC_WORMHOLE_ADDRESS,
   USDC_AXELAR_ADDRESS,
-  STAKED_CELO_ERC20_ADDRESS,
 } from "src/contract-addresses"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import { Providers } from "./Providers"
@@ -18,7 +17,6 @@ import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
 import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
 import { allOkOrThrow } from "src/utils/Result"
-import { totalmem } from "os"
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
 const ERC20_SUBSET = [
   {
@@ -125,7 +123,6 @@ export async function getCStableSupply(token: StableToken): Promise<ProviderResu
   try {
     const stableToken = await kit.contracts.getStableToken(token)
     const totalSupply = await stableToken.totalSupply()
-    const time = Date.now()
     return providerOk(formatNumber(totalSupply), Providers.celoNode)
   } catch (error) {
     return providerError(error, Providers.celoNode)
@@ -216,15 +213,9 @@ export async function getCurveUSDC(): Promise<ProviderResult> {
 
 export async function getUniV3Holdings(
   address: string
-): Promise<ProviderResult<Map<string, BigNumber>>> {
+): Promise<ProviderResult<Map<string, number>>> {
   try {
     const uniV3Holdings = await uniV3BalanceCalculator.calculateUniV3PoolBalance(address)
-    if (uniV3Holdings.has(STAKED_CELO_ERC20_ADDRESS)) {
-      uniV3Holdings.set(
-        STAKED_CELO_ERC20_ADDRESS,
-        await StakedCeloProvider.Instance.stCeloToCelo(uniV3Holdings.get(STAKED_CELO_ERC20_ADDRESS))
-      )
-    }
     return providerOk(uniV3Holdings, Providers.celoNode)
   } catch (error) {
     return providerError(error, Providers.celoNode)

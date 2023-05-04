@@ -13,7 +13,7 @@ export class UniV3PoolBalanceCalculator {
   public static get Instance() {
     return this._instance || (this._instance = this.create())
   }
-  public async calculateUniV3PoolBalance(address): Promise<Map<string, BigNumber>> {
+  public async calculateUniV3PoolBalance(address): Promise<Map<string, number>> {
     const positions = await this.uniV3PoolProvider.getPositionTokenIds(address)
     return await this.queryPositions(positions)
   }
@@ -22,8 +22,8 @@ export class UniV3PoolBalanceCalculator {
     return new UniV3PoolBalanceCalculator(new UniV3PoolProvider())
   }
 
-  private async queryPositions(positions: number[]): Promise<Map<string, BigNumber>> {
-    const holdings = new Map<string, BigNumber>()
+  private async queryPositions(positions: number[]): Promise<Map<string, number>> {
+    const holdings = new Map<string, number>()
     for (let i = 0; i < positions.length; i++) {
       const positionData = await this.uniV3PoolProvider.getPosition(positions[i])
       if (!positionData) {
@@ -53,21 +53,22 @@ export class UniV3PoolBalanceCalculator {
         await this.uniV3PoolProvider.getERC20Decimals(positionAsset1)
       )
       const liquidityFraction = positionliquidity.dividedBy(poolLiquidty)
+
       holdings.set(
         positionAsset0,
-        (holdings.get(positionAsset0) || new BigNumber(0)).plus(
+        (holdings.get(positionAsset0) || 0) +
           new BigNumber(poolBalances[0]._hex)
             .multipliedBy(liquidityFraction)
             .dividedBy(new BigNumber(10).exponentiatedBy(positionAsset0Decimals))
-        )
+            .toNumber()
       )
       holdings.set(
         positionAsset1,
-        (holdings.get(positionAsset1) || new BigNumber(0)).plus(
+        (holdings.get(positionAsset1) || 0) +
           new BigNumber(poolBalances[1]._hex)
             .multipliedBy(liquidityFraction)
             .dividedBy(new BigNumber(10).exponentiatedBy(positionAsset1Decimals))
-        )
+            .toNumber()
       )
     }
     return holdings
