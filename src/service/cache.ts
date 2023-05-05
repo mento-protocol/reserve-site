@@ -1,5 +1,4 @@
 import Cache from "node-cache"
-import { BigNumber } from "bignumber.js"
 import { MINUTE } from "src/utils/TIME"
 
 const DAY = 60 * 60 * 24
