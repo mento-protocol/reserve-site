@@ -50,6 +50,8 @@ async function getCirculations(): Promise<Circulation[]> {
 
 export default async function stables(): Promise<TokenModel[]> {
   const [prices, circulations] = await Promise.all([fiatPrices(), getCirculations()])
+
+  // We need to get the reserve owned stables that have already been minted so we can adjust the total supply displayed
   const curveCUSDAmount = valueOrThrow(await curveCUSD())
   const multisigCUSDAmount = valueOrThrow(await multisigCUSD())
 
@@ -67,6 +69,7 @@ export default async function stables(): Promise<TokenModel[]> {
     let units = tokenData.units.value
     let value = prices.value[tokenData.iso4217] * units
 
+    // This adjusts the total supply to account for the reserve owned CUSD that have already been minted
     if (tokenData.symbol === StableToken.cUSD) {
       value -= curveCUSDAmount * prices.value[tokenData.iso4217]
       units -= curveCUSDAmount

@@ -8,6 +8,7 @@ import {
   getMultisigUSDC,
   getCurveUSDC,
   getUniV3Holdings,
+  getPartialReserveUSDC,
 } from "src/providers/Celo"
 import * as etherscan from "src/providers/Etherscan"
 import * as ethplorer from "src/providers/Ethplorerer"
@@ -129,6 +130,10 @@ export async function uniV3HoldingsForToken(address: string, token: string) {
   return univ3Holdings.get(token) || 0
 }
 
+export async function partialReserveUSDC() {
+  return getOrSave<ProviderResult>("partial-reserve-usdc", getPartialReserveUSDC, 5 * MINUTE)
+}
+
 export interface HoldingsApi {
   celo: {
     unfrozen: TokenModel
@@ -199,6 +204,7 @@ export async function getHoldingsOther() {
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
+  usdcHeld.value += valueOrThrow(await partialReserveUSDC())
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
@@ -229,6 +235,7 @@ export default async function getHoldings(): Promise<HoldingsApi> {
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
+  usdcHeld.value += valueOrThrow(await partialReserveUSDC())
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
