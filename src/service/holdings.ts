@@ -6,6 +6,7 @@ import {
   getUnFrozenBalance,
   getcMC02Balance,
   getMultisigUSDC,
+  getPartialReserveUSDC,
 } from "src/providers/Celo"
 import * as etherscan from "src/providers/Etherscan"
 import * as ethplorer from "src/providers/Ethplorerer"
@@ -104,6 +105,10 @@ export async function multisigUSDC() {
   return getOrSave<ProviderResult>("multisig-usdc", getMultisigUSDC, 5 * MINUTE)
 }
 
+export async function partialReserveUSDC() {
+  return getOrSave<ProviderResult>("partial-reserve-usdc", getPartialReserveUSDC, 5 * MINUTE)
+}
+
 export interface HoldingsApi {
   celo: {
     unfrozen: TokenModel
@@ -157,6 +162,7 @@ export async function getHoldingsOther() {
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
+  usdcHeld.value += valueOrThrow(await partialReserveUSDC())
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
@@ -171,7 +177,7 @@ export async function getHoldingsOther() {
 
 export default async function getHoldings(): Promise<HoldingsApi> {
   const rates = await getRates()
-  let [btcHeld, ethHeld, daiHeld, usdcHeld, celoCustodied, frozen, unfrozen, cmco2Held] =
+  const [btcHeld, ethHeld, daiHeld, usdcHeld, celoCustodied, frozen, unfrozen, cmco2Held] =
     allOkOrThrow(
       await Promise.all([
         btcBalance(),
@@ -187,6 +193,7 @@ export default async function getHoldings(): Promise<HoldingsApi> {
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
+  usdcHeld.value += valueOrThrow(await partialReserveUSDC())
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),

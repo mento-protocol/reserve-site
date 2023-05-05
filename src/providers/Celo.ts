@@ -9,6 +9,7 @@ import {
   RESERVE_CMCO2_ADDRESS,
   USDC_WORMHOLE_ADDRESS,
   USDC_AXELAR_ADDRESS,
+  PARTIAL_RESERVE_ADDRESS,
 } from "src/contract-addresses"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import { Providers } from "./Providers"
@@ -16,7 +17,6 @@ import { ProviderResult, providerError, providerOk } from "src/utils/ProviderRes
 import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
 import { allOkOrThrow } from "src/utils/Result"
-import { totalmem } from "os"
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
 const ERC20_SUBSET = [
   {
@@ -68,7 +68,13 @@ export async function getFrozenBalance(): Promise<ProviderResult> {
 export async function getUnFrozenBalance() {
   try {
     const reserve = await kit.contracts.getReserve()
-    const balance = await reserve.getUnfrozenBalance()
+    const reserveBalance = await reserve.getUnfrozenBalance()
+
+    // Get the balance of celo in the partial reserve
+    const partialReserveBalances = await kit.celoTokens.balancesOf(PARTIAL_RESERVE_ADDRESS)
+    const partialReserveCelo = partialReserveBalances.CELO
+
+    const balance = reserveBalance.plus(partialReserveCelo)
 
     return providerOk(formatNumber(balance), Providers.celoNode)
   } catch (error) {
@@ -122,7 +128,6 @@ export async function getCStableSupply(token: StableToken): Promise<ProviderResu
   try {
     const stableToken = await kit.contracts.getStableToken(token)
     const totalSupply = await stableToken.totalSupply()
-    const time = Date.now()
     return providerOk(formatNumber(totalSupply), Providers.celoNode)
   } catch (error) {
     return providerError(error, Providers.celoNode)
@@ -138,6 +143,11 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
     return {
       value: [
         { label: "Celo Reserve", token: "CELO" as Tokens, addresses: [reserve.address] },
+        {
+          label: "Partial Reserve",
+          token: "Partial Reserve" as Tokens,
+          addresses: [PARTIAL_RESERVE_ADDRESS],
+        },
         { label: "CELO with Custodian", token: "CELO" as Tokens, addresses: addresses },
         {
           label: "USDC in Curve Pool",
@@ -220,6 +230,17 @@ export async function getMultisigUSDC() {
     await Promise.all([
       getERC20Balance(USDC_WORMHOLE_ADDRESS, RESERVE_MULTISIG_CELO),
       getERC20Balance(USDC_AXELAR_ADDRESS, RESERVE_MULTISIG_CELO),
+    ])
+  )
+
+  return providerOk(usdcWormhole.value + usdcAxelar.value, Providers.celoNode)
+}
+
+export async function getPartialReserveUSDC() {
+  const [usdcWormhole, usdcAxelar] = allOkOrThrow(
+    await Promise.all([
+      getERC20Balance(USDC_WORMHOLE_ADDRESS, PARTIAL_RESERVE_ADDRESS),
+      getERC20Balance(USDC_AXELAR_ADDRESS, PARTIAL_RESERVE_ADDRESS),
     ])
   )
 
