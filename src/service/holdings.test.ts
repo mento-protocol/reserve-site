@@ -15,9 +15,9 @@ describe("getHoldings", () => {
     expect(holdings.celo).toEqual({
       custody: {
         token: "CELO",
-        units: 2944998.2492173747,
+        units: 119594497.94055042,
         updated: 1587686400000,
-        value: 11667788.563574316,
+        value: 473821441.39066666,
       },
       frozen: {
         token: "CELO",

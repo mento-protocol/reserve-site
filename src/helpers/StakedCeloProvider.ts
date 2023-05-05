@@ -28,12 +28,15 @@ export class StakedCeloProvider {
   }
 
   public async stCeloToCelo(stCelo: BigNumber): Promise<BigNumber> {
-    const ethersBNResult: ethers.BigNumber = await this.stakedCeloManager.toCelo(stCelo)
-    return new BigNumber(ethersBNResult.toString())
+    const ethersBNResult: ethers.BigNumber = await this.stakedCeloManager.toCelo(
+      `0x${stCelo.toString(16)}`
+    )
+    return new BigNumber(ethersBNResult._hex)
   }
 
   public async getCeloBalance(address: string): Promise<BigNumber> {
-    const stCeloBalance = await this.stakedCelo.balanceOf(address)
-    return await this.stCeloToCelo(stCeloBalance)
+    const stCeloBalance: ethers.BigNumber = await this.stakedCelo.balanceOf(address)
+    const stCeloInCelo: ethers.BigNumber = await this.stakedCeloManager.toCelo(stCeloBalance)
+    return new BigNumber(stCeloInCelo._hex)
   }
 }

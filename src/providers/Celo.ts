@@ -16,6 +16,7 @@ import { Providers } from "./Providers"
 import { ProviderResult, providerError, providerOk } from "src/utils/ProviderResult"
 import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
+import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
 import { allOkOrThrow } from "src/utils/Result"
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
 const ERC20_SUBSET = [
@@ -37,6 +38,7 @@ const ERC20_SUBSET = [
 
 const kit = newKit(process.env.CELO_NODE_RPC_URL)
 const curveBalanceCalculator = CurvePoolBalanceCalculator.Instance
+const uniV3BalanceCalculator = UniV3PoolBalanceCalculator.Instance
 
 export async function getCeloPrice(): Promise<ProviderResult> {
   try {
@@ -216,6 +218,17 @@ export async function getCurveUSDC(): Promise<ProviderResult> {
   try {
     const poolUSDCBalance = await curveBalanceCalculator.calculateCurveUSDC()
     return providerOk(poolUSDCBalance, Providers.celoNode)
+  } catch (error) {
+    return providerError(error, Providers.celoNode)
+  }
+}
+
+export async function getUniV3Holdings(
+  address: string
+): Promise<ProviderResult<Map<string, number>>> {
+  try {
+    const uniV3Holdings = await uniV3BalanceCalculator.calculateUniV3PoolBalance(address)
+    return providerOk(uniV3Holdings, Providers.celoNode)
   } catch (error) {
     return providerError(error, Providers.celoNode)
   }
