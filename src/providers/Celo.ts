@@ -1,23 +1,23 @@
 import { newKit, StableToken } from "@celo/contractkit"
 import BigNumber from "bignumber.js"
-import { Tokens } from "src/service/Data"
+import { ReserveCrypto } from "src/addresses.config"
 import {
   CMCO2_ADDRESS,
   CURVE_FACTORY_POOL_ADDRESS,
   CUSD_ADDRESS,
-  RESERVE_MULTISIG_CELO,
   RESERVE_CMCO2_ADDRESS,
-  USDC_WORMHOLE_ADDRESS,
+  RESERVE_MULTISIG_CELO,
   USDC_AXELAR_ADDRESS,
+  USDC_WORMHOLE_ADDRESS,
 } from "src/contract-addresses"
-import Allocation, { AssetTypes } from "src/interfaces/allocation"
-import { Providers } from "./Providers"
-import { ProviderResult, providerError, providerOk } from "src/utils/ProviderResult"
-import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
-import { allOkOrThrow } from "src/utils/Result"
-import { totalmem } from "os"
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
+import Allocation, { AssetTypes } from "src/interfaces/allocation"
+import { Tokens } from "src/service/Data"
+import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
+import { allOkOrThrow } from "src/utils/Result"
+import { Providers } from "./Providers"
+
 const ERC20_SUBSET = [
   {
     constant: true,
@@ -122,7 +122,6 @@ export async function getCStableSupply(token: StableToken): Promise<ProviderResu
   try {
     const stableToken = await kit.contracts.getStableToken(token)
     const totalSupply = await stableToken.totalSupply()
-    const time = Date.now()
     return providerOk(formatNumber(totalSupply), Providers.celoNode)
   } catch (error) {
     return providerError(error, Providers.celoNode)
