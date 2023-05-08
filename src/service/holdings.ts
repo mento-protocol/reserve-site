@@ -1,5 +1,16 @@
 import { Token } from "@celo/contractkit"
+import { BigNumber } from "bignumber.js"
 import addressesConfig from "src/addresses.config"
+import {
+  BTC_AXELAR_ADDRESS,
+  BTC_WORMHOLE_ADDRESS,
+  CELO_ADDRESS,
+  ETH_AXELAR_ADDRESS,
+  ETH_WORMHOLE_ADDRESS,
+  RESERVE_MULTISIG_CELO,
+  STAKED_CELO_ERC20_ADDRESS,
+} from "src/contract-addresses"
+import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
 import { getBTCBalance as getBlockChainBTCBalance } from "src/providers/BlockchainDotCom"
 import getBlockStreamBTCBalance from "src/providers/Blockstream"
 import {
@@ -7,7 +18,9 @@ import {
   getFrozenBalance,
   getInCustodyBalance,
   getMultisigUSDC,
+  getPartialReserveUSDC,
   getUnFrozenBalance,
+  getUniV3Holdings,
   getcMC02Balance,
 } from "src/providers/Celo"
 import * as etherscan from "src/providers/Etherscan"
@@ -104,6 +117,23 @@ export async function multisigUSDC() {
   return getOrSave<ProviderResult>("multisig-usdc", getMultisigUSDC, 5 * MINUTE)
 }
 
+export async function uniV3Holdings(address: string) {
+  return getOrSave<ProviderResult<Map<string, number>>>(
+    address,
+    async () => getUniV3Holdings(address),
+    5 * MINUTE
+  )
+}
+
+export async function uniV3HoldingsForToken(address: string, token: string) {
+  const univ3Holdings = valueOrThrow(await uniV3Holdings(address))
+  return univ3Holdings.get(token) || 0
+}
+
+export async function partialReserveUSDC() {
+  return getOrSave<ProviderResult>("partial-reserve-usdc", getPartialReserveUSDC, 5 * MINUTE)
+}
+
 export interface HoldingsApi {
   celo: {
     unfrozen: TokenModel
@@ -123,7 +153,19 @@ export async function getHoldingsCelo() {
     ])
   )
 
-  return { celo: toCeloShape(frozen, unfrozen, celoCustodied, celoRate) }
+  celoCustodied.value += await uniV3StakedCeloInCelo(RESERVE_MULTISIG_CELO)
+  celoCustodied.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, CELO_ADDRESS)
+
+  const response = { celo: toCeloShape(frozen, unfrozen, celoCustodied, celoRate) }
+  return response
+}
+
+async function uniV3StakedCeloInCelo(address: string): Promise<number> {
+  const stCeloBalance = await uniV3HoldingsForToken(address, STAKED_CELO_ERC20_ADDRESS)
+  const stCeloBalanceInCelo = await StakedCeloProvider.Instance.stCeloToCelo(
+    new BigNumber(stCeloBalance).multipliedBy(new BigNumber(10).pow(18))
+  )
+  return stCeloBalanceInCelo.div(new BigNumber(10).pow(18)).toNumber()
 }
 
 function toCeloShape(
@@ -155,8 +197,14 @@ export async function getHoldingsOther() {
     ])
   )
 
+  ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_AXELAR_ADDRESS)
+  ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_WORMHOLE_ADDRESS)
+  btcHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, BTC_AXELAR_ADDRESS)
+  btcHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, BTC_WORMHOLE_ADDRESS)
+
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
+  usdcHeld.value += valueOrThrow(await partialReserveUSDC())
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
@@ -187,6 +235,7 @@ export default async function getHoldings(): Promise<HoldingsApi> {
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
+  usdcHeld.value += valueOrThrow(await partialReserveUSDC())
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
