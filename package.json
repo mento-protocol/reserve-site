@@ -19,7 +19,8 @@
     "test": "jest",
     "lint": "eslint .",
     "pretty": "prettier --config .prettierrc 'src/**/*.{ts, tsx}' '*.yaml' --write",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "secrets:get": "./scripts/get-secrets.sh"
   },
   "dependencies": {
     "@celo/contractkit": "2.0.0",
