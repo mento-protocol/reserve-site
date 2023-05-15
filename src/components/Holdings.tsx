@@ -1,15 +1,15 @@
 import { css } from "@emotion/react"
+import Head from "next/head"
 import Amount, { DollarDisplay } from "src/components/Amount"
 import Heading from "src/components/Heading"
-import { BreakPoints } from "src/components/styles"
 import PieChart, { ChartData } from "src/components/PieChart"
-import { HoldingsApi } from "src/service/holdings"
-import Head from "next/head"
-import { skipZeros } from "src/utils/skipZeros"
-import { Updated } from "src/components/Updated"
 import Section from "src/components/Section"
-import { sumTotalHoldings } from "./sumTotalHoldings"
+import { Updated } from "src/components/Updated"
+import { BreakPoints } from "src/components/styles"
 import useHoldings from "src/hooks/useHoldings"
+import { HoldingsApi } from "src/service/holdings"
+import { skipZeros } from "src/utils/skipZeros"
+import { sumTotalHoldings } from "./sumTotalHoldings"
 
 export function sumCeloTotal(holdings: HoldingsApi) {
   const { custody, frozen, unfrozen } = holdings.celo
