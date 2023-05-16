@@ -1,24 +1,25 @@
 import { newKit, StableToken } from "@celo/contractkit"
 import BigNumber from "bignumber.js"
-import { Tokens } from "src/service/Data"
+import { ReserveCrypto } from "src/addresses.config"
 import {
   CMCO2_ADDRESS,
   CURVE_FACTORY_POOL_ADDRESS,
   CUSD_ADDRESS,
-  RESERVE_MULTISIG_CELO,
-  RESERVE_CMCO2_ADDRESS,
-  USDC_WORMHOLE_ADDRESS,
-  USDC_AXELAR_ADDRESS,
   PARTIAL_RESERVE_ADDRESS,
+  RESERVE_CMCO2_ADDRESS,
+  RESERVE_MULTISIG_CELO,
+  USDC_AXELAR_ADDRESS,
+  USDC_WORMHOLE_ADDRESS,
 } from "src/contract-addresses"
-import Allocation, { AssetTypes } from "src/interfaces/allocation"
-import { Providers } from "./Providers"
-import { ProviderResult, providerError, providerOk } from "src/utils/ProviderResult"
-import { ReserveCrypto } from "src/addresses.config"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
-import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
-import { allOkOrThrow } from "src/utils/Result"
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
+import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
+import Allocation, { AssetTypes } from "src/interfaces/allocation"
+import { Tokens } from "src/service/Data"
+import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
+import { allOkOrThrow } from "src/utils/Result"
+import { Providers } from "./Providers"
+
 const ERC20_SUBSET = [
   {
     constant: true,

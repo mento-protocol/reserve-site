@@ -1,29 +1,6 @@
-import { getBTCBalance as getBlockChainBTCBalance } from "src/providers/BlockchainDotCom"
-import getBlockStreamBTCBalance from "src/providers/Blockstream"
-import {
-  getFrozenBalance,
-  getInCustodyBalance,
-  getUnFrozenBalance,
-  getcMC02Balance,
-  getMultisigUSDC,
-  getCurveUSDC,
-  getUniV3Holdings,
-  getPartialReserveUSDC,
-} from "src/providers/Celo"
-import * as etherscan from "src/providers/Etherscan"
-import * as ethplorer from "src/providers/Ethplorerer"
-import { duel } from "./duel"
-import { DuelResult, sumMerge } from "src/utils/DuelResult"
-import getRates, { celoPrice } from "./rates"
-import { getOrSave } from "src/service/cache"
-import { MINUTE } from "src/utils/TIME"
-import { TokenModel, Tokens } from "./Data"
-import { ProviderResult } from "src/utils/ProviderResult"
 import { Token } from "@celo/contractkit"
-import addressesConfig from "src/addresses.config"
-import { allOkOrThrow, ResultOk, valueOrThrow } from "src/utils/Result"
 import { BigNumber } from "bignumber.js"
-import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
+import addressesConfig from "src/addresses.config"
 import {
   BTC_AXELAR_ADDRESS,
   BTC_WORMHOLE_ADDRESS,
@@ -33,6 +10,29 @@ import {
   RESERVE_MULTISIG_CELO,
   STAKED_CELO_ERC20_ADDRESS,
 } from "src/contract-addresses"
+import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
+import { getBTCBalance as getBlockChainBTCBalance } from "src/providers/BlockchainDotCom"
+import getBlockStreamBTCBalance from "src/providers/Blockstream"
+import {
+  getCurveUSDC,
+  getFrozenBalance,
+  getInCustodyBalance,
+  getMultisigUSDC,
+  getPartialReserveUSDC,
+  getUnFrozenBalance,
+  getUniV3Holdings,
+  getcMC02Balance,
+} from "src/providers/Celo"
+import * as etherscan from "src/providers/Etherscan"
+import * as ethplorer from "src/providers/Ethplorerer"
+import { getOrSave } from "src/service/cache"
+import { DuelResult, sumMerge } from "src/utils/DuelResult"
+import { ProviderResult } from "src/utils/ProviderResult"
+import { ResultOk, allOkOrThrow, valueOrThrow } from "src/utils/Result"
+import { MINUTE } from "src/utils/TIME"
+import { TokenModel, Tokens } from "./Data"
+import { duel } from "./duel"
+import getRates, { celoPrice } from "./rates"
 
 export async function getGroupedNonCeloAddresses() {
   const groupedByToken = addressesConfig.reduce((groups, current) => {

@@ -1,7 +1,7 @@
-import useSWR from "swr"
 import { Tokens } from "src/service/Data"
-import { fetcher } from "src/utils/fetcher"
 import { HoldingsApi } from "src/service/holdings"
+import { fetcher } from "src/utils/fetcher"
+import useSWR from "swr"
 
 const initalToken = {
   value: NaN,
@@ -43,5 +43,6 @@ export default function useHoldings(): { data: HoldingsApi; error: any } {
   })
   const error = celoHoldings.error || otherHoldings.error
   const data: HoldingsApi = { ...celoHoldings.data, ...otherHoldings.data }
+  data.otherAssets ||= []
   return { data, error }
 }
