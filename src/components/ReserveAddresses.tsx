@@ -1,12 +1,12 @@
 import { css } from "@emotion/react"
 import * as React from "react"
-import { ReserveCrypto, generateLink } from "src/addresses.config"
+import { ReserveCryptoForDisplay, generateLink } from "src/addresses.config"
 import Button from "src/components/Button"
 import CopyIcon from "src/components/CopyIcon"
 import { Tokens } from "src/service/Data"
 
 interface Props {
-  addresses: ReserveCrypto[]
+  addresses: ReserveCryptoForDisplay[]
 }
 
 export default function ReserveAddresses(props: Props) {
@@ -35,23 +35,27 @@ function useCopy(hex: string) {
   return { onPress, justCopied }
 }
 
-const TokenDisplay = React.memo(function _TokenDisplay({ label, addresses, token }: ReserveCrypto) {
+const TokenDisplay = React.memo(function _TokenDisplay({
+  label,
+  addresses,
+  token,
+}: ReserveCryptoForDisplay) {
   return (
     <div css={rootStyle}>
       <h5 css={labelStyle}>{label}</h5>
-      {addresses.map((address) => (
-        <AddressDisplay key={address} token={token} hex={address} />
+      {addresses.map(({ address, symbol }) => (
+        <AddressDisplay key={address} token={token} hex={address} symbol={symbol} />
       ))}
     </div>
   )
 })
 
-function AddressDisplay({ token, hex }: { token: Tokens; hex: string }) {
+function AddressDisplay({ hex, symbol }: { token: Tokens; hex: string; symbol: Tokens }) {
   const { onPress, justCopied } = useCopy(hex)
 
   return (
     <div css={entryCss}>
-      <a css={addressStyle} href={generateLink(token, hex)} target="_blank" rel="noopener">
+      <a css={addressStyle} href={generateLink(symbol, hex)} target="_blank" rel="noopener">
         {hex}
       </a>
       <span css={iconStyle} onClick={onPress}>

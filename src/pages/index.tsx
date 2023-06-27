@@ -11,7 +11,7 @@ import Section from "src/components/Section"
 import { flexCol } from "src/components/styles"
 import PieChart from "src/components/PieChart"
 import useTargets from "src/hooks/useTargets"
-import { ReserveCrypto } from "src/addresses.config"
+import { ReserveCryptoForDisplay, combineTokenAddressesByLabel } from "src/addresses.config"
 
 interface ContentShape {
   title: string
@@ -24,7 +24,7 @@ interface Props {
   ATTESTATIONS: FrontMatterResult<ContentShape>
   RFP: FrontMatterResult<ContentShape>
   year: string
-  reserveCryptos: ReserveCrypto[]
+  reserveCryptos: ReserveCryptoForDisplay[]
 }
 
 export default function Home(props: Props) {
@@ -112,6 +112,8 @@ export async function getStaticProps() {
       ])
     const addresses = await fetchAddresses()
 
+    const tokensCombinedByLabels = combineTokenAddressesByLabel(addresses)
+
     const INTRO = matter<ContentShape>(intro)
     const INITIAL_TARGET = matter<ContentShape>(initialTarget)
     const ABOUT = matter<ContentShape>(about)
@@ -119,7 +121,7 @@ export async function getStaticProps() {
     const RFP = matter<ContentShape>(rfp)
     return {
       props: {
-        reserveCryptos: addresses,
+        reserveCryptos: tokensCombinedByLabels,
         INTRO,
         INITIAL_TARGET,
         ABOUT,

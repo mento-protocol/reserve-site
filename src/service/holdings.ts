@@ -187,13 +187,15 @@ function toCeloShape(
 
 export async function getHoldingsOther() {
   const rates = await getRates()
-  const [btcHeld, ethHeld, daiHeld, usdcHeld, cmco2Held] = allOkOrThrow(
+  const [btcHeld, ethHeld, daiHeld, usdcHeld, cmco2Held, wethHeld, wbtcHeld] = allOkOrThrow(
     await Promise.all([
       btcBalance(),
       ethBalance(),
       erc20OnEthereumBalance("DAI"),
       erc20OnEthereumBalance("USDC"),
       cMC02Balance(),
+      erc20OnEthereumBalance("WETH"),
+      erc20OnEthereumBalance("WBTC"),
     ])
   )
 
@@ -201,6 +203,8 @@ export async function getHoldingsOther() {
   ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_WORMHOLE_ADDRESS)
   btcHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, BTC_AXELAR_ADDRESS)
   btcHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, BTC_WORMHOLE_ADDRESS)
+  btcHeld.value += wbtcHeld.value
+  ethHeld.value += wethHeld.value
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
@@ -219,23 +223,37 @@ export async function getHoldingsOther() {
 
 export default async function getHoldings(): Promise<HoldingsApi> {
   const rates = await getRates()
-  const [btcHeld, ethHeld, daiHeld, usdcHeld, celoCustodied, frozen, unfrozen, cmco2Held] =
-    allOkOrThrow(
-      await Promise.all([
-        btcBalance(),
-        ethBalance(),
-        erc20OnEthereumBalance("DAI"),
-        erc20OnEthereumBalance("USDC"),
-        celoCustodiedBalance(),
-        celoFrozenBalance(),
-        celoUnfrozenBalance(),
-        cMC02Balance(),
-      ])
-    )
+  const [
+    btcHeld,
+    ethHeld,
+    daiHeld,
+    usdcHeld,
+    celoCustodied,
+    frozen,
+    unfrozen,
+    cmco2Held,
+    wethHeld,
+    wbtcHeld,
+  ] = allOkOrThrow(
+    await Promise.all([
+      btcBalance(),
+      ethBalance(),
+      erc20OnEthereumBalance("DAI"),
+      erc20OnEthereumBalance("USDC"),
+      celoCustodiedBalance(),
+      celoFrozenBalance(),
+      celoUnfrozenBalance(),
+      cMC02Balance(),
+      erc20OnEthereumBalance("WETH"),
+      erc20OnEthereumBalance("WBTC"),
+    ])
+  )
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
   usdcHeld.value += valueOrThrow(await partialReserveUSDC())
+  btcHeld.value += wbtcHeld.value
+  ethHeld.value += wethHeld.value
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
