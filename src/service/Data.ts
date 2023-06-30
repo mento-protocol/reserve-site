@@ -11,6 +11,9 @@ export type Tokens =
   | "cUSD in Curve Pool"
   | "USDC in Curve Pool"
   | "Partial Reserve"
+  | "WBTC"
+  | "WETH"
+
 export interface Address {
   address: string
   label: string
