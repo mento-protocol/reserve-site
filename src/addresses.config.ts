@@ -39,7 +39,10 @@ const ADDRESSES: ReserveCrypto[] = [
   {
     label: "DAI",
     token: "DAI",
-    addresses: ["0x16B34Ce9A6a6F7FC2DD25Ba59bf7308E7B38E186"],
+    addresses: [
+      "0x16B34Ce9A6a6F7FC2DD25Ba59bf7308E7B38E186",
+      "0xd0697f70E79476195B742d5aFAb14BE50f98CC1E",
+    ],
     tokenAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
   },
   {
