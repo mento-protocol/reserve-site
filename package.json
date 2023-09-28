@@ -76,7 +76,7 @@
     "typescript": "^4.3.5"
   },
   "engines": {
-    "node": "14"
+    "node": "18"
   },
   "lint-staged": {
     "*.{ts,tsx,md,yaml}": "prettier --write"
