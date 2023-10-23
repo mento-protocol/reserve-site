@@ -1,11 +1,11 @@
 import { StableToken } from "@celo/contractkit"
 import { ISO427SYMBOLS } from "src/interfaces/ISO427SYMBOLS"
-import { getCStableSupply, getCurveCUSD, getMultisigCUSD } from "src/providers/Celo"
+import { getCStableSupply, getCurveCUSD, getMultisigCUSD, getEXOFSupply } from "src/providers/Celo"
 import { TokenModel } from "src/service/Data"
 import { getOrSave } from "src/service/cache"
 import { fiatPrices } from "src/service/rates"
 import { ProviderResult } from "src/utils/ProviderResult"
-import { valueOrThrow } from "src/utils/Result"
+import { valueOrThrow, okOrThrow } from "src/utils/Result"
 import { SECOND } from "src/utils/TIME"
 import { STABLES } from "../stables.config"
 
@@ -19,6 +19,10 @@ async function curveCUSD() {
 
 async function multisigCUSD() {
   return getOrSave("multisigCUSD", () => getMultisigCUSD(), 5 * SECOND)
+}
+
+async function eXOFSupply() {
+  return getOrSave("eXOFSupply", () => getEXOFSupply(), 5 * SECOND)
 }
 
 interface Circulation {
@@ -54,7 +58,7 @@ export default async function stables(): Promise<TokenModel[]> {
   const curveCUSDAmount = valueOrThrow(await curveCUSD())
   const multisigCUSDAmount = valueOrThrow(await multisigCUSD())
 
-  return circulations.map((tokenData) => {
+  const tokens: TokenModel[] = circulations.map((tokenData) => {
     if (tokenData.units.hasError == true) {
       return {
         token: tokenData.symbol,
@@ -85,9 +89,32 @@ export default async function stables(): Promise<TokenModel[]> {
       hasError: tokenData.units.hasError,
     }
   })
+  tokens.push(await getEXOFData())
+  return tokens
 }
 
 export async function getTotalStableValueInUSD() {
   const all = await stables()
   return Number(all.reduce((sum, { value }) => sum + value, 0).toFixed(2))
+}
+
+export async function getEXOFData(): Promise<TokenModel> {
+  try {
+    const result = okOrThrow(await eXOFSupply())
+    return {
+      token: "eXOF",
+      units: result.value,
+      value: result.value * (await fiatPrices()).value["XOF"],
+      updated: result.time,
+      hasError: result.hasError,
+    }
+  } catch (error) {
+    return {
+      token: "eXOF",
+      units: null,
+      value: null,
+      updated: null,
+      hasError: true,
+    }
+  }
 }

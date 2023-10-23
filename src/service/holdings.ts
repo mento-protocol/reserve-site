@@ -18,7 +18,9 @@ import {
   getFrozenBalance,
   getInCustodyBalance,
   getMultisigUSDC,
+  getMultisigEUROC,
   getPartialReserveUSDC,
+  getPartialReserveEUROC,
   getUnFrozenBalance,
   getUniV3Holdings,
   getcMC02Balance,
@@ -117,6 +119,10 @@ export async function multisigUSDC() {
   return getOrSave<ProviderResult>("multisig-usdc", getMultisigUSDC, 5 * MINUTE)
 }
 
+export async function multisigEUROC() {
+  return getOrSave<ProviderResult>("multisig-euroc", getMultisigEUROC, 5 * MINUTE)
+}
+
 export async function uniV3Holdings(address: string) {
   return getOrSave<ProviderResult<Map<string, number>>>(
     address,
@@ -134,6 +140,9 @@ export async function partialReserveUSDC() {
   return getOrSave<ProviderResult>("partial-reserve-usdc", getPartialReserveUSDC, 5 * MINUTE)
 }
 
+export async function partialReserveEUROC() {
+  return getOrSave<ProviderResult>("partial-reserve-euroc", getPartialReserveEUROC, 5 * MINUTE)
+}
 export interface HoldingsApi {
   celo: {
     unfrozen: TokenModel
@@ -187,17 +196,19 @@ function toCeloShape(
 
 export async function getHoldingsOther() {
   const rates = await getRates()
-  const [btcHeld, ethHeld, daiHeld, usdcHeld, cmco2Held, wethHeld, wbtcHeld] = allOkOrThrow(
-    await Promise.all([
-      btcBalance(),
-      ethBalance(),
-      erc20OnEthereumBalance("DAI"),
-      erc20OnEthereumBalance("USDC"),
-      cMC02Balance(),
-      erc20OnEthereumBalance("WETH"),
-      erc20OnEthereumBalance("WBTC"),
-    ])
-  )
+  const [btcHeld, ethHeld, daiHeld, usdcHeld, eurocHeld, cmco2Held, wethHeld, wbtcHeld] =
+    allOkOrThrow(
+      await Promise.all([
+        btcBalance(),
+        ethBalance(),
+        erc20OnEthereumBalance("DAI"),
+        erc20OnEthereumBalance("USDC"),
+        partialReserveEUROC(),
+        cMC02Balance(),
+        erc20OnEthereumBalance("WETH"),
+        erc20OnEthereumBalance("WBTC"),
+      ])
+    )
 
   ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_AXELAR_ADDRESS)
   ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_WORMHOLE_ADDRESS)
@@ -215,6 +226,7 @@ export async function getHoldingsOther() {
     toToken("ETH", ethHeld, rates.eth),
     toToken("DAI", daiHeld, rates.dai),
     toToken("USDC", usdcHeld, rates.usdc),
+    toToken("EUROC", eurocHeld, rates.euroc),
     toToken("cMCO2", cmco2Held, rates.cmco2),
   ]
 
@@ -223,11 +235,13 @@ export async function getHoldingsOther() {
 
 export default async function getHoldings(): Promise<HoldingsApi> {
   const rates = await getRates()
+
   const [
     btcHeld,
     ethHeld,
     daiHeld,
     usdcHeld,
+    eurocHeld,
     celoCustodied,
     frozen,
     unfrozen,
@@ -240,6 +254,7 @@ export default async function getHoldings(): Promise<HoldingsApi> {
       ethBalance(),
       erc20OnEthereumBalance("DAI"),
       erc20OnEthereumBalance("USDC"),
+      partialReserveEUROC(),
       celoCustodiedBalance(),
       celoFrozenBalance(),
       celoUnfrozenBalance(),
@@ -260,6 +275,7 @@ export default async function getHoldings(): Promise<HoldingsApi> {
     toToken("ETH", ethHeld, rates.eth),
     toToken("DAI", daiHeld, rates.dai),
     toToken("USDC", usdcHeld, rates.usdc),
+    toToken("EUROC", eurocHeld, rates.euroc),
     toToken("cMCO2", cmco2Held, rates.cmco2),
   ]
 
