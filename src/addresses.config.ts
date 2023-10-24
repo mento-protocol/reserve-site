@@ -2,6 +2,7 @@ import { Tokens } from "./service/Data"
 
 const wallets = {
   CUSTODIAN_SAFE: "0xd0697f70E79476195B742d5aFAb14BE50f98CC1E",
+  RESERVE_MULTISIG_ETH: "0x26ac3A7b8a675b741560098fff54F94909bE5E73",
 }
 
 const tokensAddresses = {
@@ -46,8 +47,15 @@ const ADDRESSES: ReserveCrypto[] = [
     label: "USDC",
     token: "USDC",
     decimals: 6,
-    addresses: ["0x26ac3A7b8a675b741560098fff54F94909bE5E73", wallets.CUSTODIAN_SAFE],
+    addresses: [wallets.RESERVE_MULTISIG_ETH, wallets.CUSTODIAN_SAFE],
     tokenAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+  },
+  {
+    label: "EUROC",
+    token: "EUROC",
+    decimals: 6,
+    addresses: [wallets.RESERVE_MULTISIG_ETH, wallets.CUSTODIAN_SAFE],
+    tokenAddress: "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c",
   },
   {
     label: "ETH",

@@ -21,7 +21,7 @@ import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculat
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import { Tokens } from "src/service/Data"
 import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
-import { allOkOrThrow } from "src/utils/Result"
+import { allOkOrThrow, okOrThrow } from "src/utils/Result"
 import { Providers } from "./Providers"
 import { Contract } from "ethers"
 
@@ -179,6 +179,11 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
           token: "cUSD in Curve Pool" as Tokens,
           addresses: [RESERVE_MULTISIG_CELO],
         },
+        {
+          label: "EUROC in Multisig",
+          token: "cUSD in Curve Pool" as Tokens,
+          addresses: [RESERVE_MULTISIG_CELO],
+        },
       ],
     }
   } catch {
@@ -258,10 +263,7 @@ export async function getMultisigUSDC() {
 }
 
 export async function getMultisigEUROC() {
-  const [eurocAxelar] = allOkOrThrow(
-    await Promise.all([getERC20Balance(EUROC_AXELAR_ADDRESS, RESERVE_MULTISIG_CELO)])
-  )
-
+  const eurocAxelar = okOrThrow(await getERC20Balance(EUROC_AXELAR_ADDRESS, RESERVE_MULTISIG_CELO))
   return providerOk(eurocAxelar.value, Providers.celoNode)
 }
 
@@ -277,8 +279,8 @@ export async function getPartialReserveUSDC() {
 }
 
 export async function getPartialReserveEUROC() {
-  const [eurocAxelar] = allOkOrThrow(
-    await Promise.all([getERC20Balance(EUROC_AXELAR_ADDRESS, PARTIAL_RESERVE_ADDRESS)])
+  const eurocAxelar = okOrThrow(
+    await getERC20Balance(EUROC_AXELAR_ADDRESS, PARTIAL_RESERVE_ADDRESS)
   )
   return providerOk(eurocAxelar.value, Providers.celoNode)
 }

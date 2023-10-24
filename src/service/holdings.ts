@@ -30,7 +30,7 @@ import * as ethplorer from "src/providers/Ethplorerer"
 import { getOrSave } from "src/service/cache"
 import { DuelResult, sumMerge } from "src/utils/DuelResult"
 import { ProviderResult } from "src/utils/ProviderResult"
-import { ResultOk, allOkOrThrow, valueOrThrow } from "src/utils/Result"
+import { ResultOk, allOkOrThrow, valueOrThrow, Result } from "src/utils/Result"
 import { MINUTE } from "src/utils/TIME"
 import { TokenModel, Tokens } from "./Data"
 import { duel } from "./duel"
@@ -203,7 +203,7 @@ export async function getHoldingsOther() {
         ethBalance(),
         erc20OnEthereumBalance("DAI"),
         erc20OnEthereumBalance("USDC"),
-        partialReserveEUROC(),
+        erc20OnEthereumBalance("EUROC"),
         cMC02Balance(),
         erc20OnEthereumBalance("WETH"),
         erc20OnEthereumBalance("WBTC"),
@@ -221,6 +221,9 @@ export async function getHoldingsOther() {
   usdcHeld.value += valueOrThrow(await multisigUSDC())
   usdcHeld.value += valueOrThrow(await partialReserveUSDC())
 
+  eurocHeld.value += valueOrThrow(await multisigEUROC())
+  eurocHeld.value += valueOrThrow(await partialReserveEUROC())
+
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
     toToken("ETH", ethHeld, rates.eth),
@@ -235,7 +238,6 @@ export async function getHoldingsOther() {
 
 export default async function getHoldings(): Promise<HoldingsApi> {
   const rates = await getRates()
-
   const [
     btcHeld,
     ethHeld,
@@ -254,19 +256,23 @@ export default async function getHoldings(): Promise<HoldingsApi> {
       ethBalance(),
       erc20OnEthereumBalance("DAI"),
       erc20OnEthereumBalance("USDC"),
-      partialReserveEUROC(),
+      erc20OnEthereumBalance("EUROC"),
       celoCustodiedBalance(),
       celoFrozenBalance(),
       celoUnfrozenBalance(),
       cMC02Balance(),
       erc20OnEthereumBalance("WETH"),
       erc20OnEthereumBalance("WBTC"),
-    ])
+    ] as unknown as Promise<Result<any>>[])
   )
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
   usdcHeld.value += valueOrThrow(await partialReserveUSDC())
+
+  eurocHeld.value += valueOrThrow(await partialReserveEUROC())
+  eurocHeld.value += valueOrThrow(await multisigEUROC())
+
   btcHeld.value += wbtcHeld.value
   ethHeld.value += wethHeld.value
 
