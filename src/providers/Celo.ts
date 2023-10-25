@@ -5,20 +5,25 @@ import {
   CMCO2_ADDRESS,
   CURVE_FACTORY_POOL_ADDRESS,
   CUSD_ADDRESS,
+  EXOF_ADDRESS,
   PARTIAL_RESERVE_ADDRESS,
   RESERVE_CMCO2_ADDRESS,
   RESERVE_MULTISIG_CELO,
   USDC_AXELAR_ADDRESS,
+  EUROC_AXELAR_ADDRESS,
   USDC_WORMHOLE_ADDRESS,
 } from "src/contract-addresses"
+import { ERC20_ABI } from "src/constants/abis"
+import { JsonRpcProvider } from "@ethersproject/providers"
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator"
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
 import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
 import { Tokens } from "src/service/Data"
 import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
-import { allOkOrThrow } from "src/utils/Result"
+import { allOkOrThrow, okOrThrow } from "src/utils/Result"
 import { Providers } from "./Providers"
+import { Contract } from "ethers"
 
 const ERC20_SUBSET = [
   {
@@ -40,6 +45,8 @@ const ERC20_SUBSET = [
 const kit = newKit(process.env.CELO_NODE_RPC_URL)
 const curveBalanceCalculator = CurvePoolBalanceCalculator.Instance
 const uniV3BalanceCalculator = UniV3PoolBalanceCalculator.Instance
+const provider = new JsonRpcProvider(process.env.CELO_NODE_RPC_URL)
+const eXOFContract = new Contract(EXOF_ADDRESS, ERC20_ABI, provider)
 
 export async function getCeloPrice(): Promise<ProviderResult> {
   try {
@@ -172,6 +179,11 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
           token: "cUSD in Curve Pool" as Tokens,
           addresses: [RESERVE_MULTISIG_CELO],
         },
+        {
+          label: "EUROC in Multisig",
+          token: "cUSD in Curve Pool" as Tokens,
+          addresses: [RESERVE_MULTISIG_CELO],
+        },
       ],
     }
   } catch {
@@ -250,6 +262,11 @@ export async function getMultisigUSDC() {
   return providerOk(usdcWormhole.value + usdcAxelar.value, Providers.celoNode)
 }
 
+export async function getMultisigEUROC() {
+  const eurocAxelar = okOrThrow(await getERC20Balance(EUROC_AXELAR_ADDRESS, RESERVE_MULTISIG_CELO))
+  return providerOk(eurocAxelar.value, Providers.celoNode)
+}
+
 export async function getPartialReserveUSDC() {
   const [usdcWormhole, usdcAxelar] = allOkOrThrow(
     await Promise.all([
@@ -259,6 +276,23 @@ export async function getPartialReserveUSDC() {
   )
 
   return providerOk(usdcWormhole.value + usdcAxelar.value, Providers.celoNode)
+}
+
+export async function getPartialReserveEUROC() {
+  const eurocAxelar = okOrThrow(
+    await getERC20Balance(EUROC_AXELAR_ADDRESS, PARTIAL_RESERVE_ADDRESS)
+  )
+  return providerOk(eurocAxelar.value, Providers.celoNode)
+}
+
+export async function getEXOFSupply(): Promise<ProviderResult> {
+  try {
+    let eXOFSupply = (await eXOFContract.totalSupply()).toString()
+    eXOFSupply = formatNumber(new BigNumber(eXOFSupply))
+    return providerOk(eXOFSupply, Providers.celoNode)
+  } catch (error) {
+    return providerError(error, Providers.celoNode)
+  }
 }
 
 export const WEI_PER = 1_000_000_000_000_000_000

@@ -6,6 +6,8 @@ export type Tokens =
   | "ETH"
   | "cMCO2"
   | "USDC"
+  | "EUROC"
+  | "eXOF"
   | StableToken
   | Token
   | "cUSD in Curve Pool"
@@ -26,4 +28,5 @@ export interface TokenModel {
   units: number
   value: number
   updated: number
+  hasError?: boolean
 }

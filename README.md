@@ -68,9 +68,11 @@ Changes to these require a redeployment and to wait for the page cache to expire
 
 ## Development
 
-next.js with [emotion](http://emotion.sh/) for styles.
-
-`yarn dev`
+1. Install dependencies: `yarn`
+1. Log in to GCloud on your terminal: `gcloud auth login`
+1. Pull the necessary secrets into `.env` via `yarn secrets:get`
+   - In case this fails with `PERMISSION DENIED` you'll need to request permissions in GCloud from an admin
+1. Start the dev server: `yarn dev`
 
 ## Deployment
 

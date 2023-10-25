@@ -35,8 +35,17 @@ async function fetchUSDCPrice() {
   return price
 }
 
+async function fetchEUROCPrice() {
+  const price = await duel(getCoinMarketCapPrice("EURC"), getCoinMarketCapPrice("EURC"))
+  return price
+}
+
 export async function usdcPrice() {
   return getOrSave<DuelResult>("usdc-price", fetchUSDCPrice, 4 * MINUTE)
+}
+
+export async function eurocPrice() {
+  return getOrSave<DuelResult>("euroc-price", fetchEUROCPrice, 4 * MINUTE)
 }
 
 async function fetchDAIPrice() {
@@ -83,8 +92,16 @@ export async function tokenPriceInUSD(currencySymbol: Tokens) {
 }
 
 export default async function rates() {
-  const [btc, eth, celo, cmco2, usdc, dai] = allOkOrThrow(
-    await Promise.all([btcPrice(), ethPrice(), celoPrice(), CMC02Price(), usdcPrice(), daiPrice()])
+  const [btc, eth, celo, cmco2, usdc, euroc, dai] = allOkOrThrow(
+    await Promise.all([
+      btcPrice(),
+      ethPrice(),
+      celoPrice(),
+      CMC02Price(),
+      usdcPrice(),
+      eurocPrice(),
+      daiPrice(),
+    ])
   )
 
   return {
@@ -93,6 +110,7 @@ export default async function rates() {
     celo,
     cmco2,
     usdc,
+    euroc,
     dai,
   }
 }

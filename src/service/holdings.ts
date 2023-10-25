@@ -18,7 +18,9 @@ import {
   getFrozenBalance,
   getInCustodyBalance,
   getMultisigUSDC,
+  getMultisigEUROC,
   getPartialReserveUSDC,
+  getPartialReserveEUROC,
   getUnFrozenBalance,
   getUniV3Holdings,
   getcMC02Balance,
@@ -28,7 +30,7 @@ import * as ethplorer from "src/providers/Ethplorerer"
 import { getOrSave } from "src/service/cache"
 import { DuelResult, sumMerge } from "src/utils/DuelResult"
 import { ProviderResult } from "src/utils/ProviderResult"
-import { ResultOk, allOkOrThrow, valueOrThrow } from "src/utils/Result"
+import { ResultOk, allOkOrThrow, valueOrThrow, Result } from "src/utils/Result"
 import { MINUTE } from "src/utils/TIME"
 import { TokenModel, Tokens } from "./Data"
 import { duel } from "./duel"
@@ -117,6 +119,10 @@ export async function multisigUSDC() {
   return getOrSave<ProviderResult>("multisig-usdc", getMultisigUSDC, 5 * MINUTE)
 }
 
+export async function multisigEUROC() {
+  return getOrSave<ProviderResult>("multisig-euroc", getMultisigEUROC, 5 * MINUTE)
+}
+
 export async function uniV3Holdings(address: string) {
   return getOrSave<ProviderResult<Map<string, number>>>(
     address,
@@ -134,6 +140,9 @@ export async function partialReserveUSDC() {
   return getOrSave<ProviderResult>("partial-reserve-usdc", getPartialReserveUSDC, 5 * MINUTE)
 }
 
+export async function partialReserveEUROC() {
+  return getOrSave<ProviderResult>("partial-reserve-euroc", getPartialReserveEUROC, 5 * MINUTE)
+}
 export interface HoldingsApi {
   celo: {
     unfrozen: TokenModel
@@ -187,17 +196,19 @@ function toCeloShape(
 
 export async function getHoldingsOther() {
   const rates = await getRates()
-  const [btcHeld, ethHeld, daiHeld, usdcHeld, cmco2Held, wethHeld, wbtcHeld] = allOkOrThrow(
-    await Promise.all([
-      btcBalance(),
-      ethBalance(),
-      erc20OnEthereumBalance("DAI"),
-      erc20OnEthereumBalance("USDC"),
-      cMC02Balance(),
-      erc20OnEthereumBalance("WETH"),
-      erc20OnEthereumBalance("WBTC"),
-    ])
-  )
+  const [btcHeld, ethHeld, daiHeld, usdcHeld, eurocHeld, cmco2Held, wethHeld, wbtcHeld] =
+    allOkOrThrow(
+      await Promise.all([
+        btcBalance(),
+        ethBalance(),
+        erc20OnEthereumBalance("DAI"),
+        erc20OnEthereumBalance("USDC"),
+        erc20OnEthereumBalance("EUROC"),
+        cMC02Balance(),
+        erc20OnEthereumBalance("WETH"),
+        erc20OnEthereumBalance("WBTC"),
+      ])
+    )
 
   ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_AXELAR_ADDRESS)
   ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_WORMHOLE_ADDRESS)
@@ -210,11 +221,15 @@ export async function getHoldingsOther() {
   usdcHeld.value += valueOrThrow(await multisigUSDC())
   usdcHeld.value += valueOrThrow(await partialReserveUSDC())
 
+  eurocHeld.value += valueOrThrow(await multisigEUROC())
+  eurocHeld.value += valueOrThrow(await partialReserveEUROC())
+
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
     toToken("ETH", ethHeld, rates.eth),
     toToken("DAI", daiHeld, rates.dai),
     toToken("USDC", usdcHeld, rates.usdc),
+    toToken("EUROC", eurocHeld, rates.euroc),
     toToken("cMCO2", cmco2Held, rates.cmco2),
   ]
 
@@ -228,6 +243,7 @@ export default async function getHoldings(): Promise<HoldingsApi> {
     ethHeld,
     daiHeld,
     usdcHeld,
+    eurocHeld,
     celoCustodied,
     frozen,
     unfrozen,
@@ -240,18 +256,30 @@ export default async function getHoldings(): Promise<HoldingsApi> {
       ethBalance(),
       erc20OnEthereumBalance("DAI"),
       erc20OnEthereumBalance("USDC"),
+      erc20OnEthereumBalance("EUROC"),
       celoCustodiedBalance(),
       celoFrozenBalance(),
       celoUnfrozenBalance(),
       cMC02Balance(),
       erc20OnEthereumBalance("WETH"),
       erc20OnEthereumBalance("WBTC"),
-    ])
+    ] as unknown as Promise<Result<any>>[])
+    /*
+    The "as unknown as Promise<Result<any>>[]" is a hack to get around the fact that the Promise.all
+    on this typescript version seams to run into problems when the array is of mixed types and the
+    number of elements is greater than 10. Potential solutions could be:
+    - upgrade typescript
+    - simplify return types
+    */
   )
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
   usdcHeld.value += valueOrThrow(await partialReserveUSDC())
+
+  eurocHeld.value += valueOrThrow(await partialReserveEUROC())
+  eurocHeld.value += valueOrThrow(await multisigEUROC())
+
   btcHeld.value += wbtcHeld.value
   ethHeld.value += wethHeld.value
 
@@ -260,6 +288,7 @@ export default async function getHoldings(): Promise<HoldingsApi> {
     toToken("ETH", ethHeld, rates.eth),
     toToken("DAI", daiHeld, rates.dai),
     toToken("USDC", usdcHeld, rates.usdc),
+    toToken("EUROC", eurocHeld, rates.euroc),
     toToken("cMCO2", cmco2Held, rates.cmco2),
   ]
 
