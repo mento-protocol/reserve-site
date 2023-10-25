@@ -83,6 +83,7 @@ export function generateLink(token: Tokens, address: string) {
     case "ETH":
       return `https://etherscan.io/address/${address}`
     case "USDC":
+    case "EUROC":
     case "DAI":
     case "WBTC":
     case "WETH":

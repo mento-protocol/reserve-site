@@ -25,7 +25,7 @@ export default function useTargets() {
   }
 
   const allocationData = calculateTargetAllocation(
-    stablesData.data.totalStableValueInUSD,
+    stablesData.data,
     getTotalReserveUSD(holdingsApi.data)
   )
 

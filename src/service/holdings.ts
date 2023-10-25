@@ -264,6 +264,13 @@ export default async function getHoldings(): Promise<HoldingsApi> {
       erc20OnEthereumBalance("WETH"),
       erc20OnEthereumBalance("WBTC"),
     ] as unknown as Promise<Result<any>>[])
+    /*
+    The "as unknown as Promise<Result<any>>[]" is a hack to get around the fact that the Promise.all
+    on this typescript version seams to run into problems when the array is of mixed types and the
+    number of elements is greater than 10. Potential solutions could be:
+    - upgrade typescript
+    - simplify return types
+    */
   )
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())

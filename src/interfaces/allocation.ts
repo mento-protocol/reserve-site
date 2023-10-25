@@ -1,5 +1,6 @@
 export type AssetTypes =
   | "stable-value"
+  | "stable-value-eur"
   | "natural-capital"
   | "other-crypto-assets"
   | "celo-native-asset"
