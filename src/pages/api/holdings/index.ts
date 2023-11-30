@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs"
 import { NextApiRequest, NextApiResponse } from "next"
 import getHoldings from "src/service/holdings"
 
@@ -12,6 +13,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       res.status(405)
     }
   } catch (error) {
+    Sentry.captureException(error)
     res.status(error.statusCode || 500).json({ message: error.message || "unknownError" })
   }
 }
