@@ -25,8 +25,6 @@ import {
   getUniV3Holdings,
   getcMC02Balance,
 } from "src/providers/Celo"
-import * as etherscan from "src/providers/Etherscan"
-import * as ethplorer from "src/providers/Ethplorerer"
 import * as ethereum from "src/providers/EthereumRPC"
 import { getOrSave } from "src/service/cache"
 import { DuelResult, sumMerge } from "src/utils/DuelResult"

@@ -1,5 +1,4 @@
-import ADDRESSES from "src/addresses.config"
-import { getEthPrice, getETHBalance, getERC20onEthereumMainnetBalance } from "./Etherscan"
+import { getEthPrice } from "./Etherscan"
 
 describe("getEthPrice", () => {
   it("returns current price of Eth", async () => {
