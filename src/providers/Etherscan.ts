@@ -1,7 +1,5 @@
-import BigNumber from "bignumber.js"
 import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
 import { Providers } from "./Providers"
-
 // Usage limit 5 calls per second
 
 interface EthScanPriceResponse {
@@ -15,12 +13,6 @@ interface EthScanPriceResponse {
   }
 }
 
-interface EthScanBalanceResponse {
-  status: string
-  message: string
-  result: string
-}
-
 const API_KEY = process.env.ETHERSCAN_API
 
 export async function getEthPrice(): Promise<ProviderResult<number>> {
@@ -30,7 +22,10 @@ export async function getEthPrice(): Promise<ProviderResult<number>> {
     )
     const data = (await response.json()) as EthScanPriceResponse
     if (data.status === "0") {
-      throw new Error("etherscan: status is zero")
+      return providerError(
+        new Error(`etherscan: ${data.message} ${data.result}`),
+        Providers.etherscan
+      )
     }
     return providerOk(
       Number(data.result.ethusd),
@@ -39,47 +34,5 @@ export async function getEthPrice(): Promise<ProviderResult<number>> {
     )
   } catch (error) {
     return providerError(error, Providers.etherscan)
-  }
-}
-
-export async function getETHBalance(address: string): Promise<ProviderResult<number>> {
-  try {
-    const response = await fetch(
-      `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=${API_KEY}`
-    )
-    const data = (await response.json()) as EthScanBalanceResponse
-    if (data.status === "0") {
-      throw new Error("etherscan: status is zero")
-    }
-    return providerOk(formatNumber(data.result), Providers.etherscan)
-  } catch (error) {
-    return providerError(error, Providers.etherscan)
-  }
-}
-
-export async function getERC20onEthereumMainnetBalance(
-  tokenAddress: string,
-  accountAddress: string,
-  decimals?: number
-) {
-  try {
-    const response = await fetch(
-      `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${tokenAddress}&address=${accountAddress}&tag=latest&apikey=${API_KEY}`
-    )
-    const data = await response.json()
-    if (data.status === "0") {
-      throw new Error("etherscan: status is zero")
-    }
-    return providerOk(formatNumber(data.result, decimals), Providers.etherscan)
-  } catch (error) {
-    return providerError(error, Providers.etherscan)
-  }
-}
-
-function formatNumber(value, decimals?: number) {
-  if (decimals) {
-    return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals)).toNumber()
-  } else {
-    return new BigNumber(value).dividedBy(1_000_000_000_000_000_000).toNumber()
   }
 }

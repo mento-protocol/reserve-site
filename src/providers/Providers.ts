@@ -6,6 +6,7 @@ export enum Providers {
   etherscan = "etherscan",
   ethplorer = "ethplorer",
   celoNode = "celoNode",
+  ethereumNode = "ethereumNode",
   ecb = "ecb.europa.eu",
   exchangeRates = "exchangeratesapi.io",
   ubeswap = "ubeswap",
