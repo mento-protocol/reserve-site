@@ -25,8 +25,7 @@ import {
   getUniV3Holdings,
   getcMC02Balance,
 } from "src/providers/Celo"
-import * as etherscan from "src/providers/Etherscan"
-import * as ethplorer from "src/providers/Ethplorerer"
+import * as ethereum from "src/providers/EthereumRPC"
 import { getOrSave } from "src/service/cache"
 import { DuelResult, sumMerge } from "src/utils/DuelResult"
 import { ProviderResult } from "src/utils/ProviderResult"
@@ -65,7 +64,7 @@ export async function btcBalance() {
 
 async function fetchETHBalance() {
   return getSumBalance("ETH", (address) => {
-    return duel(etherscan.getETHBalance(address), ethplorer.getETHBalance(address))
+    return ethereum.getETHBalance(address)
   })
 }
 
@@ -76,13 +75,10 @@ export async function ethBalance() {
 function fetchERC20OnEthereumBalance(token: Tokens) {
   const tokenOnEthereum = addressesConfig.find((coin) => coin.token === token)
   return getSumBalance(token, (address) => {
-    return duel(
-      etherscan.getERC20onEthereumMainnetBalance(
-        tokenOnEthereum.tokenAddress,
-        address,
-        tokenOnEthereum.decimals
-      ),
-      ethplorer.getERC20OnEthereumBalance(tokenOnEthereum.tokenAddress, address)
+    return ethereum.getERC20onEthereumMainnetBalance(
+      tokenOnEthereum.tokenAddress,
+      address,
+      tokenOnEthereum.decimals
     )
   })
 }

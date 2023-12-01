@@ -1,12 +1,12 @@
 import { Providers } from "src/providers/Providers"
-import { Result, ResultOk, ResultError, okResult, errorResult } from "./Result"
+import { ResultOk, ResultError, okResult, errorResult } from "./Result"
 
 interface DuelResultOk extends ResultOk<number> {
-  sources: Providers[]
+  sources?: Providers[]
 }
 
 interface DuelError extends ResultError {
-  sources: Providers[]
+  sources?: Providers[]
 }
 
 export type DuelResult = DuelResultOk | DuelError

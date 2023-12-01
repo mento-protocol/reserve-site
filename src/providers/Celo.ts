@@ -25,7 +25,7 @@ import { allOkOrThrow, okOrThrow } from "src/utils/Result"
 import { Providers } from "./Providers"
 import { Contract } from "ethers"
 
-const ERC20_SUBSET = [
+export const ERC20_SUBSET = [
   {
     constant: true,
     inputs: [{ name: "_owner", type: "address" }],
