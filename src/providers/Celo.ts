@@ -6,7 +6,7 @@ import {
   CURVE_FACTORY_POOL_ADDRESS,
   CUSD_ADDRESS,
   EXOF_ADDRESS,
-  PARTIAL_RESERVE_ADDRESS,
+  RESERVE_ADDRESS,
   RESERVE_CMCO2_ADDRESS,
   RESERVE_MULTISIG_CELO,
   USDC_AXELAR_ADDRESS,
@@ -78,13 +78,7 @@ export async function getFrozenBalance(): Promise<ProviderResult> {
 export async function getUnFrozenBalance() {
   try {
     const reserve = await kit.contracts.getReserve()
-    const reserveBalance = await reserve.getUnfrozenBalance()
-
-    // Get the balance of celo in the partial reserve
-    const partialReserveBalances = await kit.celoTokens.balancesOf(PARTIAL_RESERVE_ADDRESS)
-    const partialReserveCelo = partialReserveBalances.CELO
-
-    const balance = reserveBalance.plus(partialReserveCelo)
+    const balance = await reserve.getUnfrozenBalance()
 
     return providerOk(formatNumber(balance), Providers.celoNode)
   } catch (error) {
@@ -153,11 +147,6 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
     return {
       value: [
         { label: "Celo Reserve", token: "CELO" as Tokens, addresses: [reserve.address] },
-        {
-          label: "Partial Reserve",
-          token: "Partial Reserve" as Tokens,
-          addresses: [PARTIAL_RESERVE_ADDRESS],
-        },
         { label: "CELO with Custodian", token: "CELO" as Tokens, addresses: addresses },
         {
           label: "USDC in Curve Pool",
@@ -267,21 +256,19 @@ export async function getMultisigEUROC() {
   return providerOk(eurocAxelar.value, Providers.celoNode)
 }
 
-export async function getPartialReserveUSDC() {
+export async function getReserveUSDC() {
   const [usdcWormhole, usdcAxelar] = allOkOrThrow(
     await Promise.all([
-      getERC20Balance(USDC_WORMHOLE_ADDRESS, PARTIAL_RESERVE_ADDRESS),
-      getERC20Balance(USDC_AXELAR_ADDRESS, PARTIAL_RESERVE_ADDRESS),
+      getERC20Balance(USDC_WORMHOLE_ADDRESS, RESERVE_ADDRESS),
+      getERC20Balance(USDC_AXELAR_ADDRESS, RESERVE_ADDRESS),
     ])
   )
 
   return providerOk(usdcWormhole.value + usdcAxelar.value, Providers.celoNode)
 }
 
-export async function getPartialReserveEUROC() {
-  const eurocAxelar = okOrThrow(
-    await getERC20Balance(EUROC_AXELAR_ADDRESS, PARTIAL_RESERVE_ADDRESS)
-  )
+export async function getReserveEUROC() {
+  const eurocAxelar = okOrThrow(await getERC20Balance(EUROC_AXELAR_ADDRESS, RESERVE_ADDRESS))
   return providerOk(eurocAxelar.value, Providers.celoNode)
 }
 
