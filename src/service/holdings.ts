@@ -19,8 +19,8 @@ import {
   getInCustodyBalance,
   getMultisigUSDC,
   getMultisigEUROC,
-  getPartialReserveUSDC,
-  getPartialReserveEUROC,
+  getReserveUSDC,
+  getReserveEUROC,
   getUnFrozenBalance,
   getUniV3Holdings,
   getcMC02Balance,
@@ -132,12 +132,12 @@ export async function uniV3HoldingsForToken(address: string, token: string) {
   return univ3Holdings.get(token) || 0
 }
 
-export async function partialReserveUSDC() {
-  return getOrSave<ProviderResult>("partial-reserve-usdc", getPartialReserveUSDC, 5 * MINUTE)
+export async function reserveUSDC() {
+  return getOrSave<ProviderResult>("reserve-usdc", getReserveUSDC, 5 * MINUTE)
 }
 
-export async function partialReserveEUROC() {
-  return getOrSave<ProviderResult>("partial-reserve-euroc", getPartialReserveEUROC, 5 * MINUTE)
+export async function reserveEUROC() {
+  return getOrSave<ProviderResult>("reserve-euroc", getReserveEUROC, 5 * MINUTE)
 }
 export interface HoldingsApi {
   celo: {
@@ -215,10 +215,10 @@ export async function getHoldingsOther() {
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
-  usdcHeld.value += valueOrThrow(await partialReserveUSDC())
+  usdcHeld.value += valueOrThrow(await reserveUSDC())
 
   eurocHeld.value += valueOrThrow(await multisigEUROC())
-  eurocHeld.value += valueOrThrow(await partialReserveEUROC())
+  eurocHeld.value += valueOrThrow(await reserveEUROC())
 
   const otherAssets: TokenModel[] = [
     toToken("BTC", btcHeld, rates.btc),
@@ -271,9 +271,9 @@ export default async function getHoldings(): Promise<HoldingsApi> {
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
-  usdcHeld.value += valueOrThrow(await partialReserveUSDC())
+  usdcHeld.value += valueOrThrow(await reserveUSDC())
 
-  eurocHeld.value += valueOrThrow(await partialReserveEUROC())
+  eurocHeld.value += valueOrThrow(await reserveEUROC())
   eurocHeld.value += valueOrThrow(await multisigEUROC())
 
   btcHeld.value += wbtcHeld.value

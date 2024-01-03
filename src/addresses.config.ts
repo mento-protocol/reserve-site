@@ -91,8 +91,6 @@ export function generateLink(token: Tokens, address: string) {
     case "cUSD in Curve Pool":
     case "USDC in Curve Pool":
       return `https://explorer.celo.org/mainnet/address/${address}/tokens#address-tabs`
-    case "Partial Reserve":
-      return `https://explorer.celo.org/address/${address}`
   }
 }
 

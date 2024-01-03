@@ -12,7 +12,6 @@ export type Tokens =
   | Token
   | "cUSD in Curve Pool"
   | "USDC in Curve Pool"
-  | "Partial Reserve"
   | "WBTC"
   | "WETH"
 
