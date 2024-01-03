@@ -10,7 +10,7 @@
 
 # Set the project ID and the comma-separated list of secret IDs to retrieve
 PROJECT_ID="mento-prod"
-SECRET_IDS="coinmarketcap-key,etherscan-api,ethplorer-key,exchange-rate-api,sentry-dsn"
+SECRET_IDS="coinmarketcap-key,etherscan-api,ethplorer-key,exchange-rate-api,sentry-dsn,ethereum-rpc-url,celo-node-rpc-url"
 
 # Set the path to the .env file as the parent directory of the current directory
 ENV_FILE="$( dirname -- "$0"; )/../.env.local"
