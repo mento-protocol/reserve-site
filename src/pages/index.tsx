@@ -11,7 +11,11 @@ import Section from "src/components/Section"
 import { flexCol } from "src/components/styles"
 import PieChart from "src/components/PieChart"
 import useTargets from "src/hooks/useTargets"
-import { ReserveCryptoForDisplay, combineTokenAddressesByLabel } from "src/addresses.config"
+import {
+  ReserveCryptoForDisplay,
+  combineTokenAddressesByLabel,
+  ReserveAssetByLabel,
+} from "src/addresses.config"
 
 interface ContentShape {
   title: string
@@ -24,7 +28,7 @@ interface Props {
   ATTESTATIONS: FrontMatterResult<ContentShape>
   RFP: FrontMatterResult<ContentShape>
   year: string
-  reserveCryptos: ReserveCryptoForDisplay[]
+  reserveCryptos: ReserveAssetByLabel
 }
 
 export default function Home(props: Props) {
@@ -44,7 +48,7 @@ export default function Home(props: Props) {
               <Ratios />
             </Section>
             <Section title={"Reserve Addresses"}>
-              <ReserveAddresses addresses={props.reserveCryptos} />
+              <ReserveAddresses reserveAssets={props.reserveCryptos} />
             </Section>
             <Section
               title={props.INITIAL_TARGET.attributes.title}

@@ -15,6 +15,7 @@ const tokensAddresses = {
 export enum AssetType {
   Native = "Native",
   ERC20 = "ERC20",
+  ERC20_IN_CURVE_POOL = "ERC20_IN_CURVE_POOL",
 }
 
 export enum Network {
@@ -28,6 +29,11 @@ export interface BaseReserveAsset {
   label: string
   addresses: string[]
   network: Network
+  isWrappedAsset?: boolean
+}
+
+export interface ERC20InCurvePoolReserveAsset extends BaseReserveAsset {
+  assetType: AssetType.ERC20_IN_CURVE_POOL
 }
 
 export interface ERC20ReserveAsset extends BaseReserveAsset {
@@ -40,11 +46,7 @@ export interface NativeReserveAsset extends BaseReserveAsset {
   assetType: AssetType.Native
 }
 
-export type ReserveCrypto = ERC20ReserveAsset | NativeReserveAsset
-
-export type ReserveCryptoForDisplay = Omit<ReserveCrypto, "addresses"> & {
-  addresses: { address: string; symbol: Tokens }[]
-}
+export type ReserveCrypto = ERC20ReserveAsset | NativeReserveAsset | ERC20InCurvePoolReserveAsset
 
 const ADDRESSES: ReserveCrypto[] = [
   {
@@ -62,6 +64,7 @@ const ADDRESSES: ReserveCrypto[] = [
       "0xe1955eA2D14e60414eBF5D649699356D8baE98eE",
       "0x8331C987D9Af7b649055fa9ea7731d2edbD58E6B",
       wallets.CUSTODIAN_ETH,
+      wallets.RESERVE_MULTISIG_ETH,
     ],
     network: Network.ETH,
   },
@@ -96,9 +99,10 @@ const ADDRESSES: ReserveCrypto[] = [
     assetType: AssetType.ERC20,
     label: "ETH",
     token: "WETH",
-    addresses: [wallets.RESERVE_MULTISIG_ETH],
+    addresses: [wallets.RESERVE_MULTISIG_ETH, wallets.CUSTODIAN_ETH],
     tokenAddress: tokensAddresses.WETH_ON_ETH,
     network: Network.ETH,
+    isWrappedAsset: true,
   },
   {
     assetType: AssetType.ERC20,
@@ -107,6 +111,7 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [wallets.CUSTODIAN_ETH],
     tokenAddress: tokensAddresses.WBTC_ON_ETH,
     network: Network.ETH,
+    isWrappedAsset: true,
   },
   {
     assetType: AssetType.ERC20,
@@ -122,59 +127,79 @@ const ADDRESSES: ReserveCrypto[] = [
 
 export default ADDRESSES
 
-export function generateLink(token: Tokens, address: string) {
-  switch (token) {
-    case "CELO":
-      return `https://explorer.celo.org/address/${address}/coin_balances`
-    case "BTC":
-      return `https://blockchain.info/address/${address}`
-    case "ETH":
-      return `https://etherscan.io/address/${address}`
-    case "USDC":
-    case "EUROC":
-    case "DAI":
-    case "WBTC":
-    case "WETH":
-      return `https://etherscan.io/address/${address}`
-    case "cUSD in Curve Pool":
-    case "USDC in Curve Pool":
-      return `https://explorer.celo.org/mainnet/address/${address}/tokens#address-tabs`
-    case "stEUR":
-      return `https://explorer.celo.org/mainnet/address/${address}`
+export type ReserveCryptoForDisplay = Omit<ReserveCrypto, "addresses"> & {
+  addresses: { address: string; symbol: Tokens }[]
+}
+
+export function generateLink(token: ReserveCrypto, address: string) {
+  if (token.assetType == AssetType.ERC20 || token.assetType == AssetType.Native) {
+    switch (token.token) {
+      case "CELO":
+        return `https://explorer.celo.org/address/${address}/coin_balances`
+      case "BTC":
+        return `https://blockchain.info/address/${address}`
+      case "ETH":
+        return `https://etherscan.io/address/${address}`
+      case "USDC":
+      case "EUROC":
+      case "DAI":
+      case "WBTC":
+      case "WETH":
+        return `https://etherscan.io/address/${address}`
+      case "stEUR":
+        return `https://explorer.celo.org/mainnet/address/${address}`
+    }
+  } else if (token.assetType === AssetType.ERC20_IN_CURVE_POOL) {
+    switch (token.token) {
+      case "cUSD":
+      case "USDC":
+        return `https://explorer.celo.org/mainnet/address/${address}/tokens#address-tabs`
+    }
   }
 }
 
-const tokensToCombine: Tokens[] = ["WETH", "WBTC"] // List of tokens to remove and combine holding addresses with another token with the same labe
+// const tokensToCombine: Tokens[] = ["WETH", "WBTC"] / / List of tokens to remove and combine holding addresses with another token with the same labe
 
-export function combineTokenAddressesByLabel(rawTokenList: ReserveCrypto[]) {
-  const combinedList = rawTokenList
-    .map((token) => {
-      // Add symbols to token addresses to facilitate link gereration on a per address basis instead of per token basis
-      return {
-        ...token,
-        addresses: token.addresses.map((address) => ({ address, symbol: token.token })),
-      }
+export type ReserveAssetByLabel = Record<string /* label */, ReserveCrypto[]>
+
+export function combineTokenAddressesByLabel(assets: ReserveCrypto[]): ReserveAssetByLabel {
+  const labels = Array.from(new Set(assets.map((a) => a.label)))
+  return Object.fromEntries(
+    labels.map((label) => {
+      return [label, assets.filter((asset) => asset.label === label)]
     })
-    .map((token, _, arr) => {
-      // Combine addresses of tokens that are in the list of tokens to combine with an existing token with the same label
-      if (tokensToCombine.includes(token.token)) {
-        const tokenToCombineWith = arr.find((t) => t.label === token.label)
-        if (tokenToCombineWith) {
-          tokenToCombineWith.addresses = [...tokenToCombineWith.addresses, ...token.addresses]
-        }
-      }
-      // Do nothing if token is not in the list of tokens to combine
-      return token
-    })
-    .filter((token) => !tokensToCombine.includes(token.token)) // Remove tokens which addresses were flagged to be combined
-
-  for (const token of combinedList) {
-    // Remove duplicate addresses introducted by combining tokens which use the same label for different tokens from the same wallet
-    token.addresses = token.addresses.filter(
-      (addressWithSymbol, i, arr) =>
-        arr.findIndex((a) => a.address === addressWithSymbol.address) === i
-    )
-  }
-
-  return combinedList
+  )
 }
+
+//export function combineTokenAddressesByLabel(rawTokenList: ReserveCrypto[]) {
+//  const combinedList = rawTokenList
+//    .map((token) => {
+//      // Add symbols to token addresses to facilitate link gereration on a per address basis instead of per token basis
+//      return {
+//        ...token,
+//        addresses: token.addresses.map((address) => ({ address, symbol: token.token })),
+//      }
+//    })
+//    .map((token, _, arr) => {
+//      // Combine addresses of tokens that are in the list of tokens to combine with an existing token with the same label
+//      if (tokensToCombine.includes(token.token)) {
+//        const tokenToCombineWith = arr.find((t) => t.label === token.label)
+//        if (tokenToCombineWith) {
+//          tokenToCombineWith.addresses = [...tokenToCombineWith.addresses, ...token.addresses]
+//        }
+//      }
+//      // Do nothing if token is not in the list of tokens to combine
+//      return token
+//    })
+//    .filter((token) => !tokensToCombine.includes(token.token)) // Remove tokens which addresses were flagged to be combined
+//
+//  for (const token of combinedList) {
+//    // Remove duplicate addresses introducted by combining tokens which use the same label for different tokens from the same wallet
+//    token.addresses = token.addresses.filter(
+//      (addressWithSymbol, i, arr) =>
+//        arr.findIndex((a) => a.address === addressWithSymbol.address) === i
+//    )
+//  }
+//
+//  return combinedList
+//}
