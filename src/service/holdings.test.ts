@@ -15,9 +15,9 @@ describe("getHoldings", () => {
     expect(holdings.celo).toEqual({
       custody: {
         token: "CELO",
-        units: 119594497.94055042,
+        units: 119589497.94055042,
         updated: 1587686400000,
-        value: 473821441.39066666,
+        value: 473801631.89066666,
       },
       frozen: {
         token: "CELO",
@@ -52,7 +52,7 @@ describe("getHoldings", () => {
     expect(holdings.otherAssets[3]).toHaveProperty("updated")
     expect(holdings.otherAssets[3]).toHaveProperty("value")
 
-    expect(holdings.otherAssets[4]).toHaveProperty("token", "cMCO2")
+    expect(holdings.otherAssets[4]).toHaveProperty("token", "EUROC")
     expect(holdings.otherAssets[4]).toHaveProperty("units")
     expect(holdings.otherAssets[4]).toHaveProperty("updated")
     expect(holdings.otherAssets[4]).toHaveProperty("value")
