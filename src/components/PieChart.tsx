@@ -16,6 +16,7 @@ enum TokenColor {
   DAI = colors.blue,
   USDC = colors.lightBlue,
   EUROC = colors.violet,
+  stEUR = colors.red,
   "stable-value-eur" = colors.violet,
   "natural-capital" = colors.green,
   cMCO2 = colors.green,

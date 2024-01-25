@@ -1,6 +1,6 @@
 import { Token } from "@celo/contractkit"
 import { BigNumber } from "bignumber.js"
-import addressesConfig from "src/addresses.config"
+import addressesConfig, { AssetType, ERC20ReserveAsset, Network } from "src/addresses.config"
 import {
   BTC_AXELAR_ADDRESS,
   BTC_WORMHOLE_ADDRESS,
@@ -24,12 +24,13 @@ import {
   getUnFrozenBalance,
   getUniV3Holdings,
   getcMC02Balance,
+  getERC20Balance as getERC20BalanceCelo,
 } from "src/providers/Celo"
 import * as ethereum from "src/providers/EthereumRPC"
 import { getOrSave } from "src/service/cache"
 import { DuelResult, sumMerge } from "src/utils/DuelResult"
 import { ProviderResult } from "src/utils/ProviderResult"
-import { ResultOk, allOkOrThrow, valueOrThrow, Result } from "src/utils/Result"
+import { ResultOk, allOkOrThrow, valueOrThrow } from "src/utils/Result"
 import { MINUTE } from "src/utils/TIME"
 import { TokenModel, Tokens } from "./Data"
 import { duel } from "./duel"
@@ -37,6 +38,9 @@ import getRates, { celoPrice } from "./rates"
 
 export async function getGroupedNonCeloAddresses() {
   const groupedByToken = addressesConfig.reduce((groups, current) => {
+    if (current.network === Network.CELO) {
+      return groups
+    }
     groups[current.token] = current.addresses
     return groups
   }, {})
@@ -44,17 +48,17 @@ export async function getGroupedNonCeloAddresses() {
 }
 
 async function fetchBTCBalance() {
-  return getSumBalance("BTC", (address) => {
+  const btc = getTokenConfig("BTC", Network.BTC)
+  return getSumBalance(btc.addresses, (address) => {
     return duel(getBlockChainBTCBalance(address), getBlockStreamBTCBalance(address))
   })
 }
 
 async function getSumBalance(
-  token: Tokens,
+  addresses: string[],
   balanceFetcher: (address: string) => Promise<DuelResult>
 ) {
-  const addresses = await getGroupedNonCeloAddresses()
-  const balances = await Promise.all(addresses[token].map(balanceFetcher))
+  const balances = await Promise.all(addresses.map(balanceFetcher))
   return balances.reduce(sumMerge)
 }
 
@@ -62,8 +66,13 @@ export async function btcBalance() {
   return getOrSave<DuelResult>("btc-balance", fetchBTCBalance, 10 * MINUTE)
 }
 
+const getTokenConfig = (token: Tokens, network: Network) => {
+  return addressesConfig.find((tc) => tc.token == token && tc.network == network)
+}
+
 async function fetchETHBalance() {
-  return getSumBalance("ETH", (address) => {
+  const token = getTokenConfig("ETH", Network.ETH)
+  return getSumBalance(token.addresses, (address) => {
     return ethereum.getETHBalance(address)
   })
 }
@@ -72,21 +81,32 @@ export async function ethBalance() {
   return getOrSave<DuelResult>("eth-balance", fetchETHBalance, 10 * MINUTE)
 }
 
-function fetchERC20OnEthereumBalance(token: Tokens) {
-  const tokenOnEthereum = addressesConfig.find((coin) => coin.token === token)
-  return getSumBalance(token, (address) => {
-    return ethereum.getERC20onEthereumMainnetBalance(
-      tokenOnEthereum.tokenAddress,
-      address,
-      tokenOnEthereum.decimals
-    )
-  })
+export const erc20BalanceFetcher = (
+  asset: ERC20ReserveAsset
+): ((holder: string) => Promise<ProviderResult<number>>) => {
+  return (holder) => {
+    if (asset.network == Network.ETH) {
+      return ethereum.getERC20onEthereumMainnetBalance(asset.tokenAddress, holder, asset.decimals)
+    } else if (asset.network == Network.CELO) {
+      return getERC20BalanceCelo(asset.tokenAddress, holder, asset.decimals)
+    } else {
+      throw Error(`no ERC20 fetcher for network: ${asset.network}`)
+    }
+  }
 }
 
-export async function erc20OnEthereumBalance(token: Tokens) {
+function fetchERC20Balance(token_: Tokens, network: Network) {
+  const token = getTokenConfig(token_, network)
+  if (token.assetType !== AssetType.ERC20) {
+    throw Error("fetching ERC20 balance for a non-ERC20 asset")
+  }
+  return getSumBalance(token.addresses, erc20BalanceFetcher(token))
+}
+
+export async function erc20Balance(token: Tokens, network: Network) {
   return getOrSave<DuelResult>(
-    `${token}-balance`,
-    () => fetchERC20OnEthereumBalance(token),
+    `${token}-${network}-balance`,
+    () => fetchERC20Balance(token, network),
     10 * MINUTE
   )
 }
@@ -192,17 +212,18 @@ function toCeloShape(
 
 export async function getHoldingsOther() {
   const rates = await getRates()
-  const [btcHeld, ethHeld, daiHeld, usdcHeld, eurocHeld, cmco2Held, wethHeld, wbtcHeld] =
+  const [btcHeld, ethHeld, daiHeld, usdcHeld, eurocHeld, cmco2Held, wethHeld, wbtcHeld, stEurHeld] =
     allOkOrThrow(
       await Promise.all([
         btcBalance(),
         ethBalance(),
-        erc20OnEthereumBalance("DAI"),
-        erc20OnEthereumBalance("USDC"),
-        erc20OnEthereumBalance("EUROC"),
+        erc20Balance("DAI", Network.ETH),
+        erc20Balance("USDC", Network.ETH),
+        erc20Balance("EUROC", Network.ETH),
         cMC02Balance(),
-        erc20OnEthereumBalance("WETH"),
-        erc20OnEthereumBalance("WBTC"),
+        erc20Balance("WETH", Network.ETH),
+        erc20Balance("WBTC", Network.ETH),
+        erc20Balance("stEUR", Network.CELO),
       ])
     )
 
@@ -226,6 +247,7 @@ export async function getHoldingsOther() {
     toToken("DAI", daiHeld, rates.dai),
     toToken("USDC", usdcHeld, rates.usdc),
     toToken("EUROC", eurocHeld, rates.euroc),
+    toToken("stEUR", stEurHeld, rates.euroc),
     toToken("cMCO2", cmco2Held, rates.cmco2),
   ]
 
@@ -234,39 +256,25 @@ export async function getHoldingsOther() {
 
 export default async function getHoldings(): Promise<HoldingsApi> {
   const rates = await getRates()
-  const [
-    btcHeld,
-    ethHeld,
-    daiHeld,
-    usdcHeld,
-    eurocHeld,
-    celoCustodied,
-    frozen,
-    unfrozen,
-    cmco2Held,
-    wethHeld,
-    wbtcHeld,
-  ] = allOkOrThrow(
+  const [daiHeld, usdcHeld, eurocHeld, wethHeld, wbtcHeld, stEurHeld, cmco2Held] = allOkOrThrow(
+    await Promise.all([
+      erc20Balance("DAI", Network.ETH),
+      erc20Balance("USDC", Network.ETH),
+      erc20Balance("EUROC", Network.ETH),
+      erc20Balance("WETH", Network.ETH),
+      erc20Balance("WBTC", Network.ETH),
+      erc20Balance("stEUR", Network.CELO),
+      cMC02Balance(),
+    ])
+  )
+  const [btcHeld, ethHeld, celoCustodied, frozen, unfrozen] = allOkOrThrow(
     await Promise.all([
       btcBalance(),
       ethBalance(),
-      erc20OnEthereumBalance("DAI"),
-      erc20OnEthereumBalance("USDC"),
-      erc20OnEthereumBalance("EUROC"),
       celoCustodiedBalance(),
       celoFrozenBalance(),
       celoUnfrozenBalance(),
-      cMC02Balance(),
-      erc20OnEthereumBalance("WETH"),
-      erc20OnEthereumBalance("WBTC"),
-    ] as unknown as Promise<Result<any>>[])
-    /*
-    The "as unknown as Promise<Result<any>>[]" is a hack to get around the fact that the Promise.all
-    on this typescript version seams to run into problems when the array is of mixed types and the
-    number of elements is greater than 10. Potential solutions could be:
-    - upgrade typescript
-    - simplify return types
-    */
+    ])
   )
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
@@ -285,6 +293,7 @@ export default async function getHoldings(): Promise<HoldingsApi> {
     toToken("DAI", daiHeld, rates.dai),
     toToken("USDC", usdcHeld, rates.usdc),
     toToken("EUROC", eurocHeld, rates.euroc),
+    toToken("stEUR", stEurHeld, rates.euroc),
     toToken("cMCO2", cmco2Held, rates.cmco2),
   ]
 

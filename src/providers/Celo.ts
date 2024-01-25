@@ -90,11 +90,17 @@ export async function getcMC02Balance() {
   return getERC20Balance(CMCO2_ADDRESS, RESERVE_CMCO2_ADDRESS)
 }
 
-async function getERC20Balance(contractAddress: string, walletAddress: string) {
+export async function getERC20Balance(
+  contractAddress: string,
+  walletAddress: string,
+  decimals?: number
+) {
   try {
     const erc20 = new kit.web3.eth.Contract(ERC20_SUBSET, contractAddress)
     const balance: string = await erc20.methods.balanceOf(walletAddress).call()
-    const decimals: number = parseInt(await erc20.methods.decimals().call())
+    if (!decimals) {
+      decimals = parseInt(await erc20.methods.decimals().call())
+    }
 
     return providerOk(formatNumber(new BigNumber(balance), decimals), Providers.celoNode)
   } catch (error) {
