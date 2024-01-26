@@ -15,7 +15,7 @@ const tokensAddresses = {
 export enum AssetType {
   Native = "Native",
   ERC20 = "ERC20",
-  ERC20_IN_CURVE_POOL = "ERC20_IN_CURVE_POOL",
+  ERC20InCurvePool = "ERC20InCurvePool",
 }
 
 export enum Network {
@@ -33,7 +33,8 @@ export interface BaseReserveAsset {
 }
 
 export interface ERC20InCurvePoolReserveAsset extends BaseReserveAsset {
-  assetType: AssetType.ERC20_IN_CURVE_POOL
+  assetType: AssetType.ERC20InCurvePool
+  curvePool?: string
 }
 
 export interface ERC20ReserveAsset extends BaseReserveAsset {
@@ -149,7 +150,9 @@ export function generateLink(token: ReserveCrypto, address: string) {
       case "stEUR":
         return `https://explorer.celo.org/mainnet/address/${address}`
     }
-  } else if (token.assetType === AssetType.ERC20_IN_CURVE_POOL) {
+  } else if (token.assetType === AssetType.ERC20InCurvePool) {
+    // TODO: This mimics the existing implementation but we can think of a better
+    // way to link to this, e.g. by linking to the LP tokens of the pool.
     switch (token.token) {
       case "cUSD":
       case "USDC":

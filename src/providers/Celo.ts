@@ -2,12 +2,10 @@ import { newKit, StableToken } from "@celo/contractkit"
 import BigNumber from "bignumber.js"
 import { AssetType, Network, ReserveCrypto } from "src/addresses.config"
 import {
-  CMCO2_ADDRESS,
   CURVE_FACTORY_POOL_ADDRESS,
   CUSD_ADDRESS,
   EXOF_ADDRESS,
   RESERVE_ADDRESS,
-  RESERVE_CMCO2_ADDRESS,
   RESERVE_MULTISIG_CELO,
   USDC_AXELAR_ADDRESS,
   EUROC_AXELAR_ADDRESS,
@@ -19,7 +17,6 @@ import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculat
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
 import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
-import { Tokens } from "src/service/Data"
 import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
 import { allOkOrThrow, okOrThrow } from "src/utils/Result"
 import { Providers } from "./Providers"
@@ -145,7 +142,7 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
     const reserve = await kit.contracts.getReserve()
     const addresses = await reserve.getOtherReserveAddresses()
 
-    // TODO: clean up these hard coded inclusions (curve pool & multisig)
+    // TODO: This shouldn't live here. It should be part of the addresses.config.ts.
     return {
       value: [
         {
@@ -163,14 +160,14 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
           network: Network.CELO,
         },
         {
-          assetType: AssetType.ERC20_IN_CURVE_POOL,
+          assetType: AssetType.ERC20InCurvePool,
           label: "USDC in Curve Pool",
           token: "USDC",
           addresses: [CURVE_FACTORY_POOL_ADDRESS],
           network: Network.CELO,
         },
         {
-          assetType: AssetType.ERC20_IN_CURVE_POOL,
+          assetType: AssetType.ERC20InCurvePool,
           label: "cUSD in Curve Pool",
           token: StableToken.cUSD,
           addresses: [CURVE_FACTORY_POOL_ADDRESS],
