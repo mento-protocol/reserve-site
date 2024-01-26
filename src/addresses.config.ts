@@ -158,8 +158,6 @@ export function generateLink(token: ReserveCrypto, address: string) {
   }
 }
 
-// const tokensToCombine: Tokens[] = ["WETH", "WBTC"] / / List of tokens to remove and combine holding addresses with another token with the same labe
-
 export type ReserveAssetByLabel = Record<string /* label */, ReserveCrypto[]>
 
 export function combineTokenAddressesByLabel(assets: ReserveCrypto[]): ReserveAssetByLabel {
@@ -170,36 +168,3 @@ export function combineTokenAddressesByLabel(assets: ReserveCrypto[]): ReserveAs
     })
   )
 }
-
-//export function combineTokenAddressesByLabel(rawTokenList: ReserveCrypto[]) {
-//  const combinedList = rawTokenList
-//    .map((token) => {
-//      // Add symbols to token addresses to facilitate link gereration on a per address basis instead of per token basis
-//      return {
-//        ...token,
-//        addresses: token.addresses.map((address) => ({ address, symbol: token.token })),
-//      }
-//    })
-//    .map((token, _, arr) => {
-//      // Combine addresses of tokens that are in the list of tokens to combine with an existing token with the same label
-//      if (tokensToCombine.includes(token.token)) {
-//        const tokenToCombineWith = arr.find((t) => t.label === token.label)
-//        if (tokenToCombineWith) {
-//          tokenToCombineWith.addresses = [...tokenToCombineWith.addresses, ...token.addresses]
-//        }
-//      }
-//      // Do nothing if token is not in the list of tokens to combine
-//      return token
-//    })
-//    .filter((token) => !tokensToCombine.includes(token.token)) // Remove tokens which addresses were flagged to be combined
-//
-//  for (const token of combinedList) {
-//    // Remove duplicate addresses introducted by combining tokens which use the same label for different tokens from the same wallet
-//    token.addresses = token.addresses.filter(
-//      (addressWithSymbol, i, arr) =>
-//        arr.findIndex((a) => a.address === addressWithSymbol.address) === i
-//    )
-//  }
-//
-//  return combinedList
-//}
