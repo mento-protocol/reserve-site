@@ -11,11 +11,7 @@ import Section from "src/components/Section"
 import { flexCol } from "src/components/styles"
 import PieChart from "src/components/PieChart"
 import useTargets from "src/hooks/useTargets"
-import {
-  ReserveCryptoForDisplay,
-  combineTokenAddressesByLabel,
-  ReserveAssetByLabel,
-} from "src/addresses.config"
+import { combineTokenAddressesByLabel, ReserveAssetByLabel } from "src/addresses.config"
 
 interface ContentShape {
   title: string
@@ -53,9 +49,7 @@ export default function Home(props: Props) {
             <Section
               title={props.INITIAL_TARGET.attributes.title}
               content={props.INITIAL_TARGET.body}
-            >
-              <Allocation />
-            </Section>
+            />
 
             <Section title={props.ABOUT.attributes.title} content={props.ABOUT.body} />
 

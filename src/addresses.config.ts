@@ -1,8 +1,9 @@
 import { Tokens } from "./service/Data"
+import { RESERVE_MULTISIG_CELO } from "./contract-addresses"
 
 const wallets = {
   RESERVE_MULTISIG_ETH: "0xd0697f70E79476195B742d5aFAb14BE50f98CC1E",
-  RESERVE_MULTISIG_CELO: "0x87647780180b8f55980c7d3ffefe08a9b29e9ae1",
+  RESERVE_MULTISIG_CELO,
   CUSTODIAN_ETH: "0x26ac3A7b8a675b741560098fff54F94909bE5E73",
 }
 
