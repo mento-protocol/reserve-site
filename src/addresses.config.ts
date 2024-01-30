@@ -11,6 +11,8 @@ const tokensAddresses = {
   WBTC_ON_ETH: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
   WETH_ON_ETH: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
   STEUR_ON_CELO: "0x004626a008b1acdc4c74ab51644093b155e59a23",
+  SAVINGS_DAI: "0x83f20f44975d03b1b09e64809b757c47f942beea",
+  LIDO_STAKED_ETH: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
 }
 
 export enum AssetType {
@@ -123,6 +125,24 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [wallets.RESERVE_MULTISIG_CELO],
     tokenAddress: tokensAddresses.STEUR_ON_CELO,
     network: Network.CELO,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "Savings DAI",
+    token: "sDAI",
+    decimals: 18,
+    addresses: [wallets.RESERVE_MULTISIG_ETH],
+    tokenAddress: tokensAddresses.SAVINGS_DAI,
+    network: Network.ETH,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "Lido Staked ETH",
+    token: "stETH",
+    decimals: 18,
+    addresses: [wallets.RESERVE_MULTISIG_ETH],
+    tokenAddress: tokensAddresses.LIDO_STAKED_ETH,
+    network: Network.ETH,
   },
 ]
 // WHEN Adding new TOKENS also update the TokenColor enum in PieChart.tsx

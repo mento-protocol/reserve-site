@@ -20,6 +20,8 @@ enum TokenColor {
   "stable-value-eur" = colors.violet,
   "natural-capital" = colors.green,
   cMCO2 = colors.green,
+  sDAI = colors.blue,
+  stETH = colors.green,
 }
 
 interface Props {

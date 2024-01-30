@@ -14,6 +14,8 @@ export type Tokens =
   | "WBTC"
   | "WETH"
   | "stEUR"
+  | "sDAI"
+  | "stETH"
 
 export interface Address {
   address: string

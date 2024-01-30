@@ -66,19 +66,19 @@ export default function Home(props: Props) {
   )
 }
 
-function Allocation() {
-  const targets = useTargets()
-  return (
-    <>
-      <PieChart
-        label={"Target Allocation"}
-        slices={targets.data}
-        showFinePrint={true}
-        isLoading={targets.isLoading}
-      />
-    </>
-  )
-}
+// function_ Allocation() {
+//   const targets = useTargets()
+//   return (
+//     <>
+//       <PieChart
+//         label={"Target Allocation"}
+//         slices={targets.data}
+//         showFinePrint={true}
+//         isLoading={targets.isLoading}
+//       />
+//     </>
+//   )
+// }
 
 const rootStyle = css({
   display: "flex",

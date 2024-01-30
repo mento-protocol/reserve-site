@@ -207,19 +207,31 @@ function toCeloShape(
 
 export async function getHoldingsOther() {
   const rates = await getRates()
-  const [btcHeld, ethHeld, daiHeld, usdcHeld, eurocHeld, wethHeld, wbtcHeld, stEurHeld] =
-    allOkOrThrow(
-      await Promise.all([
-        btcBalance(),
-        ethBalance(),
-        erc20Balance("DAI", Network.ETH),
-        erc20Balance("USDC", Network.ETH),
-        erc20Balance("EUROC", Network.ETH),
-        erc20Balance("WETH", Network.ETH),
-        erc20Balance("WBTC", Network.ETH),
-        erc20Balance("stEUR", Network.CELO),
-      ])
-    )
+  const [
+    btcHeld,
+    ethHeld,
+    daiHeld,
+    usdcHeld,
+    eurocHeld,
+    wethHeld,
+    wbtcHeld,
+    stEurHeld,
+    sDaiHeld,
+    stEthHeld,
+  ] = allOkOrThrow(
+    await Promise.all([
+      btcBalance(),
+      ethBalance(),
+      erc20Balance("DAI", Network.ETH),
+      erc20Balance("USDC", Network.ETH),
+      erc20Balance("EUROC", Network.ETH),
+      erc20Balance("WETH", Network.ETH),
+      erc20Balance("WBTC", Network.ETH),
+      erc20Balance("stEUR", Network.CELO),
+      erc20Balance("sDAI", Network.ETH),
+      erc20Balance("stETH", Network.ETH),
+    ])
+  )
 
   ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_AXELAR_ADDRESS)
   ethHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, ETH_WORMHOLE_ADDRESS)
@@ -242,6 +254,8 @@ export async function getHoldingsOther() {
     toToken("USDC", usdcHeld, rates.usdc),
     toToken("EUROC", eurocHeld, rates.euroc),
     toToken("stEUR", stEurHeld, rates.euroc),
+    toToken("sDAI", sDaiHeld, rates.sDai),
+    toToken("stETH", stEthHeld, rates.stEth),
   ]
 
   return { otherAssets }
@@ -249,16 +263,19 @@ export async function getHoldingsOther() {
 
 export default async function getHoldings(): Promise<HoldingsApi> {
   const rates = await getRates()
-  const [daiHeld, usdcHeld, eurocHeld, wethHeld, wbtcHeld, stEurHeld] = allOkOrThrow(
-    await Promise.all([
-      erc20Balance("DAI", Network.ETH),
-      erc20Balance("USDC", Network.ETH),
-      erc20Balance("EUROC", Network.ETH),
-      erc20Balance("WETH", Network.ETH),
-      erc20Balance("WBTC", Network.ETH),
-      erc20Balance("stEUR", Network.CELO),
-    ])
-  )
+  const [daiHeld, usdcHeld, eurocHeld, wethHeld, wbtcHeld, stEurHeld, sDaiHeld, stEthHeld] =
+    allOkOrThrow(
+      await Promise.all([
+        erc20Balance("DAI", Network.ETH),
+        erc20Balance("USDC", Network.ETH),
+        erc20Balance("EUROC", Network.ETH),
+        erc20Balance("WETH", Network.ETH),
+        erc20Balance("WBTC", Network.ETH),
+        erc20Balance("stEUR", Network.CELO),
+        erc20Balance("sDAI", Network.ETH),
+        erc20Balance("stETH", Network.ETH),
+      ])
+    )
   const [btcHeld, ethHeld, celoCustodied, frozen, unfrozen] = allOkOrThrow(
     await Promise.all([
       btcBalance(),
@@ -286,6 +303,8 @@ export default async function getHoldings(): Promise<HoldingsApi> {
     toToken("USDC", usdcHeld, rates.usdc),
     toToken("EUROC", eurocHeld, rates.euroc),
     toToken("stEUR", stEurHeld, rates.euroc),
+    toToken("sDAI", sDaiHeld, rates.sDai),
+    toToken("stETH", stEthHeld, rates.stEth),
   ]
 
   return {
