@@ -1,13 +1,11 @@
 import { newKit, StableToken } from "@celo/contractkit"
 import BigNumber from "bignumber.js"
-import { ReserveCrypto } from "src/addresses.config"
+import { AssetType, Network, ReserveCrypto } from "src/addresses.config"
 import {
-  CMCO2_ADDRESS,
   CURVE_FACTORY_POOL_ADDRESS,
   CUSD_ADDRESS,
   EXOF_ADDRESS,
   RESERVE_ADDRESS,
-  RESERVE_CMCO2_ADDRESS,
   RESERVE_MULTISIG_CELO,
   USDC_AXELAR_ADDRESS,
   EUROC_AXELAR_ADDRESS,
@@ -19,7 +17,6 @@ import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculat
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
 import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator"
 import Allocation, { AssetTypes } from "src/interfaces/allocation"
-import { Tokens } from "src/service/Data"
 import { providerError, providerOk, ProviderResult } from "src/utils/ProviderResult"
 import { allOkOrThrow, okOrThrow } from "src/utils/Result"
 import { Providers } from "./Providers"
@@ -86,15 +83,17 @@ export async function getUnFrozenBalance() {
   }
 }
 
-export async function getcMC02Balance() {
-  return getERC20Balance(CMCO2_ADDRESS, RESERVE_CMCO2_ADDRESS)
-}
-
-async function getERC20Balance(contractAddress: string, walletAddress: string) {
+export async function getERC20Balance(
+  contractAddress: string,
+  walletAddress: string,
+  decimals?: number
+) {
   try {
     const erc20 = new kit.web3.eth.Contract(ERC20_SUBSET, contractAddress)
     const balance: string = await erc20.methods.balanceOf(walletAddress).call()
-    const decimals: number = parseInt(await erc20.methods.decimals().call())
+    if (!decimals) {
+      decimals = parseInt(await erc20.methods.decimals().call())
+    }
 
     return providerOk(formatNumber(new BigNumber(balance), decimals), Providers.celoNode)
   } catch (error) {
@@ -143,35 +142,60 @@ export async function getAddresses(): Promise<{ value: ReserveCrypto[] | null }>
     const reserve = await kit.contracts.getReserve()
     const addresses = await reserve.getOtherReserveAddresses()
 
-    // TODO: clean up these hard coded inclusions (curve pool & multisig)
+    // TODO: This shouldn't live here. It should be part of the addresses.config.ts.
     return {
       value: [
-        { label: "Celo Reserve", token: "CELO" as Tokens, addresses: [reserve.address] },
-        { label: "CELO with Custodian", token: "CELO" as Tokens, addresses: addresses },
         {
+          assetType: AssetType.Native,
+          label: "CELO in Reserve",
+          token: "CELO",
+          addresses: [reserve.address],
+          network: Network.CELO,
+        },
+        {
+          assetType: AssetType.Native,
+          label: "CELO with Custodian",
+          token: "CELO",
+          addresses: addresses,
+          network: Network.CELO,
+        },
+        {
+          assetType: AssetType.ERC20InCurvePool,
           label: "USDC in Curve Pool",
-          token: "USDC in Curve Pool" as Tokens,
+          token: "USDC",
           addresses: [CURVE_FACTORY_POOL_ADDRESS],
+          network: Network.CELO,
         },
         {
+          assetType: AssetType.ERC20InCurvePool,
           label: "cUSD in Curve Pool",
-          token: "cUSD in Curve Pool" as Tokens,
+          token: StableToken.cUSD,
           addresses: [CURVE_FACTORY_POOL_ADDRESS],
+          network: Network.CELO,
         },
         {
+          assetType: AssetType.ERC20,
           label: "cUSD in Multisig",
-          token: "cUSD in Curve Pool" as Tokens,
+          token: StableToken.cUSD,
           addresses: [RESERVE_MULTISIG_CELO],
+          tokenAddress: CUSD_ADDRESS,
+          network: Network.CELO,
         },
         {
+          assetType: AssetType.ERC20,
           label: "USDC in Multisig",
-          token: "cUSD in Curve Pool" as Tokens,
+          token: "USDC",
           addresses: [RESERVE_MULTISIG_CELO],
+          tokenAddress: USDC_AXELAR_ADDRESS,
+          network: Network.CELO,
         },
         {
+          assetType: AssetType.ERC20,
           label: "EUROC in Multisig",
-          token: "cUSD in Curve Pool" as Tokens,
+          token: "EUROC",
           addresses: [RESERVE_MULTISIG_CELO],
+          tokenAddress: EUROC_AXELAR_ADDRESS,
+          network: Network.CELO,
         },
       ],
     }

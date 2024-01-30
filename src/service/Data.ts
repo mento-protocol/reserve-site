@@ -1,6 +1,7 @@
 import { StableToken, Token } from "@celo/contractkit"
 
 export type Tokens =
+  | "CELO"
   | "BTC"
   | "DAI"
   | "ETH"
@@ -10,10 +11,11 @@ export type Tokens =
   | "eXOF"
   | StableToken
   | Token
-  | "cUSD in Curve Pool"
-  | "USDC in Curve Pool"
   | "WBTC"
   | "WETH"
+  | "stEUR"
+  | "sDAI"
+  | "stETH"
 
 export interface Address {
   address: string

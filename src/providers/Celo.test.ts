@@ -11,7 +11,7 @@ import { newKit, StableToken } from "@celo/contractkit"
 
 describe("celo", () => {
   it("uses contractKit", () => {
-    expect(newKit).toHaveBeenCalledWith("https://forno.celo.org/")
+    expect(newKit).toHaveBeenCalledWith("https://forno.celo.org")
   })
 })
 
@@ -64,7 +64,7 @@ describe("getInCustodyBalance", () => {
       hasError: false,
       source: "celoNode",
       time: 1587686400000,
-      value: 119594497.94055042,
+      value: 119589497.94055042,
     })
   })
 })

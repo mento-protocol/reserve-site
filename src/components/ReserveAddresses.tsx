@@ -1,19 +1,24 @@
 import { css } from "@emotion/react"
 import * as React from "react"
-import { ReserveCryptoForDisplay, generateLink } from "src/addresses.config"
+import {
+  ReserveCryptoForDisplay,
+  generateLink,
+  ReserveAssetByLabel,
+  ReserveCrypto,
+} from "src/addresses.config"
 import Button from "src/components/Button"
 import CopyIcon from "src/components/CopyIcon"
 import { Tokens } from "src/service/Data"
 
 interface Props {
-  addresses: ReserveCryptoForDisplay[]
+  reserveAssets: ReserveAssetByLabel
 }
 
 export default function ReserveAddresses(props: Props) {
   return (
     <>
-      {props.addresses.map(({ addresses, label, token }) => {
-        return <TokenDisplay key={label} token={token} label={label} addresses={addresses} />
+      {Object.entries(props.reserveAssets).map(([label, assets]) => {
+        return <AssetDisplay label={label} assets={assets} />
       })}
       <Button href="https://docs.celo.org/command-line-interface/reserve">
         Query Reserve Holdings
@@ -35,28 +40,35 @@ function useCopy(hex: string) {
   return { onPress, justCopied }
 }
 
-const TokenDisplay = React.memo(function _TokenDisplay({
+const AssetDisplay = React.memo(function _TokenDisplay({
   label,
-  addresses,
-  token,
-}: ReserveCryptoForDisplay) {
+  assets,
+}: {
+  label: string
+  assets: ReserveCrypto[]
+}) {
   return (
     <div css={rootStyle}>
       <h5 css={labelStyle}>{label}</h5>
-      {addresses.map(({ address, symbol }) => (
-        <AddressDisplay key={address} token={token} hex={address} symbol={symbol} />
+      {assets.map((asset) => (
+        <>
+          {asset.addresses.map((address) => (
+            <AddressDisplay key={address} asset={asset} hex={address} />
+          ))}
+        </>
       ))}
     </div>
   )
 })
 
-function AddressDisplay({ hex, symbol }: { token: Tokens; hex: string; symbol: Tokens }) {
+function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
   const { onPress, justCopied } = useCopy(hex)
 
   return (
     <div css={entryCss}>
-      <a css={addressStyle} href={generateLink(symbol, hex)} target="_blank" rel="noopener">
+      <a css={addressStyle} href={generateLink(asset, hex)} target="_blank" rel="noopener">
         {hex}
+        {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
       </a>
       <span css={iconStyle} onClick={onPress}>
         <CopyIcon />

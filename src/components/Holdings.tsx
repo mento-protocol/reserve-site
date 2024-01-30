@@ -29,12 +29,15 @@ function getPercents(holdings: HoldingsApi): ChartData[] {
   }
 
   return [{ token: "CELO", percent: toPercent(celoTotal) }].concat(
-    holdings.otherAssets.map((asset) => {
-      return {
-        token: asset.token,
-        percent: toPercent(asset.value),
-      }
-    })
+    holdings.otherAssets
+      .map((asset) => {
+        return {
+          token: asset.token,
+          percent: toPercent(asset.value),
+        }
+      })
+      .filter((asset) => asset.percent > 0)
+      .sort((a, b) => b.percent - a.percent)
   )
 }
 
