@@ -161,12 +161,13 @@ export function generateLink(token: ReserveCrypto, address: string) {
       case "BTC":
         return `https://blockchain.info/address/${address}`
       case "ETH":
-        return `https://etherscan.io/address/${address}`
       case "USDC":
       case "EUROC":
       case "DAI":
       case "WBTC":
       case "WETH":
+      case "stETH":
+      case "sDAI":
         return `https://etherscan.io/address/${address}`
       case "stEUR":
         return `https://explorer.celo.org/mainnet/address/${address}`
