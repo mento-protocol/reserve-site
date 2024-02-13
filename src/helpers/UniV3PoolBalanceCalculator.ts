@@ -1,6 +1,7 @@
 import { UniV3PoolProvider } from "./UniV3PoolProvider"
 import { IUniV3PoolProvider } from "./IUniV3PoolProvider"
 import { BigNumber } from "bignumber.js"
+import * as Sentry from "@sentry/nextjs"
 
 export class UniV3PoolBalanceCalculator {
   private static _instance: UniV3PoolBalanceCalculator
@@ -29,6 +30,8 @@ export class UniV3PoolBalanceCalculator {
       if (!positionData) {
         continue
       }
+
+      // Get the information for the position
       const positionAsset0 = positionData[2]
       const positionAsset1 = positionData[3]
       const positionFee = positionData[4]
@@ -38,9 +41,20 @@ export class UniV3PoolBalanceCalculator {
         positionAsset1,
         positionFee
       )
+
+      // Get the total liquidity for the pool
       const poolLiquidty = new BigNumber(
         (await this.uniV3PoolProvider.getTotalLiquidityForPool(poolAddress))._hex
       )
+
+      // If the pool liquidity is 0, then we can't calculate the holdings so we skip but log it
+      if (poolLiquidty.isEqualTo(0)) {
+        Sentry.captureMessage(
+          `Pool liquidity is 0 for pool ${poolAddress} with position ${positions[i]}`
+        )
+        continue
+      }
+
       const poolBalances = await this.uniV3PoolProvider.getPoolBalance(
         poolAddress,
         positionAsset0,
