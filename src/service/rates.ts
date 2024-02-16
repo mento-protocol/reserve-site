@@ -1,7 +1,6 @@
 import * as coinbase from "src/providers/Coinbase"
 import { ISO427SYMBOLS } from "src/interfaces/ISO427SYMBOLS"
 import currencyInUSD from "src/providers/ExchangeRateAPI"
-import { getCeloPrice } from "src/providers/Celo"
 import { getEthPrice } from "src/providers/Etherscan"
 import { getOrSave, Cachable } from "src/service/cache"
 import { HOUR, MINUTE } from "src/utils/TIME"
