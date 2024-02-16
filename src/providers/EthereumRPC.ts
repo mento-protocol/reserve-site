@@ -5,12 +5,12 @@ import { providerError, providerOk, ProviderResult } from "src/utils/ProviderRes
 import { formatNumber } from "./utils"
 import { Providers } from "./Providers"
 
-let _provider: ethers.providers.JsonRpcBatchProvider | null = null
+let _provider: ethers.providers.JsonRpcProvider | null = null
 const RPC_URL = process.env.ETHEREUM_RPC_URL
 
-function getProvider(): ethers.providers.JsonRpcBatchProvider {
+function getProvider(): ethers.providers.JsonRpcProvider {
   if (_provider === null) {
-    _provider = new ethers.providers.JsonRpcBatchProvider(RPC_URL)
+    _provider = new ethers.providers.JsonRpcProvider(RPC_URL)
   }
   return _provider
 }

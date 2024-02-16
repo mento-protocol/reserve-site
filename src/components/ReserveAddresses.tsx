@@ -1,14 +1,8 @@
 import { css } from "@emotion/react"
 import * as React from "react"
-import {
-  ReserveCryptoForDisplay,
-  generateLink,
-  ReserveAssetByLabel,
-  ReserveCrypto,
-} from "src/addresses.config"
+import { generateLink, ReserveAssetByLabel, ReserveCrypto } from "src/addresses.config"
 import Button from "src/components/Button"
 import CopyIcon from "src/components/CopyIcon"
-import { Tokens } from "src/service/Data"
 
 interface Props {
   reserveAssets: ReserveAssetByLabel
@@ -18,7 +12,7 @@ export default function ReserveAddresses(props: Props) {
   return (
     <>
       {Object.entries(props.reserveAssets).map(([label, assets]) => {
-        return <AssetDisplay label={label} assets={assets} />
+        return <AssetDisplay key={label} label={label} assets={assets} />
       })}
       <Button href="https://docs.celo.org/command-line-interface/reserve">
         Query Reserve Holdings
@@ -50,13 +44,17 @@ const AssetDisplay = React.memo(function _TokenDisplay({
   return (
     <div css={rootStyle}>
       <h5 css={labelStyle}>{label}</h5>
-      {assets.map((asset) => (
-        <>
-          {asset.addresses.map((address) => (
-            <AddressDisplay key={address} asset={asset} hex={address} />
-          ))}
-        </>
-      ))}
+      {assets
+        .map((asset) =>
+          asset.addresses.map((address) => (
+            <AddressDisplay
+              key={`${asset.label}-${address}-${asset.token}`}
+              asset={asset}
+              hex={address}
+            />
+          ))
+        )
+        .flat()}
     </div>
   )
 })

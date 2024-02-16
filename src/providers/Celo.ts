@@ -45,16 +45,6 @@ const uniV3BalanceCalculator = UniV3PoolBalanceCalculator.Instance
 const provider = new JsonRpcProvider(process.env.CELO_NODE_RPC_URL)
 const eXOFContract = new Contract(EXOF_ADDRESS, ERC20_ABI, provider)
 
-export async function getCeloPrice(): Promise<ProviderResult> {
-  try {
-    const exchange = await kit.contracts.getExchange()
-    const rate = await exchange.quoteGoldSell(WEI_PER)
-    return providerOk(formatNumber(rate), Providers.celoNode)
-  } catch (error) {
-    return providerError(error, Providers.celoNode)
-  }
-}
-
 export async function getFrozenBalance(): Promise<ProviderResult> {
   try {
     const [reserve, nativeToken] = await Promise.all([

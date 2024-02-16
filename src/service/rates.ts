@@ -87,8 +87,7 @@ export async function fiatPrices() {
 }
 
 async function fetchCELOPrice() {
-  const price = await duel(getCeloPrice(), coinbase.getCELOPrice())
-  return price
+  return coinbase.getCELOPrice()
 }
 
 export async function celoPrice() {
