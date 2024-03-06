@@ -10,6 +10,7 @@ import {
   USDC_AXELAR_ADDRESS,
   EUROC_AXELAR_ADDRESS,
   USDC_WORMHOLE_ADDRESS,
+  USDC_CELO_NATIVE_ADDRESS,
 } from "src/contract-addresses"
 import { ERC20_ABI } from "src/constants/abis"
 import { JsonRpcProvider } from "@ethersproject/providers"
@@ -255,14 +256,15 @@ export async function getMultisigCUSD() {
 }
 
 export async function getMultisigUSDC() {
-  const [usdcWormhole, usdcAxelar] = allOkOrThrow(
+  const [usdcWormhole, usdcAxelar, usdcNative] = allOkOrThrow(
     await Promise.all([
       getERC20Balance(USDC_WORMHOLE_ADDRESS, RESERVE_MULTISIG_CELO),
       getERC20Balance(USDC_AXELAR_ADDRESS, RESERVE_MULTISIG_CELO),
+      getERC20Balance(USDC_CELO_NATIVE_ADDRESS, RESERVE_MULTISIG_CELO),
     ])
   )
 
-  return providerOk(usdcWormhole.value + usdcAxelar.value, Providers.celoNode)
+  return providerOk(usdcWormhole.value + usdcAxelar.value + usdcNative.value, Providers.celoNode)
 }
 
 export async function getMultisigEUROC() {
