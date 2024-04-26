@@ -273,14 +273,15 @@ export async function getMultisigEUROC() {
 }
 
 export async function getReserveUSDC() {
-  const [usdcWormhole, usdcAxelar] = allOkOrThrow(
+  const [usdcWormhole, usdcAxelar, usdcNative] = allOkOrThrow(
     await Promise.all([
       getERC20Balance(USDC_WORMHOLE_ADDRESS, RESERVE_ADDRESS),
       getERC20Balance(USDC_AXELAR_ADDRESS, RESERVE_ADDRESS),
+      getERC20Balance(USDC_CELO_NATIVE_ADDRESS, RESERVE_ADDRESS),
     ])
   )
 
-  return providerOk(usdcWormhole.value + usdcAxelar.value, Providers.celoNode)
+  return providerOk(usdcWormhole.value + usdcAxelar.value + usdcNative.value, Providers.celoNode)
 }
 
 export async function getReserveEUROC() {
