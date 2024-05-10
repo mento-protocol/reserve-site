@@ -13,7 +13,7 @@ const tokensAddresses = {
   STEUR_ON_CELO: "0x004626a008b1acdc4c74ab51644093b155e59a23",
   SAVINGS_DAI: "0x83f20f44975d03b1b09e64809b757c47f942beea",
   LIDO_STAKED_ETH: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
-  USDC_ON_CELO: "0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e",
+  USDT_ON_CELO: "0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e",
 }
 
 export enum AssetType {
@@ -152,7 +152,7 @@ const ADDRESSES: ReserveCrypto[] = [
     token: "USDT",
     decimals: 6,
     addresses: [wallets.RESERVE_MULTISIG_CELO],
-    tokenAddress: tokensAddresses.USDC_ON_CELO,
+    tokenAddress: tokensAddresses.USDT_ON_CELO,
     network: Network.CELO,
   },
 ]
