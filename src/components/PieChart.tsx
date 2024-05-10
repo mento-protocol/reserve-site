@@ -22,6 +22,7 @@ enum TokenColor {
   cMCO2 = colors.green,
   sDAI = colors.blue,
   stETH = colors.green,
+  USDT = colors.lightBlue,
 }
 
 interface Props {

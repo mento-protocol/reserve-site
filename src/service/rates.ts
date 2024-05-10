@@ -34,6 +34,11 @@ async function fetchUSDCPrice() {
   return price
 }
 
+async function fetchUSDTPrice() {
+  const price = await duel(getCoinMarketCapPrice("USDT"), getCoinMarketCapPrice("USDT"))
+  return price
+}
+
 async function fetchEUROCPrice() {
   const price = await duel(getCoinMarketCapPrice("EURC"), getCoinMarketCapPrice("EURC"))
   return price
@@ -70,6 +75,10 @@ async function fetchStETHPrice() {
 
 export async function stEthPrice() {
   return getOrSave<DuelResult>("stEth-price", fetchStETHPrice, 4 * MINUTE)
+}
+
+export async function usdtPrice() {
+  return getOrSave<DuelResult>("usdt-price", fetchUSDTPrice, 4 * MINUTE)
 }
 
 async function fetchETHPrice() {
