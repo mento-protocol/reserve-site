@@ -115,7 +115,7 @@ export async function tokenPriceInUSD(currencySymbol: Tokens) {
 }
 
 export default async function rates() {
-  const [btc, eth, celo, cmco2, usdc, euroc, dai, sDai, stEth] = allOkOrThrow(
+  const [btc, eth, celo, cmco2, usdc, euroc, dai, sDai, stEth, usdt] = allOkOrThrow(
     await Promise.all([
       btcPrice(),
       ethPrice(),
@@ -126,6 +126,7 @@ export default async function rates() {
       daiPrice(),
       sDaiPrice(),
       stEthPrice(),
+      usdtPrice(),
     ])
   )
 
@@ -139,5 +140,6 @@ export default async function rates() {
     dai,
     sDai,
     stEth,
+    usdt,
   }
 }
