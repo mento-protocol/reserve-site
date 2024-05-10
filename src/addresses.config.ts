@@ -1,5 +1,5 @@
 import { Tokens } from "./service/Data"
-import { RESERVE_MULTISIG_CELO } from "./contract-addresses"
+import { RESERVE_ADDRESS, RESERVE_MULTISIG_CELO } from "./contract-addresses"
 
 const wallets = {
   RESERVE_MULTISIG_ETH: "0xd0697f70E79476195B742d5aFAb14BE50f98CC1E",
@@ -151,7 +151,7 @@ const ADDRESSES: ReserveCrypto[] = [
     label: "USDT",
     token: "USDT",
     decimals: 6,
-    addresses: [wallets.RESERVE_MULTISIG_CELO],
+    addresses: [wallets.RESERVE_MULTISIG_CELO, RESERVE_ADDRESS],
     tokenAddress: tokensAddresses.USDT_ON_CELO,
     network: Network.CELO,
   },
