@@ -9,6 +9,7 @@ enum colors {
   green = "#77D2A7",
   violet = "#BF97FF",
   purpleGray = "#716b94",
+  darkolivegreen = "#556B2F",
 }
 
 export default colors
