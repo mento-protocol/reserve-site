@@ -1,5 +1,5 @@
 import { Tokens } from "./service/Data"
-import { RESERVE_MULTISIG_CELO } from "./contract-addresses"
+import { RESERVE_ADDRESS, RESERVE_MULTISIG_CELO } from "./contract-addresses"
 
 const wallets = {
   RESERVE_MULTISIG_ETH: "0xd0697f70E79476195B742d5aFAb14BE50f98CC1E",
@@ -13,6 +13,7 @@ const tokensAddresses = {
   STEUR_ON_CELO: "0x004626a008b1acdc4c74ab51644093b155e59a23",
   SAVINGS_DAI: "0x83f20f44975d03b1b09e64809b757c47f942beea",
   LIDO_STAKED_ETH: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+  USDT_ON_CELO: "0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e",
 }
 
 export enum AssetType {
@@ -145,6 +146,15 @@ const ADDRESSES: ReserveCrypto[] = [
     tokenAddress: tokensAddresses.LIDO_STAKED_ETH,
     network: Network.ETH,
   },
+  {
+    assetType: AssetType.ERC20,
+    label: "USDT",
+    token: "USDT",
+    decimals: 6,
+    addresses: [wallets.RESERVE_MULTISIG_CELO, RESERVE_ADDRESS],
+    tokenAddress: tokensAddresses.USDT_ON_CELO,
+    network: Network.CELO,
+  },
 ]
 // WHEN Adding new TOKENS also update the TokenColor enum in PieChart.tsx
 
@@ -172,6 +182,8 @@ export function generateLink(token: ReserveCrypto, address: string) {
         return `https://etherscan.io/address/${address}`
       case "stEUR":
         return `https://explorer.celo.org/mainnet/address/${address}`
+      case "USDT":
+        return `https://explorer.celo.org/address/${address}/coin_balances`
     }
   } else if (token.assetType === AssetType.ERC20InCurvePool) {
     // TODO: This mimics the existing implementation but we can think of a better

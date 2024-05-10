@@ -218,6 +218,7 @@ export async function getHoldingsOther() {
     stEurHeld,
     sDaiHeld,
     stEthHeld,
+    usdtHeld,
   ] = allOkOrThrow(
     await Promise.all([
       btcBalance(),
@@ -230,6 +231,7 @@ export async function getHoldingsOther() {
       erc20Balance("stEUR", Network.CELO),
       erc20Balance("sDAI", Network.ETH),
       erc20Balance("stETH", Network.ETH),
+      erc20Balance("USDT", Network.CELO),
     ])
   )
 
@@ -256,6 +258,7 @@ export async function getHoldingsOther() {
     toToken("stEUR", stEurHeld, rates.euroc),
     toToken("sDAI", sDaiHeld, rates.sDai),
     toToken("stETH", stEthHeld, rates.stEth),
+    toToken("USDT", usdtHeld, rates.usdt),
   ]
 
   return { otherAssets }
