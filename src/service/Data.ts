@@ -17,6 +17,7 @@ export type Tokens =
   | "sDAI"
   | "stETH"
   | "USDT"
+  | "cKES"
 
 export interface Address {
   address: string

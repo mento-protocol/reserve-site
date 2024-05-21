@@ -1,6 +1,12 @@
 import { StableToken } from "@celo/contractkit"
 import { ISO427SYMBOLS } from "src/interfaces/ISO427SYMBOLS"
-import { getCStableSupply, getCurveCUSD, getMultisigCUSD, getEXOFSupply } from "src/providers/Celo"
+import {
+  getCStableSupply,
+  getCurveCUSD,
+  getMultisigCUSD,
+  getEXOFSupply,
+  getCKESSupply,
+} from "src/providers/Celo"
 import { TokenModel } from "src/service/Data"
 import { getOrSave } from "src/service/cache"
 import { fiatPrices } from "src/service/rates"
@@ -23,6 +29,10 @@ async function multisigCUSD() {
 
 async function eXOFSupply() {
   return getOrSave("eXOFSupply", () => getEXOFSupply(), 5 * SECOND)
+}
+
+async function cKESSupply() {
+  return getOrSave("cKESSupply", () => getCKESSupply(), 5 * SECOND)
 }
 
 interface Circulation {
@@ -90,6 +100,7 @@ export default async function stables(): Promise<TokenModel[]> {
     }
   })
   tokens.push(await getEXOFData())
+  tokens.push(await getCKESData())
   return tokens
 }
 
@@ -111,6 +122,27 @@ export async function getEXOFData(): Promise<TokenModel> {
   } catch (error) {
     return {
       token: "eXOF",
+      units: null,
+      value: null,
+      updated: null,
+      hasError: true,
+    }
+  }
+}
+
+export async function getCKESData(): Promise<TokenModel> {
+  try {
+    const result = okOrThrow(await cKESSupply())
+    return {
+      token: "cKES",
+      units: result.value,
+      value: result.value * (await fiatPrices()).value["KES"],
+      updated: result.time,
+      hasError: result.hasError,
+    }
+  } catch (error) {
+    return {
+      token: "cKES",
       units: null,
       value: null,
       updated: null,

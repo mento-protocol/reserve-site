@@ -11,6 +11,7 @@ import {
   EUROC_AXELAR_ADDRESS,
   USDC_WORMHOLE_ADDRESS,
   USDC_CELO_NATIVE_ADDRESS,
+  CKES_ADDRESS,
 } from "src/contract-addresses"
 import { ERC20_ABI } from "src/constants/abis"
 import { JsonRpcProvider } from "@ethersproject/providers"
@@ -45,6 +46,7 @@ const curveBalanceCalculator = CurvePoolBalanceCalculator.Instance
 const uniV3BalanceCalculator = UniV3PoolBalanceCalculator.Instance
 const provider = new JsonRpcProvider(process.env.CELO_NODE_RPC_URL)
 const eXOFContract = new Contract(EXOF_ADDRESS, ERC20_ABI, provider)
+const cKESContract = new Contract(CKES_ADDRESS, ERC20_ABI, provider)
 
 export async function getFrozenBalance(): Promise<ProviderResult> {
   try {
@@ -294,6 +296,16 @@ export async function getEXOFSupply(): Promise<ProviderResult> {
     let eXOFSupply = (await eXOFContract.totalSupply()).toString()
     eXOFSupply = formatNumber(new BigNumber(eXOFSupply))
     return providerOk(eXOFSupply, Providers.celoNode)
+  } catch (error) {
+    return providerError(error, Providers.celoNode)
+  }
+}
+
+export async function getCKESSupply(): Promise<ProviderResult> {
+  try {
+    let cKesSupply = (await cKESContract.totalSupply()).toString()
+    cKesSupply = formatNumber(new BigNumber(cKesSupply))
+    return providerOk(cKesSupply, Providers.celoNode)
   } catch (error) {
     return providerError(error, Providers.celoNode)
   }
