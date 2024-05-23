@@ -131,22 +131,27 @@ export async function getEXOFData(): Promise<TokenModel> {
 }
 
 export async function getCKESData(): Promise<TokenModel> {
+  const kesData: TokenModel = {
+    token: "cKES",
+    units: null,
+    value: null,
+    updated: null,
+    hasError: false,
+  } as TokenModel
+
   try {
-    const result = okOrThrow(await cKESSupply())
-    return {
-      token: "cKES",
-      units: result.value,
-      value: result.value * (await fiatPrices()).value["KES"],
-      updated: result.time,
-      hasError: result.hasError,
+    const result: ProviderResult<number> = await cKESSupply()
+
+    if (result.hasError) {
+      kesData.hasError = true
+      return kesData
+    } else if (result.hasError == false) {
+      kesData.units = result.value
+      kesData.value = result.value * (await fiatPrices()).value["KES"]
+      kesData.updated = result.time
     }
   } catch (error) {
-    return {
-      token: "cKES",
-      units: null,
-      value: null,
-      updated: null,
-      hasError: true,
-    }
+    kesData.hasError = true
   }
+  return kesData
 }
