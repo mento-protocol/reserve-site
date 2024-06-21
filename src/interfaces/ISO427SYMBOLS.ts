@@ -166,4 +166,4 @@ export type ISO427SYMBOLS =
   | "ZAR"
   | "ZMK"
   | "ZMW"
-  | "ZWL"
+  | "ZWL";

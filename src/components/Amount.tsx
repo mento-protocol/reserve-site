@@ -1,21 +1,21 @@
-import { css } from "@emotion/react"
-import { BreakPoints } from "src/components/styles"
-import colors from "./colors"
-import { loadingStyle } from "./loadingKeyframes"
+import { css } from "@emotion/react";
+import { BreakPoints } from "src/components/styles";
+import colors from "./colors";
+import { loadingStyle } from "./loadingKeyframes";
 interface AmountProps {
-  label: string
-  units: number
-  value?: number
-  gridArea: string
-  context?: string
-  loading?: boolean
-  iconSrc?: string
+  label: string;
+  units: number;
+  value?: number;
+  gridArea: string;
+  context?: string;
+  loading?: boolean;
+  iconSrc?: string;
 }
 
 const formatter = new Intl.NumberFormat(undefined, {
   style: "decimal",
   maximumFractionDigits: 2,
-})
+});
 
 export default function Amount({
   iconSrc,
@@ -26,9 +26,9 @@ export default function Amount({
   value,
   loading,
 }: AmountProps) {
-  const display = formatter.format(units)
+  const display = formatter.format(units);
 
-  const id = `a-${dasherize(label)}`
+  const id = `a-${dasherize(label)}`;
 
   return (
     <div css={css(amountStyle, { gridArea })}>
@@ -51,18 +51,18 @@ export default function Amount({
       </span>
       <DollarDisplay css={primaryNumberStyle} value={value} loading={loading} label={label} />
     </div>
-  )
+  );
 }
 
 interface DollarDisplayProps {
-  value: number
-  loading: boolean
-  label: string
-  className?: string
+  value: number;
+  loading: boolean;
+  label: string;
+  className?: string;
 }
 
 export function DollarDisplay({ value, loading, label, className }: DollarDisplayProps) {
-  const displayValue = value && Math.round(value).toLocaleString()
+  const displayValue = value && Math.round(value).toLocaleString();
 
   return (
     <span
@@ -72,30 +72,30 @@ export function DollarDisplay({ value, loading, label, className }: DollarDispla
     >
       {loading ? " " : !!value && `$${displayValue}`}
     </span>
-  )
+  );
 }
 
 const abbrCSS = css({
   textDecoration: "none",
   cursor: "help",
-})
+});
 
 const amountLoadingStyle = css(loadingStyle, {
   backgroundColor: colors.gray,
   borderTopRightRadius: 6,
   color: "transparent",
   minHeight: "1.1em",
-})
+});
 
 const labelCss = css({
   textAlign: "left",
   alignItems: "flex-end",
   marginBottom: 0,
   lineHeight: 1,
-})
+});
 
 function dasherize(str: string) {
-  return str.toLowerCase().split(" ").join("-")
+  return str.toLowerCase().split(" ").join("-");
 }
 
 const labelAreaCss = css({
@@ -107,7 +107,7 @@ const labelAreaCss = css({
   [BreakPoints.tablet]: {
     flex: 1,
   },
-})
+});
 
 const numberStyle = css({
   textAlign: "left",
@@ -121,14 +121,14 @@ const numberStyle = css({
     fontSize: 28,
     marginBottom: 8,
   },
-})
+});
 
 const primaryNumberStyle = css(numberStyle, {
   [BreakPoints.tablet]: {
     textAlign: "right",
     flex: 1,
   },
-})
+});
 
 const secondaryNumberStyle = css(numberStyle, {
   textAlign: "left",
@@ -139,13 +139,13 @@ const secondaryNumberStyle = css(numberStyle, {
   ["@media (min-width: 597px) and (max-width: 699px)"]: {
     display: "none",
   },
-})
+});
 
 const dollarValueStyle = css(numberStyle, {
   color: colors.gray,
   marginTop: 16,
   marginBottom: 16,
-})
+});
 
 const amountStyle = css({
   [BreakPoints.tablet]: {
@@ -153,5 +153,5 @@ const amountStyle = css({
     justifyContent: "space-between",
     alignItems: "flex-end",
   },
-})
-const iconStyle = css({ height: 30, width: 30, marginRight: 8 })
+});
+const iconStyle = css({ height: 30, width: 30, marginRight: 8 });

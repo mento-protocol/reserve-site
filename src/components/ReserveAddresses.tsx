@@ -1,45 +1,45 @@
-import { css } from "@emotion/react"
-import * as React from "react"
-import { generateLink, ReserveAssetByLabel, ReserveCrypto } from "src/addresses.config"
-import Button from "src/components/Button"
-import CopyIcon from "src/components/CopyIcon"
+import { css } from "@emotion/react";
+import * as React from "react";
+import { generateLink, ReserveAssetByLabel, ReserveCrypto } from "src/addresses.config";
+import Button from "src/components/Button";
+import CopyIcon from "src/components/CopyIcon";
 
 interface Props {
-  reserveAssets: ReserveAssetByLabel
+  reserveAssets: ReserveAssetByLabel;
 }
 
 export default function ReserveAddresses(props: Props) {
   return (
     <>
       {Object.entries(props.reserveAssets).map(([label, assets]) => {
-        return <AssetDisplay key={label} label={label} assets={assets} />
+        return <AssetDisplay key={label} label={label} assets={assets} />;
       })}
       <Button href="https://docs.celo.org/command-line-interface/reserve">
         Query Reserve Holdings
       </Button>
     </>
-  )
+  );
 }
-const MILLISECONDS = 5000
+const MILLISECONDS = 5000;
 
 function useCopy(hex: string) {
-  const [justCopied, setCopied] = React.useState(false)
+  const [justCopied, setCopied] = React.useState(false);
 
   function onPress() {
-    onCopy(hex)
-    setCopied(true)
-    setTimeout(() => setCopied(false), MILLISECONDS)
+    onCopy(hex);
+    setCopied(true);
+    setTimeout(() => setCopied(false), MILLISECONDS);
   }
 
-  return { onPress, justCopied }
+  return { onPress, justCopied };
 }
 
 const AssetDisplay = React.memo(function _TokenDisplay({
   label,
   assets,
 }: {
-  label: string
-  assets: ReserveCrypto[]
+  label: string;
+  assets: ReserveCrypto[];
 }) {
   return (
     <div css={rootStyle}>
@@ -56,15 +56,20 @@ const AssetDisplay = React.memo(function _TokenDisplay({
         )
         .flat()}
     </div>
-  )
-})
+  );
+});
 
 function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
-  const { onPress, justCopied } = useCopy(hex)
+  const { onPress, justCopied } = useCopy(hex);
 
   return (
     <div css={entryCss}>
-      <a css={addressStyle} href={generateLink(asset, hex)} target="_blank" rel="noopener">
+      <a
+        css={addressStyle}
+        href={generateLink(asset, hex)}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {hex}
         {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
       </a>
@@ -73,18 +78,18 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
         <span className="info">{justCopied ? "Copied" : "Copy"}</span>
       </span>
     </div>
-  )
+  );
 }
 
 const entryCss = css({
   margin: "8px 0px",
-})
+});
 
 async function onCopy(text: string) {
-  await navigator.clipboard.writeText(text)
+  await navigator.clipboard.writeText(text);
 }
 
-const clickable = css({ cursor: "pointer" })
+const clickable = css({ cursor: "pointer" });
 
 const labelStyle = css({
   marginBottom: 5,
@@ -92,12 +97,12 @@ const labelStyle = css({
   a: {
     textDecoration: "none",
   },
-})
+});
 
 const addressStyle = css({
   wordWrap: "break-word",
   textDecoration: "none",
-})
+});
 
 const iconStyle = css(clickable, {
   marginLeft: "0.5em",
@@ -118,8 +123,8 @@ const iconStyle = css(clickable, {
       opacity: 1,
     },
   },
-})
+});
 
 const rootStyle = css({
   marginBottom: 30,
-})
+});

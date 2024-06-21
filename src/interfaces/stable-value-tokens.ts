@@ -1,6 +1,6 @@
-import { TokenModel } from "src/service/Data"
+import { TokenModel } from "src/service/Data";
 
 export default interface StableValueTokensAPI {
-  totalStableValueInUSD: number
-  tokens: TokenModel[]
+  totalStableValueInUSD: number;
+  tokens: TokenModel[];
 }

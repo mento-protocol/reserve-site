@@ -1,7 +1,7 @@
-import { Tokens } from "src/service/Data"
-import { HoldingsApi } from "src/service/holdings"
-import { fetcher } from "src/utils/fetcher"
-import useSWR from "swr"
+import { Tokens } from "src/service/Data";
+import { HoldingsApi } from "src/service/holdings";
+import { fetcher } from "src/utils/fetcher";
+import useSWR from "swr";
 
 const initalToken = {
   value: NaN,
@@ -9,7 +9,7 @@ const initalToken = {
   hasError: false,
   token: "CELO" as Tokens,
   updated: 0,
-}
+};
 
 const initalOtherToken = {
   value: NaN,
@@ -17,7 +17,7 @@ const initalOtherToken = {
   hasError: false,
   token: "BTC",
   updated: 0,
-} as const
+} as const;
 
 const INITAL_DATA: HoldingsApi = {
   celo: {
@@ -30,19 +30,27 @@ const INITAL_DATA: HoldingsApi = {
     { ...initalOtherToken, token: "ETH" },
     { ...initalOtherToken, token: "DAI" },
   ],
-}
+};
 
 export default function useHoldings(): { data: HoldingsApi; error: any } {
-  const celoHoldings = useSWR<Pick<HoldingsApi, "celo">>("/api/holdings/celo", fetcher, {
-    initialData: { celo: INITAL_DATA.celo },
-    revalidateOnMount: true,
-  })
-  const otherHoldings = useSWR<Pick<HoldingsApi, "otherAssets">>("/api/holdings/other", fetcher, {
-    initialData: { otherAssets: INITAL_DATA.otherAssets },
-    revalidateOnMount: true,
-  })
-  const error = celoHoldings.error || otherHoldings.error
-  const data: HoldingsApi = { ...celoHoldings.data, ...otherHoldings.data }
-  data.otherAssets ||= []
-  return { data, error }
+  const celoHoldings = useSWR<Pick<HoldingsApi, "celo">>(
+    "/api/holdings/celo",
+    fetcher,
+    {
+      initialData: { celo: INITAL_DATA.celo },
+      revalidateOnMount: true,
+    },
+  );
+  const otherHoldings = useSWR<Pick<HoldingsApi, "otherAssets">>(
+    "/api/holdings/other",
+    fetcher,
+    {
+      initialData: { otherAssets: INITAL_DATA.otherAssets },
+      revalidateOnMount: true,
+    },
+  );
+  const error = celoHoldings.error || otherHoldings.error;
+  const data: HoldingsApi = { ...celoHoldings.data, ...otherHoldings.data };
+  data.otherAssets ||= [];
+  return { data, error };
 }

@@ -1,16 +1,16 @@
-import { css } from "@emotion/react"
-import Chevron from "./Chevron"
-import colors from "./colors"
+import { css } from "@emotion/react";
+import Chevron from "./Chevron";
+import colors from "./colors";
 
 export default function Button({ children, href }) {
   return (
-    <a css={rootStyle} href={href} target="_blank" rel="noopener">
+    <a css={rootStyle} href={href} target="_blank" rel="noopener noreferrer">
       {children}
       <span>
         <Chevron size={12} />
       </span>
     </a>
-  )
+  );
 }
 
 const rootStyle = css({
@@ -39,4 +39,4 @@ const rootStyle = css({
       opacity: 0.65,
     },
   },
-})
+});

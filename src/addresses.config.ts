@@ -1,11 +1,11 @@
-import { Tokens } from "./service/Data"
-import { RESERVE_ADDRESS, RESERVE_MULTISIG_CELO } from "./contract-addresses"
+import { Tokens } from "./service/Data";
+import { RESERVE_ADDRESS, RESERVE_MULTISIG_CELO } from "./contract-addresses";
 
 const wallets = {
   RESERVE_MULTISIG_ETH: "0xd0697f70E79476195B742d5aFAb14BE50f98CC1E",
   RESERVE_MULTISIG_CELO,
   CUSTODIAN_ETH: "0x26ac3A7b8a675b741560098fff54F94909bE5E73",
-}
+};
 
 const tokensAddresses = {
   WBTC_ON_ETH: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
@@ -14,7 +14,7 @@ const tokensAddresses = {
   SAVINGS_DAI: "0x83f20f44975d03b1b09e64809b757c47f942beea",
   LIDO_STAKED_ETH: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
   USDT_ON_CELO: "0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e",
-}
+};
 
 export enum AssetType {
   Native = "Native",
@@ -29,36 +29,42 @@ export enum Network {
 }
 
 export interface BaseReserveAsset {
-  token: Tokens
-  label: string
-  addresses: string[]
-  network: Network
-  isWrappedAsset?: boolean
+  token: Tokens;
+  label: string;
+  addresses: string[];
+  network: Network;
+  isWrappedAsset?: boolean;
 }
 
 export interface ERC20InCurvePoolReserveAsset extends BaseReserveAsset {
-  assetType: AssetType.ERC20InCurvePool
-  curvePool?: string
+  assetType: AssetType.ERC20InCurvePool;
+  curvePool?: string;
 }
 
 export interface ERC20ReserveAsset extends BaseReserveAsset {
-  assetType: AssetType.ERC20
-  tokenAddress: string
-  decimals?: number
+  assetType: AssetType.ERC20;
+  tokenAddress: string;
+  decimals?: number;
 }
 
 export interface NativeReserveAsset extends BaseReserveAsset {
-  assetType: AssetType.Native
+  assetType: AssetType.Native;
 }
 
-export type ReserveCrypto = ERC20ReserveAsset | NativeReserveAsset | ERC20InCurvePoolReserveAsset
+export type ReserveCrypto =
+  | ERC20ReserveAsset
+  | NativeReserveAsset
+  | ERC20InCurvePoolReserveAsset;
 
 const ADDRESSES: ReserveCrypto[] = [
   {
     assetType: AssetType.Native,
     label: "BTC",
     token: "BTC",
-    addresses: ["38EPdP4SPshc5CiUCzKcLP9v7Vqo5u1HBL", "3Hc1Wje1DeJU5ahXdmD8Pt2yAfoYep331z"],
+    addresses: [
+      "38EPdP4SPshc5CiUCzKcLP9v7Vqo5u1HBL",
+      "3Hc1Wje1DeJU5ahXdmD8Pt2yAfoYep331z",
+    ],
     network: Network.BTC,
   },
   {
@@ -77,7 +83,10 @@ const ADDRESSES: ReserveCrypto[] = [
     assetType: AssetType.ERC20,
     label: "DAI",
     token: "DAI",
-    addresses: ["0x16B34Ce9A6a6F7FC2DD25Ba59bf7308E7B38E186", wallets.RESERVE_MULTISIG_ETH],
+    addresses: [
+      "0x16B34Ce9A6a6F7FC2DD25Ba59bf7308E7B38E186",
+      wallets.RESERVE_MULTISIG_ETH,
+    ],
     tokenAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
     decimals: 18,
     network: Network.ETH,
@@ -155,22 +164,25 @@ const ADDRESSES: ReserveCrypto[] = [
     tokenAddress: tokensAddresses.USDT_ON_CELO,
     network: Network.CELO,
   },
-]
+];
 // WHEN Adding new TOKENS also update the TokenColor enum in PieChart.tsx
 
-export default ADDRESSES
+export default ADDRESSES;
 
 export type ReserveCryptoForDisplay = Omit<ReserveCrypto, "addresses"> & {
-  addresses: { address: string; symbol: Tokens }[]
-}
+  addresses: { address: string; symbol: Tokens }[];
+};
 
 export function generateLink(token: ReserveCrypto, address: string) {
-  if (token.assetType == AssetType.ERC20 || token.assetType == AssetType.Native) {
+  if (
+    token.assetType == AssetType.ERC20 ||
+    token.assetType == AssetType.Native
+  ) {
     switch (token.token) {
       case "CELO":
-        return `https://explorer.celo.org/address/${address}/coin_balances`
+        return `https://explorer.celo.org/address/${address}/coin_balances`;
       case "BTC":
-        return `https://blockchain.info/address/${address}`
+        return `https://blockchain.info/address/${address}`;
       case "ETH":
       case "USDC":
       case "EUROC":
@@ -179,11 +191,11 @@ export function generateLink(token: ReserveCrypto, address: string) {
       case "WETH":
       case "stETH":
       case "sDAI":
-        return `https://etherscan.io/address/${address}`
+        return `https://etherscan.io/address/${address}`;
       case "stEUR":
-        return `https://explorer.celo.org/mainnet/address/${address}`
+        return `https://explorer.celo.org/mainnet/address/${address}`;
       case "USDT":
-        return `https://explorer.celo.org/address/${address}/coin_balances`
+        return `https://explorer.celo.org/address/${address}/coin_balances`;
     }
   } else if (token.assetType === AssetType.ERC20InCurvePool) {
     // TODO: This mimics the existing implementation but we can think of a better
@@ -191,18 +203,20 @@ export function generateLink(token: ReserveCrypto, address: string) {
     switch (token.token) {
       case "cUSD":
       case "USDC":
-        return `https://explorer.celo.org/mainnet/address/${address}/tokens#address-tabs`
+        return `https://explorer.celo.org/mainnet/address/${address}/tokens#address-tabs`;
     }
   }
 }
 
-export type ReserveAssetByLabel = Record<string /* label */, ReserveCrypto[]>
+export type ReserveAssetByLabel = Record<string /* label */, ReserveCrypto[]>;
 
-export function combineTokenAddressesByLabel(assets: ReserveCrypto[]): ReserveAssetByLabel {
-  const labels = Array.from(new Set(assets.map((a) => a.label)))
+export function combineTokenAddressesByLabel(
+  assets: ReserveCrypto[],
+): ReserveAssetByLabel {
+  const labels = Array.from(new Set(assets.map((a) => a.label)));
   return Object.fromEntries(
     labels.map((label) => {
-      return [label, assets.filter((asset) => asset.label === label)]
-    })
-  )
+      return [label, assets.filter((asset) => asset.label === label)];
+    }),
+  );
 }

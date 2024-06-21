@@ -1,18 +1,20 @@
-import * as Sentry from "@sentry/nextjs"
-import { NextApiRequest, NextApiResponse } from "next"
-import targets from "src/service/targets"
+import * as Sentry from "@sentry/nextjs";
+import { NextApiRequest, NextApiResponse } from "next";
+import targets from "src/service/targets";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method === "GET") {
-      const targetAllocations = await targets()
+      const targetAllocations = await targets();
 
-      res.json(targetAllocations)
+      res.json(targetAllocations);
     } else {
-      res.status(405)
+      res.status(405);
     }
   } catch (error) {
-    Sentry.captureException(error)
-    res.status(error.statusCode || 500).json({ message: error.message || "unknownError" })
+    Sentry.captureException(error);
+    res
+      .status(error.statusCode || 500)
+      .json({ message: error.message || "unknownError" });
   }
 }

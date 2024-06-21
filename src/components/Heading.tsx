@@ -1,11 +1,11 @@
-import { css } from "@emotion/react"
-import bottomBorder from "src/styles/bottomBorder"
+import { css } from "@emotion/react";
+import bottomBorder from "src/styles/bottomBorder";
 
 interface HeadingProps {
-  title: string
-  gridArea: string
-  iconSrc?: string
-  marginTop?: number
+  title: string;
+  gridArea: string;
+  iconSrc?: string;
+  marginTop?: number;
 }
 export default function Heading({ title, gridArea, iconSrc, marginTop }: HeadingProps) {
   return (
@@ -17,7 +17,7 @@ export default function Heading({ title, gridArea, iconSrc, marginTop }: Heading
         {title}
       </h2>
     </div>
-  )
+  );
 }
 
 const headingTextStyle = css({
@@ -27,6 +27,6 @@ const headingTextStyle = css({
   fontWeight: "normal",
   fontSize: 28,
   lineHeight: "36px",
-})
+});
 
-const iconStyle = css({ height: 30, width: 30, marginRight: 8 })
+const iconStyle = css({ height: 30, width: 30, marginRight: 8 });

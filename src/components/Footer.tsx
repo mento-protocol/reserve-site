@@ -1,6 +1,6 @@
-import { css } from "@emotion/react"
-import ChangeStory from "./ChangeStory"
-import { fineStyle } from "./styles"
+import { css } from "@emotion/react";
+import ChangeStory from "./ChangeStory";
+import { fineStyle } from "./styles";
 
 export default function Footer({ year }) {
   return (
@@ -26,12 +26,12 @@ export default function Footer({ year }) {
         <ChangeStory />
       </div>
     </footer>
-  )
+  );
 }
 
 const copyRightStyle = css(fineStyle, {
   marginTop: 15,
-})
+});
 
 const rootStyle = css({
   boxSizing: "border-box",
@@ -44,18 +44,18 @@ const rootStyle = css({
   justifyContent: "space-between",
   alignItems: "flex-end",
   flexWrap: "wrap",
-})
+});
 
 const wordMark = css({
   fontSize: 20,
   paddingBottom: 12,
-})
+});
 
 const contentStyle = css({
   maxWidth: 380,
-})
+});
 
 const navStyle = css({
   padding: 10,
   marginLeft: 10,
-})
+});

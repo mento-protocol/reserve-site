@@ -1,5 +1,5 @@
-import { css } from "@emotion/react"
-import colors from "src/components/colors"
+import { css } from "@emotion/react";
+import colors from "src/components/colors";
 
 export default function NavBar() {
   return (
@@ -9,7 +9,7 @@ export default function NavBar() {
       </a>
       <div css={navLinksStyle}></div>
     </nav>
-  )
+  );
 }
 
 const navLinksStyle = css({
@@ -17,7 +17,7 @@ const navLinksStyle = css({
   alignContent: "center",
   display: "flex",
   label: "links",
-})
+});
 
 const navStyle = css({
   boxSizing: "border-box",
@@ -34,7 +34,7 @@ const navStyle = css({
   "@media (max-width: 500px)": {
     paddingLeft: 0,
   },
-})
+});
 
 const linkStyle = {
   marginLeft: 10,
@@ -61,6 +61,6 @@ const linkStyle = {
       transform: "scale(1)",
     },
   },
-}
+};
 
-const logoStyle = css({ width: "40%" })
+const logoStyle = css({ width: "40%" });

@@ -1,31 +1,31 @@
-import { css } from "@emotion/react"
-import Head from "next/head"
-import Amount, { DollarDisplay } from "src/components/Amount"
-import Heading from "src/components/Heading"
-import PieChart, { ChartData } from "src/components/PieChart"
-import Section from "src/components/Section"
-import { Updated } from "src/components/Updated"
-import { BreakPoints } from "src/components/styles"
-import useHoldings from "src/hooks/useHoldings"
-import { HoldingsApi } from "src/service/holdings"
-import { skipZeros } from "src/utils/skipZeros"
-import { sumTotalHoldings } from "./sumTotalHoldings"
+import { css } from "@emotion/react";
+import Head from "next/head";
+import Amount, { DollarDisplay } from "src/components/Amount";
+import Heading from "src/components/Heading";
+import PieChart, { ChartData } from "src/components/PieChart";
+import Section from "src/components/Section";
+import { Updated } from "src/components/Updated";
+import { BreakPoints } from "src/components/styles";
+import useHoldings from "src/hooks/useHoldings";
+import { HoldingsApi } from "src/service/holdings";
+import { skipZeros } from "src/utils/skipZeros";
+import { sumTotalHoldings } from "./sumTotalHoldings";
 
 export function sumCeloTotal(holdings: HoldingsApi) {
-  const { custody, frozen, unfrozen } = holdings.celo
-  return custody.value + unfrozen.value + frozen.value
+  const { custody, frozen, unfrozen } = holdings.celo;
+  return custody.value + unfrozen.value + frozen.value;
 }
 
 export function sumNonCelo({ otherAssets }: HoldingsApi) {
-  return otherAssets.reduce((prev, current) => current.value + prev, 0)
+  return otherAssets.reduce((prev, current) => current.value + prev, 0);
 }
 
 function getPercents(holdings: HoldingsApi): ChartData[] {
-  const celoTotal = sumCeloTotal(holdings)
-  const total = celoTotal + sumNonCelo(holdings)
+  const celoTotal = sumCeloTotal(holdings);
+  const total = celoTotal + sumNonCelo(holdings);
 
   function toPercent(value: number) {
-    return (value / total) * 100
+    return (value / total) * 100;
   }
 
   return [{ token: "CELO", percent: toPercent(celoTotal) }].concat(
@@ -34,32 +34,32 @@ function getPercents(holdings: HoldingsApi): ChartData[] {
         return {
           token: asset.token,
           percent: toPercent(asset.value),
-        }
+        };
       })
       .filter((asset) => asset.percent > 0)
       .sort((a, b) => b.percent - a.percent)
-  )
+  );
 }
 
 function findOldestValueUpdatedAt(data?: HoldingsApi): number {
   if (!data) {
-    return 0
+    return 0;
   }
 
   return Math.min(
     ...data.otherAssets
       .map((token) => token.updated)
       .concat([data.celo.custody.updated, data.celo.frozen.updated, data.celo.unfrozen.updated])
-  )
+  );
 }
 
 export default function Holdings() {
-  const { data } = useHoldings()
-  const percentages = getPercents(data)
-  const isLoadingCelo = data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0
-  const isLoadingOther = !data.otherAssets.findIndex((coin) => coin.updated === 0)
-  const oldestUpdate = findOldestValueUpdatedAt(data)
-  const celo = data.celo
+  const { data } = useHoldings();
+  const percentages = getPercents(data);
+  const isLoadingCelo = data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0;
+  const isLoadingOther = !data.otherAssets.findIndex((coin) => coin.updated === 0);
+  const oldestUpdate = findOldestValueUpdatedAt(data);
+  const celo = data.celo;
 
   return (
     <>
@@ -125,7 +125,7 @@ export default function Holdings() {
         />
       </Section>
     </>
-  )
+  );
 }
 
 const rootStyle = css({
@@ -148,9 +148,9 @@ const rootStyle = css({
                         "eth"
                         "dai"`,
   },
-})
+});
 
 const hiddenCelo = css({
   visibility: "hidden",
   margin: 50,
-})
+});

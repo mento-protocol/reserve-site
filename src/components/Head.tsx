@@ -1,9 +1,9 @@
-import { css, Global } from "@emotion/react"
-import NextHead from "next/head"
-import colors from "src/components/colors"
-import description from "src/content/meta-description.md"
+import { css, Global } from "@emotion/react";
+import NextHead from "next/head";
+import colors from "src/components/colors";
+import description from "src/content/meta-description.md";
 
-const garamond = "EB Garamond, eb-garamond, Garamond, serif"
+const garamond = "EB Garamond, eb-garamond, Garamond, serif";
 
 const globalStyles = css`
   x * {
@@ -95,11 +95,11 @@ const globalStyles = css`
   table {
     border-spacing: 12px;
   }
-`
+`;
 
 export default function Head() {
-  const title = "Mento Reserve"
-  const metaImage = "/assets/open-graph.png"
+  const title = "Mento Reserve";
+  const metaImage = "/assets/open-graph.png";
   return (
     <>
       <Global styles={globalStyles} />
@@ -125,5 +125,5 @@ export default function Head() {
         <meta name="twitter:card" content="summary_large_image" />
       </NextHead>
     </>
-  )
+  );
 }
