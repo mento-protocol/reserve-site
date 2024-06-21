@@ -3,38 +3,19 @@ import colors from "src/components/colors";
 
 export default function NavBar() {
   return (
-    <nav css={navStyle}>
+    <nav className="phablet:pl-0 box-border flex w-full max-w-[1280px] items-center justify-between self-center px-[20px] py-[10px]">
       <a css={linkStyle} href="/">
-        <img src={"/assets/mento-logo.svg"} alt="Home" height={60} css={logoStyle} />
+        <img
+          src={"/assets/mento-logo.svg"}
+          alt="Home"
+          height={60}
+          className="w-[40%]"
+        />
       </a>
-      <div css={navLinksStyle}></div>
+      <div className="links flex content-center items-center"></div>
     </nav>
   );
 }
-
-const navLinksStyle = css({
-  alignItems: "center",
-  alignContent: "center",
-  display: "flex",
-  label: "links",
-});
-
-const navStyle = css({
-  boxSizing: "border-box",
-  maxWidth: 1280,
-  width: "100%",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "cemter",
-  alignSelf: "center",
-  paddingLeft: 20,
-  paddingRight: 20,
-  paddingTop: 10,
-  paddingBottom: 10,
-  "@media (max-width: 500px)": {
-    paddingLeft: 0,
-  },
-});
 
 const linkStyle = {
   marginLeft: 10,
@@ -63,4 +44,6 @@ const linkStyle = {
   },
 };
 
-const logoStyle = css({ width: "40%" });
+cn(
+  "[&_span]:transition-du text-reserve-dark spacing mx-[10px] cursor-pointer p-[10px] pl-[5px] text-[24px] font-medium tracking-[-0.02em] no-underline [&_span]:[transition-property:_'transform']",
+);

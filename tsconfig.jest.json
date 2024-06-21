@@ -3,7 +3,7 @@
   "compilerOptions": {
     "jsx": "preserve",
     "target": "es2016",
-    "types": ["node","@emotion/react/types/css-prop", "jest"],
+    "types": ["node", "jest"]
   },
   "typeRoots": ["node_modules/@types"],
   "include": [

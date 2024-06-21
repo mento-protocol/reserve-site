@@ -1,5 +1,3 @@
-import { css } from "@emotion/react";
-
 interface Props {
   date?: string | number;
   humanDate?: string;
@@ -7,7 +5,7 @@ interface Props {
 
 export function Updated({ date, humanDate }: Props) {
   return (
-    <small css={dateStyle}>
+    <small className="mb-[36px] block">
       <strong>Updated </strong>
 
       {date
@@ -20,4 +18,3 @@ export function Updated({ date, humanDate }: Props) {
     </small>
   );
 }
-const dateStyle = css({ marginBottom: 36, display: "block" });

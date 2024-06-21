@@ -1,4 +1,3 @@
-import { css } from "@emotion/react";
 import { FrontMatterResult } from "front-matter";
 import Footer from "src/components/Footer";
 import Head from "src/components/Head";
@@ -11,7 +10,10 @@ import Section from "src/components/Section";
 import { flexCol } from "src/components/styles";
 import PieChart from "src/components/PieChart";
 import useTargets from "src/hooks/useTargets";
-import { combineTokenAddressesByLabel, ReserveAssetByLabel } from "src/addresses.config";
+import {
+  combineTokenAddressesByLabel,
+  ReserveAssetByLabel,
+} from "src/addresses.config";
 
 interface ContentShape {
   title: string;
@@ -31,11 +33,14 @@ export default function Home(props: Props) {
   return (
     <>
       <Head />
-      <div css={rootStyle}>
-        <div css={containerStyle}>
+      <div className="flex min-h-screen flex-1 flex-col items-center justify-center">
+        <div className={flexCol("w-full flex-1 items-center")}>
           <NavBar />
-          <main css={mainStyle}>
-            <Section title={props.INTRO.attributes.title} content={props.INTRO.body} />
+          <main className="w-full max-w-[960px]">
+            <Section
+              title={props.INTRO.attributes.title}
+              content={props.INTRO.body}
+            />
             <Holdings />
             <Section title="Stable Value Assets">
               <StableTokens />
@@ -51,9 +56,15 @@ export default function Home(props: Props) {
               content={props.INITIAL_TARGET.body}
             />
 
-            <Section title={props.ABOUT.attributes.title} content={props.ABOUT.body} />
+            <Section
+              title={props.ABOUT.attributes.title}
+              content={props.ABOUT.body}
+            />
 
-            <Section title={props.RFP.attributes.title} content={props.RFP.body} />
+            <Section
+              title={props.RFP.attributes.title}
+              content={props.RFP.body}
+            />
             <Section
               title={props.ATTESTATIONS.attributes.title}
               content={props.ATTESTATIONS.body}
@@ -80,34 +91,25 @@ export default function Home(props: Props) {
 //   )
 // }
 
-const rootStyle = css({
-  display: "flex",
-  flexDirection: "column",
-  minHeight: "100vh",
-  flex: 1,
-  alignItems: "center",
-  justifyContent: " space-between",
-});
-
-const mainStyle = css({
-  width: "100%",
-  maxWidth: 960,
-});
-
-const containerStyle = css(flexCol, { flex: 1, width: "100%", alignItems: "center" });
-
 export async function getStaticProps() {
   try {
-    const [about, attestations, rfp, initialTarget, intro, matter, fetchAddresses] =
-      await Promise.all([
-        import("src/content/home/about.md").then((mod) => mod.default),
-        import("src/content/home/attestations.md").then((mod) => mod.default),
-        import("src/content/home/rfp.md").then((mod) => mod.default),
-        import("src/content/home/initial-target.md").then((mod) => mod.default),
-        import("src/content/home/intro.md").then((mod) => mod.default),
-        import("front-matter").then((mod) => mod.default),
-        import("src/service/addresses").then((mod) => mod.default),
-      ]);
+    const [
+      about,
+      attestations,
+      rfp,
+      initialTarget,
+      intro,
+      matter,
+      fetchAddresses,
+    ] = await Promise.all([
+      import("src/content/home/about.md").then((mod) => mod.default),
+      import("src/content/home/attestations.md").then((mod) => mod.default),
+      import("src/content/home/rfp.md").then((mod) => mod.default),
+      import("src/content/home/initial-target.md").then((mod) => mod.default),
+      import("src/content/home/intro.md").then((mod) => mod.default),
+      import("front-matter").then((mod) => mod.default),
+      import("src/service/addresses").then((mod) => mod.default),
+    ]);
     const addresses = await fetchAddresses();
 
     const tokensCombinedByLabels = combineTokenAddressesByLabel(addresses);

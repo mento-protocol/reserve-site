@@ -51,6 +51,7 @@
     "@babel/runtime": "^7.8.4",
     "@emotion/babel-plugin": "^11.2.0",
     "@ethersproject/providers": "^5.7.2",
+    "@savvywombat/tailwindcss-grid-areas": "^4.0.0",
     "@tailwindcss/typography": "^0.5.10",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.31",

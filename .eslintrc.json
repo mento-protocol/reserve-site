@@ -59,6 +59,7 @@
     "no-useless-escape": "warn",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-useless-constructor": "warn",
-    "@typescript-eslint/prefer-literal-enum-member": "warn"
+    "@typescript-eslint/prefer-literal-enum-member": "warn",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
   }
 }

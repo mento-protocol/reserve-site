@@ -2871,6 +2871,7 @@ __metadata:
     "@emotion/eslint-plugin": ^11.7.0
     "@emotion/react": ^11.7.1
     "@ethersproject/providers": ^5.7.2
+    "@savvywombat/tailwindcss-grid-areas": ^4.0.0
     "@sentry/nextjs": ^7.21.1
     "@tailwindcss/typography": ^0.5.10
     "@types/jest": ^26.0.20
@@ -3169,6 +3170,15 @@ __metadata:
   version: 1.0.6
   resolution: "@rushstack/eslint-patch@npm:1.0.6"
   checksum: fbecc15d7e95186622514d86f566082f1f6d04c30d93830bffe154fd699780f32120bbbce2efb919658696af01c58f0e02e580941ede8eee8cc9b007637b639c
+  languageName: node
+  linkType: hard
+
+"@savvywombat/tailwindcss-grid-areas@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@savvywombat/tailwindcss-grid-areas@npm:4.0.0"
+  peerDependencies:
+    tailwindcss: ^3.0.1
+  checksum: 4ac65fd117eddd4768b7552d7245a1edf258a0081ee34a8798522d6aa81ae5dc9ede5d56e1afeaf80bb9f956d87b429636434e0ddbafb0d11597766735ae7dfd
   languageName: node
   linkType: hard
 

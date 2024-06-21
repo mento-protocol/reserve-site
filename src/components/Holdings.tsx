@@ -37,7 +37,7 @@ function getPercents(holdings: HoldingsApi): ChartData[] {
         };
       })
       .filter((asset) => asset.percent > 0)
-      .sort((a, b) => b.percent - a.percent)
+      .sort((a, b) => b.percent - a.percent),
   );
 }
 
@@ -49,23 +49,40 @@ function findOldestValueUpdatedAt(data?: HoldingsApi): number {
   return Math.min(
     ...data.otherAssets
       .map((token) => token.updated)
-      .concat([data.celo.custody.updated, data.celo.frozen.updated, data.celo.unfrozen.updated])
+      .concat([
+        data.celo.custody.updated,
+        data.celo.frozen.updated,
+        data.celo.unfrozen.updated,
+      ]),
   );
 }
 
 export default function Holdings() {
   const { data } = useHoldings();
   const percentages = getPercents(data);
-  const isLoadingCelo = data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0;
-  const isLoadingOther = !data.otherAssets.findIndex((coin) => coin.updated === 0);
+  const isLoadingCelo =
+    data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0;
+  const isLoadingOther = !data.otherAssets.findIndex(
+    (coin) => coin.updated === 0,
+  );
   const oldestUpdate = findOldestValueUpdatedAt(data);
   const celo = data.celo;
 
   return (
     <>
       <Head>
-        <link rel="preload" href="/api/holdings/celo" as="fetch" crossOrigin="anonymous" />
-        <link rel="preload" href="/api/holdings/other" as="fetch" crossOrigin="anonymous" />
+        <link
+          rel="preload"
+          href="/api/holdings/celo"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/api/holdings/other"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
       </Head>
       <Section
         title={"Current Reserve Holdings"}
@@ -106,17 +123,23 @@ export default function Holdings() {
             gridArea="unfrozen"
           />
 
-          <Heading title="Non-Celo Crypto Assets" gridArea="crypto" marginTop={30} />
-          {data?.otherAssets?.filter(skipZeros)?.map((asset) => (
-            <Amount
-              key={asset.token}
-              loading={isLoadingOther}
-              label={asset.token}
-              units={asset.units}
-              value={asset.value}
-              gridArea={""}
-            />
-          ))}
+          <Heading
+            className="mt-[30px]"
+            title="Non-Celo Crypto Assets"
+            gridArea="crypto"
+          />
+          {data?.otherAssets
+            ?.filter(skipZeros)
+            ?.map((asset) => (
+              <Amount
+                key={asset.token}
+                loading={isLoadingOther}
+                label={asset.token}
+                units={asset.units}
+                value={asset.value}
+                gridArea={""}
+              />
+            ))}
         </div>
         <PieChart
           label={"Current Composition"}

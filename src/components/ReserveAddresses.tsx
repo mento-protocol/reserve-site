@@ -1,6 +1,9 @@
-import { css } from "@emotion/react";
 import * as React from "react";
-import { generateLink, ReserveAssetByLabel, ReserveCrypto } from "src/addresses.config";
+import {
+  generateLink,
+  ReserveAssetByLabel,
+  ReserveCrypto,
+} from "src/addresses.config";
 import Button from "src/components/Button";
 import CopyIcon from "src/components/CopyIcon";
 
@@ -42,8 +45,8 @@ const AssetDisplay = React.memo(function _TokenDisplay({
   assets: ReserveCrypto[];
 }) {
   return (
-    <div css={rootStyle}>
-      <h5 css={labelStyle}>{label}</h5>
+    <div className="mb-[30px]">
+      <h5 className="mb-[5px] mt-[10px] [&_a]:no-underline">{label}</h5>
       {assets
         .map((asset) =>
           asset.addresses.map((address) => (
@@ -52,7 +55,7 @@ const AssetDisplay = React.memo(function _TokenDisplay({
               asset={asset}
               hex={address}
             />
-          ))
+          )),
         )
         .flat()}
     </div>
@@ -63,9 +66,9 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
   const { onPress, justCopied } = useCopy(hex);
 
   return (
-    <div css={entryCss}>
+    <div className="mx-0 my-[8px]">
       <a
-        css={addressStyle}
+        className="text-wrap no-underline"
         href={generateLink(asset, hex)}
         target="_blank"
         rel="noopener noreferrer"
@@ -73,7 +76,11 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
         {hex}
         {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
       </a>
-      <span css={iconStyle} onClick={onPress}>
+      {/* TODO: check if all works as expected */}
+      <span
+        className="hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] ml-[0.5em] cursor-pointer p-[1px] [&.info]:ml-[3px] [&.info]:opacity-0"
+        onClick={onPress}
+      >
         <CopyIcon />
         <span className="info">{justCopied ? "Copied" : "Copy"}</span>
       </span>
@@ -81,50 +88,6 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
   );
 }
 
-const entryCss = css({
-  margin: "8px 0px",
-});
-
 async function onCopy(text: string) {
   await navigator.clipboard.writeText(text);
 }
-
-const clickable = css({ cursor: "pointer" });
-
-const labelStyle = css({
-  marginBottom: 5,
-  marginTop: 10,
-  a: {
-    textDecoration: "none",
-  },
-});
-
-const addressStyle = css({
-  wordWrap: "break-word",
-  textDecoration: "none",
-});
-
-const iconStyle = css(clickable, {
-  marginLeft: "0.5em",
-  padding: 1,
-  "&:active": {
-    svg: {
-      transform: "scale(1.1)",
-    },
-  },
-  ".info": {
-    marginLeft: 3,
-    opacity: 0,
-    transitionProperty: "opacity",
-    transitionDuration: "400ms",
-  },
-  "&:hover": {
-    ".info": {
-      opacity: 1,
-    },
-  },
-});
-
-const rootStyle = css({
-  marginBottom: 30,
-});
