@@ -2,16 +2,27 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   darkMode: ["class"],
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       gridTemplateAreas: {
         "ratio-desktop": ["ratio unfrozen .", "info info ."],
         "ratio-mobile": ["unfrozen", "ratio", "info"],
+        "holdings-desktop": [
+          "celo celo celo",
+          "unfrozen unfrozen frozen",
+          "crypto crypto crypto",
+          "btc eth dai",
+        ],
+        "holdings-mobile": [
+          "celo",
+          "unfrozen",
+          "frozen",
+          "crypto",
+          "btc",
+          "eth",
+          "dai",
+        ],
       },
       screens: {
         smallPhone: {
@@ -31,14 +42,17 @@ const config: Config = {
         },
       },
       animation: {
-        loaderPulseBorder: "loaderPulseBorder 2s linear infinite",
-        altSpin: "altSpin 1s linear infinite",
+        loading:
+          "loading 1.4s ease-in-out infinite 20ms alternate-reverse none",
       },
       keyframes: {
-        "spin-slow": {
-          // TODO: Cant find usage of this
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(360deg)" },
+        loading: {
+          from: {
+            opacity: "0",
+          },
+          to: {
+            opacity: "0.4",
+          },
         },
       },
       backgroundImage: {
@@ -90,6 +104,9 @@ const config: Config = {
         "in-bounce": "cubic-bezier(0.71, -0.46, 0.88, 0.6)",
         "out-bounce": "cubic-bezier(0.12, 0.84, 0.29, 1.16)",
         "in-out-bounce": "cubic-bezier(0.81, -0.44, 0.19, 1.44)",
+      },
+      transitionProperty: {
+        transformOpacity: "transform, opacity",
       },
       colors: {
         reserve: {

@@ -1,7 +1,6 @@
 import { Fragment } from "react";
-import { css } from "@emotion/react";
 import colors from "src/components/colors";
-import { loadingStyle } from "./loadingKeyframes";
+import { cn } from "src/styles/helpers";
 
 enum KeyAsHuman {
   "stable-value" = "Stable Value Assets*",
@@ -53,9 +52,11 @@ export default function PieChart({
   });
 
   return (
-    <figure css={rootStyle}>
-      <figcaption css={legendStyle}>
-        <h3 css={labelStyle}>{label}</h3>
+    <figure className="m-0 flex w-[670px] max-w-full flex-wrap pt-[48px]">
+      <figcaption className="min-w-[260px] flex-[3]">
+        <h3 className="mb-[24px] block w-full text-[28px] leading-[48px]">
+          {label}
+        </h3>
         {slices.map(({ token, percent }) => (
           <ChartKey
             key={token}
@@ -80,7 +81,12 @@ export default function PieChart({
           </>
         )}
       </figcaption>
-      <div css={css(pieStyle, isLoading && loadingStyle)}>
+      <div
+        className={cn(
+          "flex min-w-[250px] flex-[3]",
+          isLoading && "animate-loading",
+        )}
+      >
         <svg
           viewBox="-20 -20 40 40"
           transform="rotate(-90)"
@@ -122,30 +128,6 @@ export default function PieChart({
   );
 }
 
-const legendStyle = css({
-  minWidth: "260",
-  flex: 3,
-});
-
-const labelStyle = css({
-  marginBottom: 24,
-  fontSize: 28,
-  lineHeight: "48px",
-  display: "block",
-  width: "100%",
-});
-
-const pieStyle = css({ display: "flex", flex: 3, minWidth: 250 });
-
-const rootStyle = css({
-  paddingTop: 48,
-  margin: 0,
-  display: "flex",
-  flexWrap: "wrap",
-  maxWidth: "100%",
-  width: 670,
-});
-
 export interface ChartData {
   token: string;
   percent: number;
@@ -158,25 +140,15 @@ const formatter = new Intl.NumberFormat(undefined, {
 
 function ChartKey({ token, percent }: ChartData) {
   return (
-    <div css={chartKeyStyle}>
-      <div css={css(squareStyle, { backgroundColor: TokenColor[token] })} />
-      <span css={percentStyle}>
+    <div className="mb-[10px] flex text-[20px]">
+      <div
+        className="h-[20px] w-[20px] rounded-[3px]"
+        style={{ backgroundColor: TokenColor[token] }}
+      />
+      <span className="pl-[10px] pr-[8px] font-bold">
         {isNaN(percent) ? "??" : formatter.format(percent)}%
       </span>
       <span>{KeyAsHuman[token] || token}</span>
     </div>
   );
 }
-
-const squareStyle = css({ width: 20, height: 20, borderRadius: 3 });
-const chartKeyStyle = css({
-  display: "flex",
-  marginBottom: 10,
-  fontSize: 20,
-});
-
-const percentStyle = css({
-  fontWeight: "bold",
-  paddingLeft: 10,
-  paddingRight: 8,
-});

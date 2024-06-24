@@ -1,11 +1,9 @@
-import { css } from "@emotion/react";
 import Head from "next/head";
 import Amount, { DollarDisplay } from "src/components/Amount";
 import Heading from "src/components/Heading";
 import PieChart, { ChartData } from "src/components/PieChart";
 import Section from "src/components/Section";
 import { Updated } from "src/components/Updated";
-import { BreakPoints } from "src/components/styles";
 import useHoldings from "src/hooks/useHoldings";
 import { HoldingsApi } from "src/service/holdings";
 import { skipZeros } from "src/utils/skipZeros";
@@ -97,7 +95,7 @@ export default function Holdings() {
           </>
         }
       >
-        <div css={rootStyle}>
+        <div className="grid-areas-holdings-desktop tablet:grid-areas-holding-mobile grid grid-cols-3 gap-x-[20px] gap-y-[12px] tablet:grid-cols-1">
           <Heading title="Celo Assets" gridArea="celo" />
           {celo.frozen.value > 0 ? (
             <Amount
@@ -110,7 +108,7 @@ export default function Holdings() {
               gridArea="frozen"
             />
           ) : (
-            <div css={hiddenCelo}></div>
+            <div className="m-[50px] hidden"></div>
           )}
 
           <Amount
@@ -150,30 +148,3 @@ export default function Holdings() {
     </>
   );
 }
-
-const rootStyle = css({
-  display: "grid",
-  gridColumnGap: 20,
-  gridRowGap: 12,
-  gridAutoColumns: "1fr 1fr 1fr",
-  gridTemplateAreas: `"celo celo celo"
-                    "unfrozen unfrozen frozen"
-                    "crypto crypto crypto"
-                    "btc eth dai"
-                    `,
-  [BreakPoints.tablet]: {
-    gridAutoColumns: "1fr",
-    gridTemplateAreas: `"celo"
-                        "unfrozen"
-                        "frozen"
-                        "crypto"
-                        "btc"
-                        "eth"
-                        "dai"`,
-  },
-});
-
-const hiddenCelo = css({
-  visibility: "hidden",
-  margin: 50,
-});
