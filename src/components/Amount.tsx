@@ -38,7 +38,7 @@ export default function Amount({
             alt=""
           />
         )}
-        <p id={id} className="mb-0 items-end text-left text-[22px]">
+        <p id={id} className="mb-0 items-end text-left text-[22px] font-medium">
           <abbr className="cursor-help no-underline" title={context}>
             {label}
           </abbr>
