@@ -1,8 +1,6 @@
 import useSWR from "swr";
-import Amount from "src/components/Amount";
 import StableValueTokensAPI from "src/interfaces/stable-value-tokens";
 import { fetcher } from "src/utils/fetcher";
-import { sumLiquidHoldings } from "./sumLiquidHoldings";
 import { sumTotalHoldings } from "./sumTotalHoldings";
 import useHoldings from "src/hooks/useHoldings";
 import { useMemo } from "react";
@@ -13,9 +11,9 @@ export function Ratios() {
     fetcher,
   );
   const holdings = useHoldings();
-  // const isLoading = useMemo(() => {
-  //   return !holdings.data || !stables.data;
-  // }, [holdings.data, stables.data]);
+  const isLoading = useMemo(() => {
+    return !holdings.data || !stables.data;
+  }, [holdings.data, stables.data]);
 
   const outstanding = useMemo(() => {
     return stables.data?.totalStableValueInUSD || 1;
@@ -54,7 +52,7 @@ export function Ratios() {
       </section>
       <section className="mt-6 sm:mt-0 sm:pl-[72px]">
         <span className="text-[60px] font-medium">
-          {(totalReserveValue / outstanding).toFixed(3)}
+          {isLoading ? "Loading..." : totalReserveValue / outstanding}
         </span>
       </section>
     </article>
