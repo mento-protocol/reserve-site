@@ -1,4 +1,4 @@
-import Footer from "src/components/Footer";
+import { Footer } from "src/components/Footer";
 import Head from "src/components/Head";
 import NavBar from "src/components/Navbar";
 import { flexCol, mainStyle, rootStyle } from "src/components/styles";
@@ -13,12 +13,16 @@ export default function Page(props: Props) {
       <div className={rootStyle()}>
         <div className={flexCol("flex w-full items-center")}>
           <NavBar />
-          <main  className={mainStyle("flex flex-col justify-center items-center content-center")}>
+          <main
+            className={mainStyle(
+              "flex flex-col content-center items-center justify-center",
+            )}
+          >
             <img className="max-w-[400px] p-[24px]" src="assets/unique.png" />
-            <h1 className="text-center mt-[30px]">Page Not Found</h1>
+            <h1 className="mt-[30px] text-center">Page Not Found</h1>
           </main>
         </div>
-        <Footer year={props.year} />
+        <Footer />
       </div>
     </>
   );
