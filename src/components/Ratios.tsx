@@ -26,13 +26,11 @@ export function Ratios() {
         loading={isLoading}
         label="Total"
         units={totalReserveValue / outstanding}
-        gridArea="ratio"
       />
       <Amount
         loading={isLoading}
         label="Unfrozen"
         units={unfrozenReserveValue / outstanding}
-        gridArea="unfrozen"
       />
 
       <div className="[grid-area:'info']">

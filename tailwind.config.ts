@@ -26,22 +26,6 @@ const config: Config = {
       },
       screens: {
         content: "1120px",
-        // Old
-        smallPhone: {
-          max: "320px",
-        },
-        mediumPhone: {
-          max: "420px",
-        },
-        phablet: {
-          max: "500px",
-        },
-        smallTablet: {
-          max: "590px",
-        },
-        tablet: {
-          max: "890px",
-        },
       },
       animation: {
         loading:

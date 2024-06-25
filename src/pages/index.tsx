@@ -2,7 +2,7 @@ import { FrontMatterResult } from "front-matter";
 import Footer from "src/components/Footer";
 import Head from "src/components/Head";
 import Holdings from "src/components/Holdings";
-import { StableTokens } from "src/components/StableTokens";
+import { StableTokens } from "@/components/StableTokens.1";
 import { Ratios } from "src/components/Ratios";
 import ReserveAddresses from "src/components/ReserveAddresses";
 import Section from "src/components/Section";
