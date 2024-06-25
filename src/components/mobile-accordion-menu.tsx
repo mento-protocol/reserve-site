@@ -23,6 +23,14 @@ const mobileMenuAccordionMenuItems = [
       { name: "Twitter", href: links.twitter },
     ],
   },
+  {
+    name: "Other",
+    items: [
+      { name: "Team", href: links.mentoLabsTeam },
+      { name: "Privacy", href: links.privacy },
+      { name: "Terms", href: links.terms },
+    ],
+  },
 ];
 
 export const MobileAccordionMenu = ({

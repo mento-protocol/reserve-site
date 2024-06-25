@@ -45,7 +45,7 @@ const MobileFooter = () => {
               All rights reserved.
             </p>
           </div>
-            <SocialLinks />
+          <SocialLinks />
         </div>
       </div>
     </footer>
@@ -62,19 +62,29 @@ const FooterNav = () => {
               {heading}
             </h4>
             <ul className="flex flex-col font-inter text-[15px]">
-              {links.map(({ title, href, isDownload }) => {
-                return (
-                  <a
-                    key={title}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={href}
-                    download={isDownload}
-                  >
-                    {title}
-                  </a>
-                );
-              })}
+              {links.map(
+                ({
+                  title,
+                  href,
+                  isDownloadable,
+                }: {
+                  title: string;
+                  href: string;
+                  isDownloadable?: boolean;
+                }) => {
+                  return (
+                    <a
+                      key={title}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={href}
+                      download={isDownloadable}
+                    >
+                      {title}
+                    </a>
+                  );
+                },
+              )}
             </ul>
           </div>
         );
@@ -85,7 +95,7 @@ const FooterNav = () => {
 
 const SocialLinks = () => {
   return (
-    <nav className="dark:text-clean-white -mt-[10px] flex">
+    <nav className="dark:text-clean-white -mt-[10px] flex items-center justify-center">
       <a target="_blank" rel="noopener noreferrer" href={links.twitter}>
         <TwitterIcon className="text-black dark:text-white" />
       </a>
@@ -111,15 +121,18 @@ const SocialLinks = () => {
 
 const footerMenuItems = {
   Developers: [
-    { title: "Docs", href: links.docs, isDownload: false },
-    { title: "Github", href: links.github, isDownload: false },
+    { title: "Docs", href: links.docs },
+    { title: "Github", href: links.github },
+    { title: "Source", href: links.reserveSiteSource },
   ],
   Community: [
-    { title: "Forum", href: links.forum, isDownload: false },
-    { title: "Discord", href: links.discord, isDownload: false },
-    { title: "Twitter", href: links.twitter, isDownload: false },
+    { title: "Forum", href: links.forum },
+    { title: "Discord", href: links.discord },
+    { title: "Twitter", href: links.twitter },
   ],
   Other: [
-    { title: "Cookie Policy", href: links.cookiePolicy, isDownload: true },
+    { title: "Team", href: links.mentoLabsTeam },
+    { title: "Privacy", href: links.privacy },
+    { title: "Terms", href: links.terms },
   ],
 };
