@@ -14,6 +14,7 @@ import {
   combineTokenAddressesByLabel,
   ReserveAssetByLabel,
 } from "src/addresses.config";
+import { cn } from "@/styles/helpers";
 
 interface ContentShape {
   title: string;
@@ -33,7 +34,16 @@ export default function Home(props: Props) {
   return (
     <>
       <Head />
-      <div className="flex min-h-screen flex-1 flex-col items-center justify-center">
+      <div
+        className={cn(
+          "w-full overscroll-none bg-white font-fg text-base antialiased dark:bg-black",
+          "[background-origin:border-box,_border-box]",
+          "[background-position:_0_0,_0_0]",
+          "[background-repeat:_repeat]",
+          "[background-size:_100vw_200vh]",
+          "[background-image:radial-gradient(circle_at_calc(100%+210px)_37.5%,_#4D62F0_0%,_transparent_540px),radial-gradient(circle_at_calc(0%-210px)_75%,_#4D62F0_0%,_transparent_540px)]",
+        )}
+      >
         <div className={flexCol("w-full flex-1 items-center")}>
           <NavBar />
           <main className="w-full max-w-[960px]">
