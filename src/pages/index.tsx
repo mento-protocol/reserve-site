@@ -63,11 +63,12 @@ export default function Home(props: Props) {
           <CardBackground>
             <StableTokens />
           </CardBackground>
+          <CardBackground className="mt-[56px]">
+            <Ratios />
+          </CardBackground>
           <Holdings />
 
-          <Section title="Reserve Ratio">
-            <Ratios />
-          </Section>
+          <Section title="Reserve Ratio"></Section>
           <Section title={"Reserve Addresses"}>
             <ReserveAddresses reserveAssets={props.reserveCryptos} />
           </Section>
