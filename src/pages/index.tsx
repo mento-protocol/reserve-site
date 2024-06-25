@@ -1,5 +1,4 @@
 import { FrontMatterResult } from "front-matter";
-import Footer from "src/components/Footer";
 import Head from "src/components/Head";
 import Holdings from "src/components/Holdings";
 import { StableTokens } from "@/components/StableTokens";
@@ -14,6 +13,7 @@ import {
 } from "src/addresses.config";
 import { cn } from "@/styles/helpers";
 import { Header } from "@/components/header";
+import {Footer} from "@/components/Footer";
 import { CardBackground } from "@/components/CardBackground";
 
 interface ContentShape {
@@ -88,7 +88,7 @@ export default function Home(props: Props) {
             title={props.ATTESTATIONS.attributes.title}
             content={props.ATTESTATIONS.body}
           />
-          <Footer year={props.year} />
+          <Footer />
         </main>
       </div>
     </>
