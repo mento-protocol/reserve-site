@@ -15,7 +15,7 @@ export const Header = () => {
 
 const DesktopHeader = () => {
   return (
-    <header className="mx-auto hidden h-32 w-full items-center justify-center bg-white px-4 py-10 dark:border-[#343437] dark:bg-black lg:flex">
+    <header className="mx-auto hidden h-32 w-full items-center justify-center bg-white py-10 dark:border-[#343437] dark:bg-black lg:flex">
       <div className="flex w-full items-center justify-between">
         <Link href="/">
           <a>
