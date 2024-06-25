@@ -1,13 +1,10 @@
 import Head from "next/head";
-import Amount, { DollarDisplay } from "src/components/Amount";
+import { useMemo } from "react";
+import Amount from "src/components/Amount";
 import Heading from "src/components/Heading";
-import PieChart, { ChartData } from "src/components/PieChart";
-import Section from "src/components/Section";
-import { Updated } from "src/components/Updated";
 import useHoldings from "src/hooks/useHoldings";
 import { HoldingsApi } from "src/service/holdings";
 import { skipZeros } from "src/utils/skipZeros";
-import { sumTotalHoldings } from "./sumTotalHoldings";
 
 export function sumCeloTotal(holdings: HoldingsApi) {
   const { custody, frozen, unfrozen } = holdings.celo;
@@ -18,53 +15,19 @@ export function sumNonCelo({ otherAssets }: HoldingsApi) {
   return otherAssets.reduce((prev, current) => current.value + prev, 0);
 }
 
-function getPercents(holdings: HoldingsApi): ChartData[] {
-  const celoTotal = sumCeloTotal(holdings);
-  const total = celoTotal + sumNonCelo(holdings);
-
-  function toPercent(value: number) {
-    return (value / total) * 100;
-  }
-
-  return [{ token: "CELO", percent: toPercent(celoTotal) }].concat(
-    holdings.otherAssets
-      .map((asset) => {
-        return {
-          token: asset.token,
-          percent: toPercent(asset.value),
-        };
-      })
-      .filter((asset) => asset.percent > 0)
-      .sort((a, b) => b.percent - a.percent),
-  );
-}
-
-function findOldestValueUpdatedAt(data?: HoldingsApi): number {
-  if (!data) {
-    return 0;
-  }
-
-  return Math.min(
-    ...data.otherAssets
-      .map((token) => token.updated)
-      .concat([
-        data.celo.custody.updated,
-        data.celo.frozen.updated,
-        data.celo.unfrozen.updated,
-      ]),
-  );
-}
-
 export default function Holdings() {
   const { data } = useHoldings();
-  const percentages = getPercents(data);
-  const isLoadingCelo =
-    data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0;
-  const isLoadingOther = !data.otherAssets.findIndex(
-    (coin) => coin.updated === 0,
-  );
-  const oldestUpdate = findOldestValueUpdatedAt(data);
-  const celo = data.celo;
+  const isLoadingCelo = useMemo(() => {
+    return data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0;
+  }, [data.celo.frozen.updated, data.celo.unfrozen.updated]);
+
+  const isLoadingOther = useMemo(() => {
+    return !data.otherAssets.findIndex((coin) => coin.updated === 0);
+  }, [data.otherAssets]);
+
+  const celo = useMemo(() => {
+    return data.celo;
+  }, [data.celo]);
 
   return (
     <>
@@ -82,22 +45,16 @@ export default function Holdings() {
           crossOrigin="anonymous"
         />
       </Head>
-      <Section title={"Current Reserve Holdings"}>
-        <div className="grid-areas-holdings-desktop tablet:grid-areas-holding-mobile grid grid-cols-3 gap-x-[20px] gap-y-[12px] tablet:grid-cols-1">
-          <Heading title="Celo Assets" gridArea="celo" />
-          {celo.frozen.value > 0 ? (
-            <Amount
-              iconSrc={"/assets/tokens/CELO.svg"}
-              context="Funds frozen in on-chain Reserve contract"
-              loading={isLoadingCelo}
-              label="Frozen"
-              units={celo.frozen.units}
-              value={celo.frozen.value}
-            />
-          ) : (
-            <div className="m-[50px] hidden"></div>
-          )}
-
+      <article>
+        <h2 className="mx-auto mb-6 text-center text-[32px] font-medium">
+          Collateralisation ratio
+        </h2>
+        <section className="mb-[32px]">
+          <div className="mx-auto text-[26px]">
+            Total reserve holdings: {celo.frozen.value > 0 ?? celo.frozen.value}
+          </div>
+        </section>
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Amount
             iconSrc={"/assets/tokens/CELO.svg"}
             context="Funds in on-chain Reserve contract and in custody"
@@ -105,12 +62,6 @@ export default function Holdings() {
             label={celo.frozen.value > 0 ? "Unfrozen" : "CELO"}
             units={celo.unfrozen.units + celo.custody.units}
             value={celo.unfrozen.value + celo.custody.value}
-          />
-
-          <Heading
-            className="mt-[30px]"
-            title="Non-Celo Crypto Assets"
-            gridArea="crypto"
           />
           {data?.otherAssets
             ?.filter(skipZeros)
@@ -123,13 +74,8 @@ export default function Holdings() {
                 value={asset.value}
               />
             ))}
-        </div>
-        <PieChart
-          label={"Current Composition"}
-          slices={percentages}
-          isLoading={isLoadingCelo || isLoadingOther}
-        />
-      </Section>
+        </section>
+      </article>
     </>
   );
 }

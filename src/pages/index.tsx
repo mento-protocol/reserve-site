@@ -66,7 +66,9 @@ export default function Home(props: Props) {
           <CardBackground className="mt-[56px]">
             <Ratios />
           </CardBackground>
-          <Holdings />
+          <CardBackground className="mt-[56px]">
+            <Holdings />
+          </CardBackground>
 
           <Section title="Reserve Ratio"></Section>
           <Section title={"Reserve Addresses"}>
