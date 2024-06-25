@@ -14,6 +14,7 @@ import {
 } from "src/addresses.config";
 import { cn } from "@/styles/helpers";
 import { Header } from "@/components/header";
+import { CardBackground } from "@/components/CardBackground";
 
 interface ContentShape {
   title: string;
@@ -45,11 +46,13 @@ export default function Home(props: Props) {
       >
         <main className="content:max-w-[1120px] mx-auto w-full max-w-[calc(100vw_-_32px)]">
           <Header />
-          <Section
-            title={props.INTRO.attributes.title}
-            content={props.INTRO.body}
-          />
-          100vw
+          <CardBackground>
+            <Section
+              title={props.INTRO.attributes.title}
+              content={props.INTRO.body}
+            />
+          </CardBackground>
+
           <Holdings />
           <Section title="Stable Value Assets">
             <StableTokens />
