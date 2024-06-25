@@ -4,15 +4,18 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { withSentryConfig } = require("@sentry/nextjs")
+const { withSentryConfig } = require("@sentry/nextjs");
 
 const moduleExports = {
   reactStrictMode: true,
   experimental: {
     modern: true,
     scss: false,
+    optimizeDeps: {
+      include: ["react/jsx-runtime"],
+    },
   },
-  webpack: (config) => {
+  webpack: (config, context) => {
     config.module.rules.push({
       test: /\.md$/,
       use: [
@@ -23,8 +26,15 @@ const moduleExports = {
           },
         },
       ],
-    })
-    return config
+    });
+    if (config.plugins) {
+      config.plugins.push(
+        new context.webpack.IgnorePlugin({
+          resourceRegExp: /^(lokijs|pino-pretty|encoding)$/,
+        }),
+      );
+    }
+    return config;
   },
   async headers() {
     return [
@@ -73,7 +83,7 @@ const moduleExports = {
           },
         ],
       },
-    ]
+    ];
   },
 
   sentry: {
@@ -85,7 +95,7 @@ const moduleExports = {
     // for more information.
     hideSourceMaps: true,
   },
-}
+};
 
 const sentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
@@ -97,8 +107,8 @@ const sentryWebpackPluginOptions = {
   silent: false, // Suppresses all logs
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
-}
+};
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions)
+module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
