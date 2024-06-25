@@ -46,17 +46,25 @@ export default function Home(props: Props) {
       >
         <main className="content:max-w-[1120px] mx-auto w-full max-w-[calc(100vw_-_32px)]">
           <Header />
+          <section className="mb-[56px] flex flex-col items-center justify-center">
+            <h1 className="text-center text-[56px] font-bold leading-[56px] md:flex md:gap-1 md:text-[56px] md:leading-[56px]">
+              <span className="text-transparent [-webkit-text-stroke:1.2px_black] dark:[-webkit-text-stroke:1.2px_white]">
+                THE MENTO
+              </span>
+              <br className="md:hidden" />
+              <span className={``}>RESERVE</span>
+            </h1>
+            <p className="mb-0 mt-[32px] max-w-[690px] text-center text-lg font-normal">
+              A diversified portfolio of cryptoassets supporting the ability of
+              the Mento protocol to expand and contract the supply of Mento
+              stable assets.
+            </p>
+          </section>
           <CardBackground>
-            <Section
-              title={props.INTRO.attributes.title}
-              content={props.INTRO.body}
-            />
-          </CardBackground>
-
-          <Holdings />
-          <Section title="Stable Value Assets">
             <StableTokens />
-          </Section>
+          </CardBackground>
+          <Holdings />
+
           <Section title="Reserve Ratio">
             <Ratios />
           </Section>
