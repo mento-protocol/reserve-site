@@ -1,14 +1,10 @@
-import { css } from "@emotion/react"
+import { cn } from "src/styles/helpers";
 
-export const flexCol = css({
-  display: "flex",
-  flexDirection: "column",
-})
+export const flexCol = (classNames: string = "") => cn(`${classNames} flex flex-col`) 
 
-export const fineStyle = css({
-  fontSize: 16,
-  lineHeight: 1.25,
-})
+
+export const fineStyle = (classNames: string = "") => cn(`${classNames} font-[16px] leading-[1.25]`) 
+
 
 export enum BreakPoints {
   smallPhone = "@media (max-width: 320px)",
@@ -18,16 +14,6 @@ export enum BreakPoints {
   tablet = "@media (max-width: 890px)",
 }
 
-export const rootStyle = css({
-  display: "flex",
-  flexDirection: "column",
-  minHeight: "100vh",
-  flex: 1,
-  alignItems: "center",
-  justifyContent: " space-between",
-})
+export const rootStyle = (classNames: string = "") => cn(`${classNames} flex flex-col min-h-screen flex-1 items-center justify-between`) 
 
-export const mainStyle = css({
-  width: "100%",
-  maxWidth: 960,
-})
+export const mainStyle = (classNames: string = "") => cn(`${classNames} w-full max-w-[960px]`) 

@@ -1,3 +1,3 @@
-const stub = "/example.jpg"
+const stub = "/example.jpg";
 
-export default stub
+export default stub;

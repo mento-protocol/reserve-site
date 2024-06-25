@@ -1,4 +1,6 @@
 {
-  "semi": false,
-  "printWidth": 100
+  "semi": true,
+  "singleQuote": false,
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindFunctions": ["clsx", "cva", "cn"]
 }

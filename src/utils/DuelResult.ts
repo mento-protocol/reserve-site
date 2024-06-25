@@ -1,31 +1,31 @@
-import { Providers } from "src/providers/Providers"
-import { ResultOk, ResultError, okResult, errorResult } from "./Result"
+import { Providers } from "src/providers/Providers";
+import { ResultOk, ResultError, okResult, errorResult } from "./Result";
 
 interface DuelResultOk extends ResultOk<number> {
-  sources?: Providers[]
+  sources?: Providers[];
 }
 
 interface DuelError extends ResultError {
-  sources?: Providers[]
+  sources?: Providers[];
 }
 
-export type DuelResult = DuelResultOk | DuelError
+export type DuelResult = DuelResultOk | DuelError;
 
 export function duelOk(value: number, sources: Providers[], time = Date.now()) {
-  return { ...okResult(value, time), sources }
+  return { ...okResult(value, time), sources };
 }
 
 export function duelError(error: Error, sources: Providers[]) {
-  console.info("ERROR", sources, error)
-  return { ...errorResult(error), sources }
+  console.info("ERROR", sources, error);
+  return { ...errorResult(error), sources };
 }
 
 export function sumMerge(acc: DuelResult, current: DuelResult): DuelResult {
   if (acc.hasError == true) {
-    return acc
+    return acc;
   }
   if (current.hasError == true) {
-    return current
+    return current;
   }
 
   return {
@@ -33,5 +33,5 @@ export function sumMerge(acc: DuelResult, current: DuelResult): DuelResult {
     value: acc.value + current.value,
     time: current.time,
     sources: current.sources,
-  }
+  };
 }

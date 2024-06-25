@@ -1,8 +1,8 @@
-import * as React from "react"
-import colors from "./colors"
+import * as React from "react";
+import colors from "./colors";
 
 interface Props {
-  size?: number
+  size?: number;
 }
 
 export default React.memo(function CopyIcon({ size = 16 }: Props) {
@@ -13,5 +13,5 @@ export default React.memo(function CopyIcon({ size = 16 }: Props) {
         fill={colors.dark}
       />
     </svg>
-  )
-})
+  );
+});

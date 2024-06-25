@@ -2,38 +2,41 @@ import {
   CURVE_FACTORY_POOL_ADDRESS,
   GOVERNANCE_CELO,
   RESERVE_MULTISIG_CELO,
-} from "src/contract-addresses"
-import { CurvePoolProvider } from "./CurvePoolProvider"
-import { ICurvePoolProvider } from "./ICurvePoolProvider"
+} from "src/contract-addresses";
+import { CurvePoolProvider } from "./CurvePoolProvider";
+import { ICurvePoolProvider } from "./ICurvePoolProvider";
 
 export class CurvePoolBalanceCalculator {
-  private static _instance: CurvePoolBalanceCalculator
-  private curvePoolProvider: ICurvePoolProvider
+  private static _instance: CurvePoolBalanceCalculator;
+  private curvePoolProvider: ICurvePoolProvider;
 
   constructor(_curvePoolProvider: ICurvePoolProvider) {
-    this.curvePoolProvider = _curvePoolProvider
+    this.curvePoolProvider = _curvePoolProvider;
   }
 
   public static get Instance() {
-    return this._instance || (this._instance = this.create())
+    return this._instance || (this._instance = this.create());
   }
 
   private static create(): CurvePoolBalanceCalculator {
-    return new CurvePoolBalanceCalculator(new CurvePoolProvider())
+    return new CurvePoolBalanceCalculator(new CurvePoolProvider());
   }
 
   /**
    * @returns The fraction of liquidity in the pool that is owned by Mento
    */
   private async getGovernancePoolFraction(): Promise<number> {
-    const gscBalance = await this.curvePoolProvider.getLPBalanceOf(RESERVE_MULTISIG_CELO)
-    const governanceBalance = await this.curvePoolProvider.getLPBalanceOf(GOVERNANCE_CELO)
+    const gscBalance = await this.curvePoolProvider.getLPBalanceOf(
+      RESERVE_MULTISIG_CELO,
+    );
+    const governanceBalance =
+      await this.curvePoolProvider.getLPBalanceOf(GOVERNANCE_CELO);
 
-    const totalLPTokens = gscBalance.add(governanceBalance)
+    const totalLPTokens = gscBalance.add(governanceBalance);
 
-    const totalLpSupply = await this.curvePoolProvider.getTotalLPSupply()
+    const totalLpSupply = await this.curvePoolProvider.getTotalLPSupply();
 
-    return totalLPTokens / totalLpSupply
+    return totalLPTokens / totalLpSupply;
   }
 
   /**
@@ -41,10 +44,10 @@ export class CurvePoolBalanceCalculator {
    */
   public async calculateCurveCUSD(): Promise<number> {
     const CUSDPoolBalance = await this.curvePoolProvider.getCUSDBalanceOf(
-      CURVE_FACTORY_POOL_ADDRESS
-    )
-    const lpTokenFraction = await this.getGovernancePoolFraction()
-    return CUSDPoolBalance * lpTokenFraction
+      CURVE_FACTORY_POOL_ADDRESS,
+    );
+    const lpTokenFraction = await this.getGovernancePoolFraction();
+    return CUSDPoolBalance * lpTokenFraction;
   }
 
   /**
@@ -52,15 +55,15 @@ export class CurvePoolBalanceCalculator {
    */
   public async calculateCurveUSDC(): Promise<number> {
     const usdcPoolBalance = await this.curvePoolProvider.getUSDCBalanceOf(
-      CURVE_FACTORY_POOL_ADDRESS
-    )
+      CURVE_FACTORY_POOL_ADDRESS,
+    );
 
-    const decimals = await this.curvePoolProvider.getUSDCDecimals()
+    const decimals = await this.curvePoolProvider.getUSDCDecimals();
 
-    const lpTokenFraction = await this.getGovernancePoolFraction()
+    const lpTokenFraction = await this.getGovernancePoolFraction();
 
-    const usdcBalance = usdcPoolBalance * lpTokenFraction
+    const usdcBalance = usdcPoolBalance * lpTokenFraction;
 
-    return usdcBalance / 10 ** decimals
+    return usdcBalance / 10 ** decimals;
   }
 }

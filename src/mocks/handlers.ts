@@ -1,40 +1,97 @@
-import { rest } from "msw"
+import { rest } from "msw";
 
 export const handlers = [
-  rest.get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest", (req, res, ctx) => {
-    const symbol = req.url.searchParams.get("symbol")
+  rest.get(
+    "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest",
+    (req, res, ctx) => {
+      const symbol = req.url.searchParams.get("symbol");
 
-    if (symbol === "BTC") {
+      if (symbol === "BTC") {
+        return res(
+          ctx.json({
+            status: {
+              timestamp: "2021-10-06T22:16:47.540Z",
+              error_code: 0,
+              error_message: null,
+              elapsed: 18,
+              credit_count: 1,
+              notice: null,
+            },
+            data: {
+              BTC: {
+                id: 1,
+                name: "Bitcoin",
+                symbol: "BTC",
+                slug: "bitcoin",
+                num_market_pairs: 8523,
+                date_added: "2013-04-28T00:00:00.000Z",
+                tags: [Array],
+                max_supply: 21000000,
+                circulating_supply: 18836712,
+                total_supply: 18836712,
+                is_active: 1,
+                platform: null,
+                cmc_rank: 1,
+                is_fiat: 0,
+                last_updated: "2021-10-06T22:16:02.000Z",
+                quote: {
+                  USD: {
+                    price: 56200.0,
+                    volume_24h: 141886.9455234,
+                    percent_change_1h: 1.06488522,
+                    percent_change_24h: 1.56037461,
+                    percent_change_7d: -1.79004442,
+                    percent_change_30d: 78.16734785,
+                    percent_change_60d: 100.226614,
+                    percent_change_90d: 122.45884997,
+                    market_cap: 0,
+                    market_cap_dominance: 0,
+                    fully_diluted_market_cap: 24682051.01,
+                    last_updated: "2021-10-04T21:35:07.000Z",
+                  },
+                },
+              },
+            },
+          }),
+        );
+      }
+
       return res(
         ctx.json({
           status: {
-            timestamp: "2021-10-06T22:16:47.540Z",
+            timestamp: "2021-10-04T21:36:33.278Z",
             error_code: 0,
             error_message: null,
-            elapsed: 18,
+            elapsed: 8,
             credit_count: 1,
             notice: null,
           },
           data: {
-            BTC: {
-              id: 1,
-              name: "Bitcoin",
-              symbol: "BTC",
-              slug: "bitcoin",
-              num_market_pairs: 8523,
-              date_added: "2013-04-28T00:00:00.000Z",
-              tags: [Array],
-              max_supply: 21000000,
-              circulating_supply: 18836712,
-              total_supply: 18836712,
+            [symbol]: {
+              id: 8826,
+              name: "Moss Carbon Credit",
+              symbol: symbol,
+              slug: "moss-carbon-credit",
+              num_market_pairs: 8,
+              date_added: "2021-03-16T00:00:00.000Z",
+              tags: [],
+              max_supply: 1930269,
+              circulating_supply: 0,
+              total_supply: 0,
+              platform: {
+                id: 1027,
+                name: "Ethereum",
+                symbol: "ETH",
+                slug: "ethereum",
+                token_address: "0xfc98e825a2264d890f9a1e68ed50e1526abccacd",
+              },
               is_active: 1,
-              platform: null,
-              cmc_rank: 1,
+              cmc_rank: 3614,
               is_fiat: 0,
-              last_updated: "2021-10-06T22:16:02.000Z",
+              last_updated: "2021-10-04T21:35:07.000Z",
               quote: {
                 USD: {
-                  price: 56200.0,
+                  price: 12.78684525683156,
                   volume_24h: 141886.9455234,
                   percent_change_1h: 1.06488522,
                   percent_change_24h: 1.56037461,
@@ -50,83 +107,55 @@ export const handlers = [
               },
             },
           },
-        })
-      )
-    }
-
-    return res(
-      ctx.json({
-        status: {
-          timestamp: "2021-10-04T21:36:33.278Z",
-          error_code: 0,
-          error_message: null,
-          elapsed: 8,
-          credit_count: 1,
-          notice: null,
-        },
-        data: {
-          [symbol]: {
-            id: 8826,
-            name: "Moss Carbon Credit",
-            symbol: symbol,
-            slug: "moss-carbon-credit",
-            num_market_pairs: 8,
-            date_added: "2021-03-16T00:00:00.000Z",
-            tags: [],
-            max_supply: 1930269,
-            circulating_supply: 0,
-            total_supply: 0,
-            platform: {
-              id: 1027,
-              name: "Ethereum",
-              symbol: "ETH",
-              slug: "ethereum",
-              token_address: "0xfc98e825a2264d890f9a1e68ed50e1526abccacd",
-            },
-            is_active: 1,
-            cmc_rank: 3614,
-            is_fiat: 0,
-            last_updated: "2021-10-04T21:35:07.000Z",
-            quote: {
-              USD: {
-                price: 12.78684525683156,
-                volume_24h: 141886.9455234,
-                percent_change_1h: 1.06488522,
-                percent_change_24h: 1.56037461,
-                percent_change_7d: -1.79004442,
-                percent_change_30d: 78.16734785,
-                percent_change_60d: 100.226614,
-                percent_change_90d: 122.45884997,
-                market_cap: 0,
-                market_cap_dominance: 0,
-                fully_diluted_market_cap: 24682051.01,
-                last_updated: "2021-10-04T21:35:07.000Z",
-              },
+        }),
+      );
+    },
+  ),
+  rest.post(
+    "https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap",
+    (req, res, ctx) => {
+      return res(
+        ctx.json({
+          data: {
+            token: {
+              id: req.id,
+              symbol: "CMCO2",
+              derivedCUSD: 12.262838068638402,
             },
           },
-        },
-      })
-    )
-  }),
-  rest.post("https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap", (req, res, ctx) => {
-    return res(
-      ctx.json({
-        data: { token: { id: req.id, symbol: "CMCO2", derivedCUSD: 12.262838068638402 } },
-      })
-    )
-  }),
-  rest.get("https://api.coinbase.com/v2/prices/BTC-USD/spot", (req, res, ctx) => {
-    return res(ctx.json({ data: { base: "BTC", currency: "USD", amount: "50000.00" } }))
-  }),
-  rest.get("https://api.coinbase.com/v2/prices/ETH-USD/spot", (req, res, ctx) => {
-    return res(ctx.json({ data: { base: "ETH", currency: "USD", amount: "1500.00" } }))
-  }),
-  rest.get("https://api.coinbase.com/v2/prices/CGLD-USD/spot", (req, res, ctx) => {
-    return res(ctx.json({ data: { base: "CGLD", currency: "USD", amount: "3.9619" } }))
-  }),
+        }),
+      );
+    },
+  ),
+  rest.get(
+    "https://api.coinbase.com/v2/prices/BTC-USD/spot",
+    (req, res, ctx) => {
+      return res(
+        ctx.json({
+          data: { base: "BTC", currency: "USD", amount: "50000.00" },
+        }),
+      );
+    },
+  ),
+  rest.get(
+    "https://api.coinbase.com/v2/prices/ETH-USD/spot",
+    (req, res, ctx) => {
+      return res(
+        ctx.json({ data: { base: "ETH", currency: "USD", amount: "1500.00" } }),
+      );
+    },
+  ),
+  rest.get(
+    "https://api.coinbase.com/v2/prices/CGLD-USD/spot",
+    (req, res, ctx) => {
+      return res(
+        ctx.json({ data: { base: "CGLD", currency: "USD", amount: "3.9619" } }),
+      );
+    },
+  ),
   rest.get("https://api.etherscan.io/api", (req, res, ctx) => {
-    const action = req.url.searchParams.get("action")
-    const module = req.url.searchParams.get("module")
+    const action = req.url.searchParams.get("action");
+    const module = req.url.searchParams.get("module");
 
     if (module === "stats" && action === "ethprice") {
       return res(
@@ -139,26 +168,26 @@ export const handlers = [
             ethusd: "1400.00",
             ethusd_timestamp: "1613763975",
           },
-        })
-      )
+        }),
+      );
     } else if (module === "account" && action === "balance") {
       return res(
         ctx.json({
           status: "1",
           message: "OK-Missing/Invalid API Key, rate limit of 1/5sec applied",
           result: "40891626854930000000000",
-        })
-      )
+        }),
+      );
     } else if (module === "account" && action === "tokenbalance") {
       return res(
         ctx.json({
           status: "1",
           message: "OK-Missing/Invalid API Key, rate limit of 1/5sec applied",
           result: "2095536317474040000000000",
-        })
-      )
+        }),
+      );
     } else {
-      res.networkError("Query not mocked, add a mock to handlers.ts")
+      res.networkError("Query not mocked, add a mock to handlers.ts");
     }
   }),
 
@@ -170,19 +199,22 @@ export const handlers = [
           n_tx: 34,
           total_received: 140798450548,
         },
-      })
-    )
+      }),
+    );
   }),
-  rest.get("https://api.blockchain.com/v3/exchange/tickers/BTC-USD", (req, res, ctx) => {
-    return res(
-      ctx.json({
-        symbol: "BTC-USD",
-        price_24h: 51943.8,
-        volume_24h: 386.26026182,
-        last_trade_price: 56200.0,
-      })
-    )
-  }),
+  rest.get(
+    "https://api.blockchain.com/v3/exchange/tickers/BTC-USD",
+    (req, res, ctx) => {
+      return res(
+        ctx.json({
+          symbol: "BTC-USD",
+          price_24h: 51943.8,
+          volume_24h: 386.26026182,
+          last_trade_price: 56200.0,
+        }),
+      );
+    },
+  ),
   rest.get("https://blockstream.info/api/address/:address", (req, res, ctx) => {
     return res(
       ctx.json({
@@ -201,128 +233,131 @@ export const handlers = [
           spent_txo_sum: 0,
           tx_count: 0,
         },
-      })
-    )
+      }),
+    );
   }),
-  rest.get("https://api.ethplorer.io/getAddressInfo/:address/", (req, res, ctx) => {
-    return res(
-      ctx.json({
-        address: req.params.address,
-        ETH: {
-          balance: 23247.018265690003,
-          price: {
-            rate: 1612.7196048087776,
-            diff: 7.18,
-            diff7d: -11.3,
-            ts: 1614197282,
-            marketCapUsd: 185149586276.65247,
-            availableSupply: 114805813.5615,
-            volume24h: 31489053285.742695,
-            diff30d: 18.79831622796712,
-            volDiff1: -37.55454681633618,
-            volDiff7: 1.5720643391604767,
-            volDiff30: 9.414151933489975,
-          },
-        },
-        countTxs: 0,
-        tokens: [
-          {
-            tokenInfo: {
-              address: "0x35e125bb2527aeb74ef83f61008506362bf3fb24",
-              decimals: "5",
-              name: "Defla Yield Farm",
-              owner: "0x34cb50f289c5ae2d5950c7d7bd09d4db2444b2b6",
-              symbol: "DYF",
-              totalSupply: "21000000000000",
-              lastUpdated: 1603925320,
-              issuancesCount: 0,
-              holdersCount: 49,
-              ethTransfersCount: 0,
-              price: false,
+  rest.get(
+    "https://api.ethplorer.io/getAddressInfo/:address/",
+    (req, res, ctx) => {
+      return res(
+        ctx.json({
+          address: req.params.address,
+          ETH: {
+            balance: 23247.018265690003,
+            price: {
+              rate: 1612.7196048087776,
+              diff: 7.18,
+              diff7d: -11.3,
+              ts: 1614197282,
+              marketCapUsd: 185149586276.65247,
+              availableSupply: 114805813.5615,
+              volume24h: 31489053285.742695,
+              diff30d: 18.79831622796712,
+              volDiff1: -37.55454681633618,
+              volDiff7: 1.5720643391604767,
+              volDiff30: 9.414151933489975,
             },
-            balance: 10000000000,
-            totalIn: 0,
-            totalOut: 0,
           },
-          {
-            tokenInfo: {
-              address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-              name: "USD Coin",
-              decimals: "6",
-              symbol: "USDC",
-              totalSupply: "46865621933809550",
-              owner: "0xfcb19e6a322b27c06842a71e8c725399f049ae3a",
-              lastUpdated: 1656104909,
-              issuancesCount: 212105,
-              holdersCount: 1467597,
-              image: "/images/usdc.png",
-              website: "https://www.circle.com/en/usdc",
-              ethTransfersCount: 0,
-              price: {
-                rate: 1.0000415875422946,
-                diff: -0.02,
-                diff7d: -0.06,
-                ts: 1656104580,
-                marketCapUsd: 55923776648.97886,
-                availableSupply: 55921451013.26967,
-                volume24h: 5049871329.968494,
-                volDiff1: 9.52809981264808,
-                volDiff7: -31.636488564304827,
-                volDiff30: -13.628312371671498,
-                diff30d: -0.013294376020908771,
-                bid: 1.001,
-                currency: "USD",
+          countTxs: 0,
+          tokens: [
+            {
+              tokenInfo: {
+                address: "0x35e125bb2527aeb74ef83f61008506362bf3fb24",
+                decimals: "5",
+                name: "Defla Yield Farm",
+                owner: "0x34cb50f289c5ae2d5950c7d7bd09d4db2444b2b6",
+                symbol: "DYF",
+                totalSupply: "21000000000000",
+                lastUpdated: 1603925320,
+                issuancesCount: 0,
+                holdersCount: 49,
+                ethTransfersCount: 0,
+                price: false,
               },
-              publicTags: ["Stablecoins"],
+              balance: 10000000000,
+              totalIn: 0,
+              totalOut: 0,
             },
-            balance: 145179868044219,
-            totalIn: 0,
-            totalOut: 0,
-            rawBalance: "145179868044219",
-          },
-          {
-            tokenInfo: {
-              address: "0x6b175474e89094c44da98b954eedeac495271d0f",
-              name: "Dai",
-              decimals: "18",
-              symbol: "DAI",
-              totalSupply: "2265340224461973585512191864",
-              owner: "0x",
-              lastUpdated: 1614197339,
-              issuancesCount: 0,
-              holdersCount: 313001,
-              description:
-                "Decentralized multi-collateral stablecoin soft-pegged to the US Dollar by MakerDao.",
-              image: "/images/mcd-dai.png",
-              website: "https://makerdao.com/",
-              twitter: "MakerDAO",
-              reddit: "MakerDAO",
-              coingecko: "dai",
-              ethTransfersCount: 0,
-              price: {
-                rate: 1.00128688571454,
-                diff: 0.04,
-                diff7d: 0.03,
-                ts: 1614197288,
-                marketCapUsd: 2318706623.0815187,
-                availableSupply: 2315726547.668543,
-                volume24h: 667774487.076702,
-                diff30d: -0.009075119580259638,
-                volDiff1: -45.54940130975274,
-                volDiff7: 114.08982030342182,
-                volDiff30: -4.5879155179605675,
-                currency: "USD",
+            {
+              tokenInfo: {
+                address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+                name: "USD Coin",
+                decimals: "6",
+                symbol: "USDC",
+                totalSupply: "46865621933809550",
+                owner: "0xfcb19e6a322b27c06842a71e8c725399f049ae3a",
+                lastUpdated: 1656104909,
+                issuancesCount: 212105,
+                holdersCount: 1467597,
+                image: "/images/usdc.png",
+                website: "https://www.circle.com/en/usdc",
+                ethTransfersCount: 0,
+                price: {
+                  rate: 1.0000415875422946,
+                  diff: -0.02,
+                  diff7d: -0.06,
+                  ts: 1656104580,
+                  marketCapUsd: 55923776648.97886,
+                  availableSupply: 55921451013.26967,
+                  volume24h: 5049871329.968494,
+                  volDiff1: 9.52809981264808,
+                  volDiff7: -31.636488564304827,
+                  volDiff30: -13.628312371671498,
+                  diff30d: -0.013294376020908771,
+                  bid: 1.001,
+                  currency: "USD",
+                },
+                publicTags: ["Stablecoins"],
               },
-              publicTags: ["DeFi", "Stablecoins"],
+              balance: 145179868044219,
+              totalIn: 0,
+              totalOut: 0,
+              rawBalance: "145179868044219",
             },
-            balance: 2.09553631747404e24,
-            totalIn: 0,
-            totalOut: 0,
-          },
-        ],
-      })
-    )
-  }),
+            {
+              tokenInfo: {
+                address: "0x6b175474e89094c44da98b954eedeac495271d0f",
+                name: "Dai",
+                decimals: "18",
+                symbol: "DAI",
+                totalSupply: "2265340224461973585512191864",
+                owner: "0x",
+                lastUpdated: 1614197339,
+                issuancesCount: 0,
+                holdersCount: 313001,
+                description:
+                  "Decentralized multi-collateral stablecoin soft-pegged to the US Dollar by MakerDao.",
+                image: "/images/mcd-dai.png",
+                website: "https://makerdao.com/",
+                twitter: "MakerDAO",
+                reddit: "MakerDAO",
+                coingecko: "dai",
+                ethTransfersCount: 0,
+                price: {
+                  rate: 1.00128688571454,
+                  diff: 0.04,
+                  diff7d: 0.03,
+                  ts: 1614197288,
+                  marketCapUsd: 2318706623.0815187,
+                  availableSupply: 2315726547.668543,
+                  volume24h: 667774487.076702,
+                  diff30d: -0.009075119580259638,
+                  volDiff1: -45.54940130975274,
+                  volDiff7: 114.08982030342182,
+                  volDiff30: -4.5879155179605675,
+                  currency: "USD",
+                },
+                publicTags: ["DeFi", "Stablecoins"],
+              },
+              balance: 2.09553631747404e24,
+              totalIn: 0,
+              totalOut: 0,
+            },
+          ],
+        }),
+      );
+    },
+  ),
   rest.get("http://api.exchangeratesapi.io/v1/latest", (req, res, ctx) => {
     return res(
       ctx.json({
@@ -498,13 +533,15 @@ export const handlers = [
           ZMW: 18.185069,
           ZWL: 364.399269,
         },
-      })
-    )
+      }),
+    );
   }),
-  rest.get("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", (req, res, ctx) => {
-    return res(
-      ctx.xml(
-        `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+  rest.get(
+    "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+    (req, res, ctx) => {
+      return res(
+        ctx.xml(
+          `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
     <gesmes:Envelope xmlns:gesmes=\"http://www.gesmes.org/xml/2002-08-01\" xmlns=\"http://www.ecb.int/vocabulary/2002-08-01/eurofxref\">
     	<gesmes:subject>Reference rates</gesmes:subject>
     	<gesmes:Sender>
@@ -546,8 +583,9 @@ export const handlers = [
     			<Cube currency='ZAR' rate='18.1101'/>
     		</Cube>
     	</Cube>
-    </gesmes:Envelope>`
-      )
-    )
-  }),
-]
+    </gesmes:Envelope>`,
+        ),
+      );
+    },
+  ),
+];
