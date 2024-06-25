@@ -23,6 +23,13 @@ export function Ratios() {
     return holdings.data ? sumTotalHoldings(holdings.data) : 1;
   }, [holdings, sumTotalHoldings]);
 
+  const result = useMemo(() => {
+    if (isLoading) return;
+
+    const processed = totalReserveValue / outstanding;
+    if (!Number.isNaN(processed)) return processed.toFixed(3);
+  }, [totalReserveValue, isLoading, outstanding]);
+
   // const unfrozenReserveValue = useMemo(() => {
   //   return holdings.data ? sumLiquidHoldings(holdings.data) : 1;
   // }, [holdings, sumLiquidHoldings]);
@@ -52,7 +59,7 @@ export function Ratios() {
       </section>
       <section className="mt-6 sm:mt-0 sm:pl-[72px]">
         <span className="text-[60px] font-medium">
-          {isLoading ? "Loading..." : totalReserveValue / outstanding}
+          {!isLoading && result ? result : "Loading..."}
         </span>
       </section>
     </article>
