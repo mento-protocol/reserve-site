@@ -6,7 +6,7 @@ import { GithubIcon } from "@/components/icons/github.icon";
 import { DiscordIcon } from "@/components/icons/discord.icon";
 import { cn } from "@/styles/helpers";
 
-export const Footer = ({ year }: { year: number }) => {
+export const Footer = () => {
   return (
     <>
       <DesktopFooter />
