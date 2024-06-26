@@ -13,7 +13,7 @@ import {
 } from "src/addresses.config";
 import { cn } from "@/styles/helpers";
 import { Header } from "@/components/header";
-import {Footer} from "@/components/Footer";
+import { Footer } from "@/components/Footer";
 import { CardBackground } from "@/components/CardBackground";
 
 interface ContentShape {
@@ -145,7 +145,6 @@ export async function getStaticProps() {
         ABOUT,
         ATTESTATIONS,
         RFP,
-        year: new Date().getFullYear(),
       },
     };
   } catch (e) {

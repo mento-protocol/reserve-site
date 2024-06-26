@@ -4,10 +4,9 @@ import { MobileAccordionMenu } from "@/components/mobile-accordion-menu";
 import { TwitterIcon } from "@/components/icons/twitter.icon";
 import { GithubIcon } from "@/components/icons/github.icon";
 import { DiscordIcon } from "@/components/icons/discord.icon";
+import { cn } from "@/styles/helpers";
 
-
-
-export const Footer = () => {
+export const Footer = ({ year }: { year: number }) => {
   return (
     <>
       <DesktopFooter />
@@ -21,10 +20,7 @@ const DesktopFooter = () => {
     <footer className="mx-auto mt-36 hidden items-start justify-between gap-16 border-t border-black px-4 pb-20 pt-20 dark:border-[#343437] lg:mx-10 lg:flex xl:mx-auto xl:max-w-[1120px] xl:gap-36">
       <div>
         <MentoLogoIcon />
-        <p className="pt-3 font-inter text-[#636768] ">
-          Mento © 2024. <br />
-          All rights reserved.
-        </p>
+        <CopyrightNotice className="pt-3" />
       </div>
       <FooterNav />
       <SocialLinks />
@@ -40,10 +36,7 @@ const MobileFooter = () => {
         <div className="mt-6 flex justify-between">
           <div className="flex flex-col">
             <MentoLogoIcon className="h-5 w-[90px]" />
-            <p className="text-body-light pt-4">
-              Mento © 2024. <br />
-              All rights reserved.
-            </p>
+            <CopyrightNotice className="pt-4" />
           </div>
           <SocialLinks />
         </div>
@@ -58,10 +51,10 @@ const FooterNav = () => {
       {Object.entries(footerMenuItems).map(([heading, links]) => {
         return (
           <div key={heading}>
-            <h4 className="text-body-light mb-[10px] font-fg text-[20px] font-medium leading-none text-[#636768] dark:text-[#8F9394]">
+            <h4 className="mb-[10px] font-fg text-[20px] font-medium leading-none text-[#636768] dark:text-[#8F9394]">
               {heading}
             </h4>
-            <ul className="flex flex-col font-inter text-[15px]">
+            <ul className="flex flex-col gap-2 font-inter text-[15px]">
               {links.map(
                 ({
                   title,
@@ -135,4 +128,14 @@ const footerMenuItems = {
     { title: "Privacy", href: links.privacy },
     { title: "Terms", href: links.terms },
   ],
+};
+
+const CopyrightNotice = ({ className }) => {
+  const year = new Date().getFullYear();
+  return (
+    <p className={cn("text-[#636768]", className)}>
+      Mento © {year}. <br />
+      All rights reserved.
+    </p>
+  );
 };
