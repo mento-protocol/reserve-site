@@ -2,7 +2,7 @@ import { FrontMatterResult } from "front-matter";
 import Footer from "src/components/Footer";
 import Head from "src/components/Head";
 import Holdings from "src/components/Holdings";
-import { StableTokens } from "src/components/StableTokens";
+import { StableTokens } from "@/components/StableTokens";
 import { Ratios } from "src/components/Ratios";
 import ReserveAddresses from "src/components/ReserveAddresses";
 import Section from "src/components/Section";
@@ -14,6 +14,7 @@ import {
 } from "src/addresses.config";
 import { cn } from "@/styles/helpers";
 import { Header } from "@/components/header";
+import { CardBackground } from "@/components/CardBackground";
 
 interface ContentShape {
   title: string;
@@ -35,7 +36,7 @@ export default function Home(props: Props) {
       <Head />
       <div
         className={cn(
-          "min-h-screen w-full overscroll-none bg-white font-fg text-base antialiased dark:bg-black",
+          "min-h-screen w-full overscroll-none bg-white text-base antialiased dark:bg-black",
           "[background-origin:border-box,_border-box]",
           "[background-position:_0_0,_0_0]",
           "[background-repeat:_repeat]",
@@ -43,17 +44,27 @@ export default function Home(props: Props) {
           "[background-image:radial-gradient(circle_at_calc(100%+210px)_37.5%,_#4D62F0_0%,_transparent_540px),radial-gradient(circle_at_calc(0%-210px)_75%,_#4D62F0_0%,_transparent_540px)]",
         )}
       >
-        <main className="content:max-w-[1120px] mx-auto w-full max-w-[calc(100vw_-_32px)]">
+        <main className="mx-auto w-full max-w-[calc(100vw_-_32px)] content:max-w-[1120px]">
           <Header />
-          <Section
-            title={props.INTRO.attributes.title}
-            content={props.INTRO.body}
-          />
-          100vw
-          <Holdings />
-          <Section title="Stable Value Assets">
+          <section className="mb-[56px] flex flex-col items-center justify-center">
+            <h1 className="text-center font-fg text-[56px] font-bold leading-[56px] md:flex md:gap-1 md:text-[56px] md:leading-[56px]">
+              <span className="text-transparent [-webkit-text-stroke:1.2px_black] dark:[-webkit-text-stroke:1.2px_white]">
+                THE MENTO
+              </span>
+              <br className="md:hidden" />
+              <span className={``}>RESERVE</span>
+            </h1>
+            <p className="mb-0 mt-[32px] max-w-[690px] text-center font-inter text-lg">
+              A diversified portfolio of cryptoassets supporting the ability of
+              the Mento protocol to expand and contract the supply of Mento
+              stable assets.
+            </p>
+          </section>
+          <CardBackground>
             <StableTokens />
-          </Section>
+          </CardBackground>
+          <Holdings />
+
           <Section title="Reserve Ratio">
             <Ratios />
           </Section>

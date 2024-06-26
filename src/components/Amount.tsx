@@ -1,9 +1,9 @@
+import { CardBackground } from "@/components/CardBackground";
 import { cn } from "@/styles/helpers";
 interface AmountProps {
   label: string;
   units: number;
   value?: number;
-  gridArea: string;
   context?: string;
   loading?: boolean;
   iconSrc?: string;
@@ -18,7 +18,6 @@ export default function Amount({
   iconSrc,
   label,
   units,
-  gridArea,
   context,
   value,
   loading,
@@ -28,23 +27,18 @@ export default function Amount({
   const id = `a-${dasherize(label)}`;
 
   return (
-    <div
-      className={cn(
-        "tablet:flex tablet:items-end tablet:justify-between",
-        gridArea,
-      )}
-    >
-      <div className="my-[12px] inline-flex flex-row items-end tablet:flex-1">
+    <CardBackground className="min-w-[220px] px-6 py-4">
+      <div className="flex flex-row items-center">
         {iconSrc && (
           <img
-            width={30}
-            height={30}
+            width={32}
+            height={32}
             src={iconSrc}
-            className="mr-[8px] h-[30px] w-[30px]"
+            className="mr-2 h-[32px] w-[32px]"
             alt=""
           />
         )}
-        <p id={id} className="mb-0 items-end text-left leading-[1]">
+        <p id={id} className="mb-0 items-end text-left text-[22px] font-medium">
           <abbr className="cursor-help no-underline" title={context}>
             {label}
           </abbr>
@@ -54,22 +48,20 @@ export default function Amount({
       <span
         aria-labelledby={id}
         className={cn(
-          "block text-left text-[36px] opacity-100 transition-opacity duration-500 tablet:mb-[8px]",
-          !loading && value
-            ? "pl-[2em] tablet:text-right tablet:text-[28px]"
-            : "tablet:flex-1 tablet:text-[28px]",
+          "my-6 block text-left text-[32px] font-medium opacity-100 transition-opacity duration-500",
+          !loading && value ? "" : "",
           loading && "amountLoadingStyle",
         )}
       >
         {display}
       </span>
       <DollarDisplay
-        className="block text-left text-[36px] opacity-100 transition-opacity duration-500 tablet:mb-[8px] tablet:flex-1 tablet:text-right tablet:text-[28px]"
+        className="block text-left text-[22px] opacity-100 transition-opacity duration-500"
         value={value}
         loading={loading}
         label={label}
       />
-    </div>
+    </CardBackground>
   );
 }
 
@@ -93,7 +85,7 @@ export function DollarDisplay({
       className={cn(
         className,
         loading && "animate-loading",
-        "my-[16px] block text-left text-[36px] text-reserve-gray opacity-100 transition-opacity duration-500 tablet:mb-[8px] tablet:flex-1 tablet:text-[28px]",
+        "text-[22px] text-mento-blue",
       )}
       aria-label={`Value of ${label} in USD`}
     >

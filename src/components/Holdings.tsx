@@ -82,19 +82,7 @@ export default function Holdings() {
           crossOrigin="anonymous"
         />
       </Head>
-      <Section
-        title={"Current Reserve Holdings"}
-        subHeading={
-          <>
-            <DollarDisplay
-              loading={isLoadingCelo || isLoadingOther}
-              label="Liquidity"
-              value={sumTotalHoldings(data)}
-            />
-            <Updated date={oldestUpdate} />
-          </>
-        }
-      >
+      <Section title={"Current Reserve Holdings"}>
         <div className="grid-areas-holdings-desktop tablet:grid-areas-holding-mobile grid grid-cols-3 gap-x-[20px] gap-y-[12px] tablet:grid-cols-1">
           <Heading title="Celo Assets" gridArea="celo" />
           {celo.frozen.value > 0 ? (
@@ -105,7 +93,6 @@ export default function Holdings() {
               label="Frozen"
               units={celo.frozen.units}
               value={celo.frozen.value}
-              gridArea="frozen"
             />
           ) : (
             <div className="m-[50px] hidden"></div>
@@ -118,7 +105,6 @@ export default function Holdings() {
             label={celo.frozen.value > 0 ? "Unfrozen" : "CELO"}
             units={celo.unfrozen.units + celo.custody.units}
             value={celo.unfrozen.value + celo.custody.value}
-            gridArea="unfrozen"
           />
 
           <Heading
@@ -135,7 +121,6 @@ export default function Holdings() {
                 label={asset.token}
                 units={asset.units}
                 value={asset.value}
-                gridArea={""}
               />
             ))}
         </div>

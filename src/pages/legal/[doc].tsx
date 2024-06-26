@@ -4,7 +4,6 @@ import Head from "src/components/Head";
 import NavBar from "src/components/Navbar";
 import Section from "src/components/Section";
 import { flexCol, mainStyle, rootStyle } from "src/components/styles";
-import { Updated } from "src/components/Updated";
 
 interface Props {
   body: string;
@@ -18,12 +17,12 @@ export default function Page(props: Props) {
     <>
       <Head />
       <div className={rootStyle()}>
-        <div className={flexCol("flex-1 w-full items-center")}>
+        <div className={flexCol("w-full flex-1 items-center")}>
           <NavBar />
           <main className={mainStyle()}>
             <Section
               title={props.title}
-              subHeading={<Updated humanDate={props.updated} />}
+              // subHeading={<Updated humanDate={props.updated} />}
               content={props.body}
             />
           </main>
@@ -35,7 +34,9 @@ export default function Page(props: Props) {
 }
 
 export async function getStaticProps({ params }) {
-  const doc = await import(`src/content/legal/${params.doc}.md`).then((mod) => mod.default);
+  const doc = await import(`src/content/legal/${params.doc}.md`).then(
+    (mod) => mod.default,
+  );
   const matter = await import("front-matter").then((mod) => mod.default);
   const document = matter<{ title: string; updated: string }>(doc);
   return {
