@@ -25,28 +25,12 @@ export function Ratios() {
 
   const result = useMemo(() => {
     if (isLoading) return;
-
     const processed = totalReserveValue / outstanding;
-    if (!Number.isNaN(processed)) return processed.toFixed(3);
+    if (!Number.isNaN(processed)) return processed.toFixed(2);
   }, [totalReserveValue, isLoading, outstanding]);
-
-  // const unfrozenReserveValue = useMemo(() => {
-  //   return holdings.data ? sumLiquidHoldings(holdings.data) : 1;
-  // }, [holdings, sumLiquidHoldings]);
 
   return (
     <article className="mx-auto flex w-full max-w-[872px] flex-col items-center justify-between sm:flex-row">
-      {/* <Amount
-        loading={isLoading}
-        label="Total"
-        units={totalReserveValue / outstanding}
-      />
-      <Amount
-        loading={isLoading}
-        label="Unfrozen"
-        units={unfrozenReserveValue / outstanding}
-      /> */}
-
       <section>
         <h2 className="mb-6 text-center text-[32px] font-medium sm:text-left">
           Collateralisation ratio
@@ -58,10 +42,20 @@ export function Ratios() {
         </p>
       </section>
       <section className="mt-6 sm:mt-0 sm:pl-[72px]">
-        <span className="text-[60px] font-medium">
-          {!isLoading && result ? result : "Loading..."}
-        </span>
+        {!isLoading && result ? (
+          <span className="text-[60px] font-medium">{result}</span>
+        ) : (
+          <RatioLoadingSkeleton />
+        )}
       </section>
     </article>
   );
 }
+
+const RatioLoadingSkeleton = () => {
+  return (
+    <span className="animate-pulse rounded-md bg-gray-300 text-[60px]  font-medium text-gray-300">
+      0.00
+    </span>
+  );
+};
