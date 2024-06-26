@@ -1,61 +1,36 @@
-import useSWR from "swr";
-import StableValueTokensAPI from "src/interfaces/stable-value-tokens";
-import { fetcher } from "src/utils/fetcher";
-import useHoldings from "src/hooks/useHoldings";
-import { useMemo } from "react";
-import { sumTotalHoldings } from "@/lib/utils/holdings";
+import { useReserveTotals } from "@/lib/hooks/use-reserve-totals";
+import { TextSkeleton } from "./TextSkeleton";
+import { CardBackground } from "./CardBackground";
 
 export function Ratios() {
-  const stables = useSWR<StableValueTokensAPI>(
-    "/api/stable-value-tokens",
-    fetcher,
-  );
-  const holdings = useHoldings();
-  const isLoading = useMemo(() => {
-    return !holdings.data || !stables.data;
-  }, [holdings.data, stables.data]);
-
-  const outstanding = useMemo(() => {
-    return stables.data?.totalStableValueInUSD || 1;
-  }, [stables.data]);
-
-  const totalReserveValue = useMemo(() => {
-    return holdings.data ? sumTotalHoldings(holdings.data) : 1;
-  }, [holdings, sumTotalHoldings]);
-
-  const result = useMemo(() => {
-    if (isLoading) return;
-    const processed = totalReserveValue / outstanding;
-    if (!Number.isNaN(processed)) return processed.toFixed(2);
-  }, [totalReserveValue, isLoading, outstanding]);
+  const { collateralisationRatio, isLoading } = useReserveTotals();
 
   return (
-    <article className="mx-auto flex w-full max-w-[872px] flex-col items-center justify-between sm:flex-row">
-      <section>
-        <h2 className="mb-6 text-center text-[32px] font-medium sm:text-left font-fg">
+    <CardBackground className="mx-auto flex w-full flex-col items-center justify-between gap-6 px-4 py-6 md:flex-row md:px-[125px] md:py-10">
+      <div className="flex flex-col justify-between gap-6">
+        <h2 className="text-center font-fg text-[32px] font-medium md:text-left">
           Collateralisation ratio
         </h2>
-        <p className="text-[16px]">
-          Mento Stable Assets are backed by the basket of reserve assets. Ratio
-          of the value of the reserve in USD to the value of all outstanding
-          stable assets.
+        <p className="mx-1 inline-block text-center leading-[19.2px] md:text-left">
+          Mento Stable Assets are backed by
+          <br className="md:hidden" /> the basket of reserve assets.
+          <br className="hidden md:inline-block" />
+          Ratio of
+          <br className="md:hidden" /> the value of the reserve in USD to the
+          <br className="md:hidden" /> value of all outstanding stable assets.
         </p>
-      </section>
-      <section className="mt-6 sm:mt-0 sm:pl-[72px]">
-        {!isLoading && result ? (
-          <span className="text-[60px] font-medium">{result}</span>
+      </div>
+      <span className="-mt-3 font-fg text-6xl font-medium md:m-0">
+        {!isLoading && collateralisationRatio ? (
+          <>{collateralisationRatio}</>
         ) : (
           <RatioLoadingSkeleton />
         )}
-      </section>
-    </article>
+      </span>
+    </CardBackground>
   );
 }
 
 const RatioLoadingSkeleton = () => {
-  return (
-    <span className="animate-pulse rounded-md bg-gray-300 text-[60px]  font-medium text-gray-300">
-      0.00
-    </span>
-  );
+  return <TextSkeleton>0.00</TextSkeleton>;
 };
