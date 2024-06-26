@@ -25,6 +25,8 @@ const config: Config = {
         ],
       },
       screens: {
+        content: "1120px",
+        // Old
         smallPhone: {
           max: "320px",
         },
