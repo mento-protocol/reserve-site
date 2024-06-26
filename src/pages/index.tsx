@@ -2,7 +2,7 @@ import { FrontMatterResult } from "front-matter";
 import Footer from "src/components/Footer";
 import Head from "src/components/Head";
 import Holdings from "src/components/Holdings";
-import { StableTokens } from "@/components/StableTokens.1";
+import { StableTokens } from "@/components/StableTokens";
 import { Ratios } from "src/components/Ratios";
 import ReserveAddresses from "src/components/ReserveAddresses";
 import Section from "src/components/Section";
@@ -44,7 +44,7 @@ export default function Home(props: Props) {
           "[background-image:radial-gradient(circle_at_calc(100%+210px)_37.5%,_#4D62F0_0%,_transparent_540px),radial-gradient(circle_at_calc(0%-210px)_75%,_#4D62F0_0%,_transparent_540px)]",
         )}
       >
-        <main className="content:max-w-[1120px] mx-auto w-full max-w-[calc(100vw_-_32px)]">
+        <main className="mx-auto w-full max-w-[calc(100vw_-_32px)] content:max-w-[1120px]">
           <Header />
           <section className="mb-[56px] flex flex-col items-center justify-center">
             <h1 className="text-center text-[56px] font-bold leading-[56px] md:flex md:gap-1 md:text-[56px] md:leading-[56px]">
