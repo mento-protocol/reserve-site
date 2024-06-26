@@ -1,10 +1,9 @@
 import useSWR from "swr";
-import Amount from "src/components/Amount";
 import StableValueTokensAPI from "src/interfaces/stable-value-tokens";
 import { fetcher } from "src/utils/fetcher";
-import { sumLiquidHoldings } from "./sumLiquidHoldings";
 import { sumTotalHoldings } from "./sumTotalHoldings";
 import useHoldings from "src/hooks/useHoldings";
+import { useMemo } from "react";
 
 export function Ratios() {
   const stables = useSWR<StableValueTokensAPI>(
@@ -12,36 +11,51 @@ export function Ratios() {
     fetcher,
   );
   const holdings = useHoldings();
-  const isLoading = !holdings.data || !stables.data;
+  const isLoading = useMemo(() => {
+    return !holdings.data || !stables.data;
+  }, [holdings.data, stables.data]);
 
-  const outstanding = stables.data?.totalStableValueInUSD || 1;
-  const totalReserveValue = holdings.data ? sumTotalHoldings(holdings.data) : 1;
-  const unfrozenReserveValue = holdings.data
-    ? sumLiquidHoldings(holdings.data)
-    : 1;
+  const outstanding = useMemo(() => {
+    return stables.data?.totalStableValueInUSD || 1;
+  }, [stables.data]);
+
+  const totalReserveValue = useMemo(() => {
+    return holdings.data ? sumTotalHoldings(holdings.data) : 1;
+  }, [holdings, sumTotalHoldings]);
+
+  const result = useMemo(() => {
+    if (isLoading) return;
+    const processed = totalReserveValue / outstanding;
+    if (!Number.isNaN(processed)) return processed.toFixed(2);
+  }, [totalReserveValue, isLoading, outstanding]);
 
   return (
-    <div className="grid-y-[12px] grid-areas-ratio-desktop tablet:grid-areas-ratio-mobile grid grid-cols-1 gap-x-[20px]">
-      <Amount
-        loading={isLoading}
-        label="Total"
-        units={totalReserveValue / outstanding}
-      />
-      <Amount
-        loading={isLoading}
-        label="Unfrozen"
-        units={unfrozenReserveValue / outstanding}
-      />
-
-      <div className="[grid-area:'info']">
-        <div className="pb-[24px]">
-          <small>
-            Ratios of the value of the reserve in USD (for total and for
-            unfrozen) to the value of all outstanding stable assets (cUSD, cEUR,
-            as well as other future stabilized tokens supported by the reserve)
-          </small>
-        </div>
-      </div>
-    </div>
+    <article className="mx-auto flex w-full max-w-[872px] flex-col items-center justify-between sm:flex-row">
+      <section>
+        <h2 className="mb-6 text-center text-[32px] font-medium sm:text-left">
+          Collateralisation ratio
+        </h2>
+        <p className="text-[16px]">
+          Mento Stable Assets are backed by the basket of reserve assets. Ratio
+          of the value of the reserve in USD to the value of all outstanding
+          stable assets.
+        </p>
+      </section>
+      <section className="mt-6 sm:mt-0 sm:pl-[72px]">
+        {!isLoading && result ? (
+          <span className="text-[60px] font-medium">{result}</span>
+        ) : (
+          <RatioLoadingSkeleton />
+        )}
+      </section>
+    </article>
   );
 }
+
+const RatioLoadingSkeleton = () => {
+  return (
+    <span className="animate-pulse rounded-md bg-gray-300 text-[60px]  font-medium text-gray-300">
+      0.00
+    </span>
+  );
+};
