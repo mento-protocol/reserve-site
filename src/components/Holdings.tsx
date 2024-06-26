@@ -2,17 +2,8 @@ import Head from "next/head";
 import { useMemo } from "react";
 import Amount from "src/components/Amount";
 import useHoldings from "src/hooks/useHoldings";
-import { HoldingsApi } from "src/service/holdings";
 import { skipZeros } from "src/utils/skipZeros";
 
-export function sumCeloTotal(holdings: HoldingsApi) {
-  const { custody, frozen, unfrozen } = holdings.celo;
-  return custody.value + unfrozen.value + frozen.value;
-}
-
-export function sumNonCelo({ otherAssets }: HoldingsApi) {
-  return otherAssets.reduce((prev, current) => current.value + prev, 0);
-}
 
 export default function Holdings() {
   const { data } = useHoldings();

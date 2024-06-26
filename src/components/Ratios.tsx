@@ -1,9 +1,9 @@
 import useSWR from "swr";
 import StableValueTokensAPI from "src/interfaces/stable-value-tokens";
 import { fetcher } from "src/utils/fetcher";
-import { sumTotalHoldings } from "./sumTotalHoldings";
 import useHoldings from "src/hooks/useHoldings";
 import { useMemo } from "react";
+import { sumTotalHoldings } from "@/lib/utils/holdings";
 
 export function Ratios() {
   const stables = useSWR<StableValueTokensAPI>(
