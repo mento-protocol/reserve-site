@@ -16,7 +16,7 @@ export function StableTokens() {
 
   return (
     <section>
-      <h2 className="mb-8 text-center text-[32px] font-medium">
+      <h2 className="mb-8 text-center text-[32px] font-medium font-fg">
         Outstanding supply of Mento stablecoins
       </h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

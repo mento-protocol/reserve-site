@@ -32,7 +32,7 @@ export function Ratios() {
   return (
     <article className="mx-auto flex w-full max-w-[872px] flex-col items-center justify-between sm:flex-row">
       <section>
-        <h2 className="mb-6 text-center text-[32px] font-medium sm:text-left">
+        <h2 className="mb-6 text-center text-[32px] font-medium sm:text-left font-fg">
           Collateralisation ratio
         </h2>
         <p className="text-[16px]">

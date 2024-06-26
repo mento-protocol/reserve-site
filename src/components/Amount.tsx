@@ -39,7 +39,7 @@ export default function Amount({
           />
         )}
         <p id={id} className="mb-0 items-end text-left text-[22px] font-medium">
-          <abbr className="cursor-help no-underline" title={context}>
+          <abbr className="cursor-help no-underline font-fg" title={context}>
             {label}
           </abbr>
         </p>
@@ -48,7 +48,7 @@ export default function Amount({
       <span
         aria-labelledby={id}
         className={cn(
-          "my-6 block text-left text-[32px] font-medium opacity-100 transition-opacity duration-500",
+          "my-6 block text-left text-[32px] font-medium opacity-100 transition-opacity duration-500 font-fg",
           !loading && value ? "" : "",
           loading && "amountLoadingStyle",
         )}
