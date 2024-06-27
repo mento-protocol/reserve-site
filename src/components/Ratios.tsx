@@ -1,5 +1,5 @@
 import { useReserveTotals } from "@/lib/hooks/use-reserve-totals";
-import { TextSkeleton } from "./TextSkeleton";
+import { Skeleton } from "./TextSkeleton";
 import { CardBackground } from "./CardBackground";
 
 export function Ratios() {
@@ -24,13 +24,9 @@ export function Ratios() {
         {!isLoading && collateralisationRatio ? (
           <>{collateralisationRatio}</>
         ) : (
-          <RatioLoadingSkeleton />
+          <Skeleton className="h-[60px] w-[112px] bg-black/10" />
         )}
       </span>
     </CardBackground>
   );
 }
-
-const RatioLoadingSkeleton = () => {
-  return <TextSkeleton>0.00</TextSkeleton>;
-};

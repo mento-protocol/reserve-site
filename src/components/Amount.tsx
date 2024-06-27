@@ -56,7 +56,7 @@ export default function Amount({
         {display}
       </span>
       <DollarDisplay
-        className="block text-left text-[22px] opacity-100 transition-opacity duration-500"
+        className="block text-left text-[22px] opacity-100 transition-opacity duration-500 font-fg"
         value={value}
         loading={loading}
         label={label}

@@ -60,16 +60,13 @@ export default function Home(props: Props) {
               stable assets.
             </p>
           </section>
-          <CardBackground>
-            <StableTokens />
-          </CardBackground>
-          <CardBackground className="mt-[56px]">
+          <div className="flex flex-col gap-14">
+            <CardBackground>
+              <StableTokens />
+            </CardBackground>
             <Ratios />
-          </CardBackground>
-          <CardBackground className="mt-[56px]">
             <Holdings />
-          </CardBackground>
-
+          </div>
           <Section title="Reserve Ratio"></Section>
           <Section title={"Reserve Addresses"}>
             <ReserveAddresses reserveAssets={props.reserveCryptos} />

@@ -1,18 +1,13 @@
 import { cn } from "@/styles/helpers";
-import { PropsWithChildren } from "react";
 
-export const TextSkeleton = ({
+export const Skeleton = ({
   className,
-  children,
-}: PropsWithChildren<{ className?: string }>) => {
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
   return (
-    <span
-      className={cn(
-        "animate-pulse rounded-md bg-gray-300 font-medium text-gray-300",
-        className,
-      )}
-    >
-      {children}
-    </span>
+    <div
+      className={cn("animate-pulse rounded-md bg-gray-300", className)}
+      {...props}
+    />
   );
 };
