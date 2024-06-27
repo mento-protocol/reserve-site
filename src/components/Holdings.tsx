@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { useMemo } from "react";
 import Amount from "src/components/Amount";
-import Heading from "src/components/Heading";
 import useHoldings from "src/hooks/useHoldings";
 import { HoldingsApi } from "src/service/holdings";
 import { skipZeros } from "src/utils/skipZeros";
@@ -29,6 +28,21 @@ export default function Holdings() {
     return data.celo;
   }, [data.celo]);
 
+  const totalValue = useMemo(() => {
+    if (!data) return 0;
+
+    const celoTotal =
+      data.celo.frozen.value +
+      data.celo.unfrozen.value +
+      data.celo.custody.value;
+    const otherAssetsTotal = data.otherAssets.reduce(
+      (sum, asset) => sum + asset.value,
+      0,
+    );
+
+    return celoTotal + otherAssetsTotal;
+  }, [data]);
+
   return (
     <>
       <Head>
@@ -46,12 +60,16 @@ export default function Holdings() {
         />
       </Head>
       <article>
-        <h2 className="mx-auto mb-6 text-center text-[32px] font-medium">
-          Collateralisation ratio
+        <h2 className="mx-auto mb-6 text-center font-fg text-[32px] font-medium">
+          Current reserve holdings
         </h2>
         <section className="mb-[32px]">
-          <div className="mx-auto text-[26px]">
-            Total reserve holdings: {celo.frozen.value > 0 ?? celo.frozen.value}
+          <div className="mx-auto text-center font-fg text-[26px]">
+            Total reserve holdings:{" "}
+            {totalValue.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            })}
           </div>
         </section>
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
