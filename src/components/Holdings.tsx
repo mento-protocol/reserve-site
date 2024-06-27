@@ -74,7 +74,7 @@ export default function Holdings() {
             </span>
           </div>
         </section>
-        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="grid grid-cols-1 gap-4 font-fg sm:grid-cols-2 lg:grid-cols-4">
           <Amount
             iconSrc={"/assets/tokens/CELO.svg"}
             context="Funds in on-chain Reserve contract and in custody"
@@ -87,6 +87,7 @@ export default function Holdings() {
             ?.filter(skipZeros)
             ?.map((asset) => (
               <Amount
+                iconSrc={`/assets/tokens/${asset.token}.svg`}
                 key={asset.token}
                 loading={isLoadingOther}
                 label={asset.token}
