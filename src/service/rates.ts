@@ -11,14 +11,14 @@ import getCoinMarketCapPrice from "src/providers/CoinMarketCap";
 import { Tokens } from "./Data";
 import { allOkOrThrow } from "src/utils/Result";
 
-async function fetchCMCO2price(): Promise<DuelResult> {
-  const cmco2 = await duel(getCMC02Price(), getCoinMarketCapPrice("MCO2"));
-  return cmco2;
-}
+// async function fetchCMCO2price(): Promise<DuelResult> {
+//   const cmco2 = await duel(getCMC02Price(), getCoinMarketCapPrice("MCO2"));
+//   return cmco2;
+// }
 
-export async function CMC02Price() {
-  return getOrSave<DuelResult>("cmco2-price", fetchCMCO2price, 2 * MINUTE);
-}
+// export async function CMC02Price() {
+//   return getOrSave<DuelResult>("cmco2-price", fetchCMCO2price, 2 * MINUTE);
+// }
 
 async function fetchBTCPrice() {
   const price = await duel(
@@ -134,27 +134,24 @@ export async function tokenPriceInUSD(currencySymbol: Tokens) {
 }
 
 export default async function rates() {
-  const [btc, eth, celo, cmco2, usdc, euroc, dai, sDai, stEth, usdt] =
-    allOkOrThrow(
-      await Promise.all([
-        btcPrice(),
-        ethPrice(),
-        celoPrice(),
-        CMC02Price(),
-        usdcPrice(),
-        eurocPrice(),
-        daiPrice(),
-        sDaiPrice(),
-        stEthPrice(),
-        usdtPrice(),
-      ]),
-    );
+  const [btc, eth, celo, usdc, euroc, dai, sDai, stEth, usdt] = allOkOrThrow(
+    await Promise.all([
+      btcPrice(),
+      ethPrice(),
+      celoPrice(),
+      usdcPrice(),
+      eurocPrice(),
+      daiPrice(),
+      sDaiPrice(),
+      stEthPrice(),
+      usdtPrice(),
+    ]),
+  );
 
   return {
     btc,
     eth,
     celo,
-    cmco2,
     usdc,
     euroc,
     dai,
