@@ -1,5 +1,5 @@
 import { GetStaticPaths } from "next";
-import Footer from "src/components/Footer";
+import { Footer } from "@/components/Footer";
 import Head from "src/components/Head";
 import NavBar from "src/components/Navbar";
 import Section from "src/components/Section";
@@ -27,7 +27,7 @@ export default function Page(props: Props) {
             />
           </main>
         </div>
-        <Footer year={props.year} />
+        <Footer />
       </div>
     </>
   );

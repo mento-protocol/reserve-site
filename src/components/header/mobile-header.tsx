@@ -24,7 +24,7 @@ export const MobileHeader = () => {
   const toggleMenu = () => setIsOpen((currIsOpenStatus) => !currIsOpenStatus);
 
   return (
-    <header className="w-full px-4 lg:hidden">
+    <header className="w-full lg:hidden">
       <div className="flex items-center justify-between border-b border-black p-4 dark:border-[#343437]">
         <MentoLogoIcon className="h-5 w-[90px]" />
         <AnimatedHamburgerButton
