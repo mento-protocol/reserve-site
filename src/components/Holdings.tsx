@@ -64,12 +64,14 @@ export default function Holdings() {
           Current reserve holdings
         </h2>
         <section className="mb-[32px]">
-          <div className="mx-auto text-center font-fg text-[26px]">
-            Total reserve holdings:{" "}
-            {totalValue.toLocaleString("en-US", {
-              style: "currency",
-              currency: "USD",
-            })}
+          <div className="mx-auto flex w-[328px] items-center justify-between rounded-lg border border-solid border-black bg-mento-mint p-4 text-center font-fg text-[26px] md:w-[511px]">
+            <span>Total reserve holdings:</span>
+            <span className="font-medium">
+              {totalValue.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </span>
           </div>
         </section>
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
