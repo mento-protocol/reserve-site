@@ -1,7 +1,6 @@
 import { useReserveTotals } from "@/lib/hooks/use-reserve-totals";
 import { cn } from "@/styles/helpers";
 import Head from "next/head";
-import { useMemo } from "react";
 import Amount from "src/components/Amount";
 import useHoldings from "src/hooks/useHoldings";
 import { skipZeros } from "src/utils/skipZeros";
@@ -52,26 +51,48 @@ const Heading = () => {
 };
 
 const ReserveAssetGrid = () => {
-  const { data } = useHoldings();
-  const isLoadingCelo = useMemo(() => {
-    return data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0;
-  }, [data.celo.frozen.updated, data.celo.unfrozen.updated]);
+  const {
+    data: { celo, otherAssets },
+    isLoadingOther,
+    isLoadingCelo,
+  } = useHoldings();
 
-  const isLoadingOther = useMemo(() => {
-    return !data.otherAssets.findIndex((coin) => coin.updated === 0);
-  }, [data.otherAssets]);
 
-  const celo = useMemo(() => {
-    return data.celo;
-  }, [data.celo]);
 
+  return (
+    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <Amount
+        iconSrc={"/assets/tokens/CELO.svg"}
+        context="Funds in on-chain Reserve contract and in custodyy"
+        loading={isLoadingCelo}
+        label={"CELO"}
+        units={celo.unfrozen.units + celo.custody.units}
+        value={celo.unfrozen.value + celo.custody.value}
+      />
+      {otherAssets
+        ?.filter(skipZeros)
+        ?.map((asset) => (
+          <Amount
+            iconSrc={`/assets/tokens/${asset.token}.svg`}
+            key={asset.token}
+            loading={isLoadingOther}
+            label={asset.token}
+            units={asset.units}
+            value={asset.value}
+          />
+        ))}
+    </section>
+  );
+};
+
+const HoldingSkeleton = () => {
   return (
     <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Amount
         iconSrc={"/assets/tokens/CELO.svg"}
         context="Funds in on-chain Reserve contract and in custody"
         loading={isLoadingCelo}
-        label={celo.frozen.value > 0 ? "Unfrozen" : "CELO"}
+        label={"CELO"}
         units={celo.unfrozen.units + celo.custody.units}
         value={celo.unfrozen.value + celo.custody.value}
       />
@@ -79,6 +100,7 @@ const ReserveAssetGrid = () => {
         ?.filter(skipZeros)
         ?.map((asset) => (
           <Amount
+            iconSrc={`/assets/tokens/${asset.token}.svg`}
             key={asset.token}
             loading={isLoadingOther}
             label={asset.token}

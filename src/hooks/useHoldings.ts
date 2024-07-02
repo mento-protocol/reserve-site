@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Tokens } from "src/service/Data";
 import { HoldingsApi } from "src/service/holdings";
 import { fetcher } from "src/utils/fetcher";
@@ -29,10 +30,21 @@ const INITAL_DATA: HoldingsApi = {
     initalOtherToken,
     { ...initalOtherToken, token: "ETH" },
     { ...initalOtherToken, token: "DAI" },
+    { ...initalOtherToken, token: "USDC" },
+    { ...initalOtherToken, token: "EUROC" },
+    { ...initalOtherToken, token: "stEUR" },
+    { ...initalOtherToken, token: "sDAI" },
+    { ...initalOtherToken, token: "stETH" },
+    { ...initalOtherToken, token: "USDT" },
   ],
 };
 
-export default function useHoldings(): { data: HoldingsApi; error: any } {
+export default function useHoldings(): {
+  data: HoldingsApi;
+  error: any;
+  isLoadingCelo: boolean;
+  isLoadingOther: boolean;
+} {
   const celoHoldings = useSWR<Pick<HoldingsApi, "celo">>(
     "/api/holdings/celo",
     fetcher,
@@ -50,7 +62,16 @@ export default function useHoldings(): { data: HoldingsApi; error: any } {
     },
   );
   const error = celoHoldings.error || otherHoldings.error;
+
   const data: HoldingsApi = { ...celoHoldings.data, ...otherHoldings.data };
-  data.otherAssets ||= [];
-  return { data, error };
+
+  const isLoadingCelo = useMemo(() => {
+    return data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0;
+  }, [data.celo.frozen.updated, data.celo.unfrozen.updated]);
+
+  const isLoadingOther = useMemo(() => {
+    return !data.otherAssets.findIndex((coin) => coin.updated === 0);
+  }, [data.otherAssets]);
+
+  return { data, error, isLoadingCelo, isLoadingOther };
 }
