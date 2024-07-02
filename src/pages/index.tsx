@@ -67,7 +67,7 @@ export default function Home(props: Props) {
             <Ratios />
             <Holdings />
           </div>
-          <Section title="Reserve Ratio"></Section>
+          {/* <Section title="Reserve Ratio"></Section>
           <Section title={"Reserve Addresses"}>
             <ReserveAddresses reserveAssets={props.reserveCryptos} />
           </Section>
@@ -86,7 +86,7 @@ export default function Home(props: Props) {
           <Section
             title={props.ATTESTATIONS.attributes.title}
             content={props.ATTESTATIONS.body}
-          />
+          /> */}
           <Footer />
         </main>
       </div>
