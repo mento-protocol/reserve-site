@@ -7,6 +7,10 @@
   --font-inter: "Inter", sans-serif;
 }
 
+body {
+  font-family: var(--font-inter);
+}
+
 @layer base {
   @font-face {
     font-family: "Founders Grotesk";

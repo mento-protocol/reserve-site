@@ -60,15 +60,14 @@ export default function Home(props: Props) {
               stable assets.
             </p>
           </section>
-          <CardBackground>
-            <StableTokens />
-          </CardBackground>
-          <CardBackground className="mt-[56px]">
+          <div className="flex flex-col gap-14">
+            <CardBackground>
+              <StableTokens />
+            </CardBackground>
             <Ratios />
-          </CardBackground>
-          <Holdings />
-
-          <Section title="Reserve Ratio"></Section>
+            <Holdings />
+          </div>
+          {/* <Section title="Reserve Ratio"></Section>
           <Section title={"Reserve Addresses"}>
             <ReserveAddresses reserveAssets={props.reserveCryptos} />
           </Section>
@@ -87,7 +86,7 @@ export default function Home(props: Props) {
           <Section
             title={props.ATTESTATIONS.attributes.title}
             content={props.ATTESTATIONS.body}
-          />
+          /> */}
           <Footer />
         </main>
       </div>
