@@ -57,8 +57,6 @@ const ReserveAssetGrid = () => {
     isLoadingCelo,
   } = useHoldings();
 
-
-
   return (
     <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Amount
@@ -70,33 +68,6 @@ const ReserveAssetGrid = () => {
         value={celo.unfrozen.value + celo.custody.value}
       />
       {otherAssets
-        ?.filter(skipZeros)
-        ?.map((asset) => (
-          <Amount
-            iconSrc={`/assets/tokens/${asset.token}.svg`}
-            key={asset.token}
-            loading={isLoadingOther}
-            label={asset.token}
-            units={asset.units}
-            value={asset.value}
-          />
-        ))}
-    </section>
-  );
-};
-
-const HoldingSkeleton = () => {
-  return (
-    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <Amount
-        iconSrc={"/assets/tokens/CELO.svg"}
-        context="Funds in on-chain Reserve contract and in custody"
-        loading={isLoadingCelo}
-        label={"CELO"}
-        units={celo.unfrozen.units + celo.custody.units}
-        value={celo.unfrozen.value + celo.custody.value}
-      />
-      {data?.otherAssets
         ?.filter(skipZeros)
         ?.map((asset) => (
           <Amount
