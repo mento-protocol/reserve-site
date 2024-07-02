@@ -13,7 +13,7 @@ export const useStableTokens = () => {
     updated: 0,
   } as const;
 
-  const { data, error, isValidating } = useSWR<StableValueTokensAPI>(
+  const { data, error } = useSWR<StableValueTokensAPI>(
     "/api/stable-value-tokens",
     fetcher,
     {
@@ -32,10 +32,8 @@ export const useStableTokens = () => {
   );
 
   const isLoading = useMemo(() => {
-    return !data?.tokens?.findIndex((coin) => coin.updated === 0);
+    return !data?.tokens?.findIndex((coin) => coin.updated === 0) ?? true;
   }, [data.tokens]);
-
-  console.log({ data });
 
   return { stables: data?.tokens, isLoading, error };
 };
