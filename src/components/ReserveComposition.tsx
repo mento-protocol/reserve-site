@@ -50,15 +50,8 @@ function findOldestValueUpdatedAt(data?: HoldingsApi): number {
 }
 
 export const ReserveComposition = () => {
-  const { data } = useHoldings();
+  const { data, isLoadingCelo, isLoadingOther } = useHoldings();
   const percentages = getPercents(data);
-  const isLoadingCelo =
-    data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0;
-  const isLoadingOther = !data.otherAssets.findIndex(
-    (coin) => coin.updated === 0,
-  );
-  const oldestUpdate = findOldestValueUpdatedAt(data);
-  const celo = data.celo;
 
   return (
     <article>
