@@ -3,6 +3,8 @@ title: Data Privacy Notice
 updated: June 24, 2024
 ---
 
+**[Download Privacy Policy PDF](https://drive.google.com/uc?export=download&id=1E1pBFFo1R7sdGZx_xvkESdaaH2LOhC5e)**
+
 Mento Protocol Foundation (the **“Company” or “us”**) is a foundation company created under the laws of the Cayman Islands.
 
 The purpose of this document is to provide you with information on the Company's use of your personal data in accordance with the Cayman Islands Data Protection Act, (2021 Revision) and, in respect of EU data subjects, the EU General Data Protection Regulation (together, the "**Data Protection Legislation**").
