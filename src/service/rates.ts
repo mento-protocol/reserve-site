@@ -6,19 +6,10 @@ import { getOrSave, Cachable } from "src/service/cache";
 import { HOUR, MINUTE } from "src/utils/TIME";
 import { duel, providerToDuel } from "./duel";
 import { DuelResult } from "src/utils/DuelResult";
-// import { getCMC02Price } from "src/providers/UbeSwapGraph";
 import getCoinMarketCapPrice from "src/providers/CoinMarketCap";
 import { Tokens } from "./Data";
 import { allOkOrThrow } from "src/utils/Result";
 
-// async function fetchCMCO2price(): Promise<DuelResult> {
-//   const cmco2 = await duel(getCMC02Price(), getCoinMarketCapPrice("MCO2"));
-//   return cmco2;
-// }
-
-// export async function CMC02Price() {
-//   return getOrSave<DuelResult>("cmco2-price", fetchCMCO2price, 2 * MINUTE);
-// }
 
 async function fetchBTCPrice() {
   const price = await duel(
