@@ -69,6 +69,7 @@ const ReserveAssetGrid = () => {
       />
       {otherAssets
         ?.filter(skipZeros)
+        .sort((a, b) => b.value - a.value)
         ?.map((asset) => (
           <Amount
             iconSrc={`/assets/tokens/${asset.token}.svg`}
@@ -85,6 +86,8 @@ const ReserveAssetGrid = () => {
 
 const TotalReserveHoldings = () => {
   const { isLoading, totalReserveValue } = useReserveTotals();
+  const displayValue =
+    totalReserveValue && Math.round(totalReserveValue).toLocaleString();
 
   return (
     <span
@@ -96,7 +99,7 @@ const TotalReserveHoldings = () => {
       {isLoading || !totalReserveValue ? (
         <Skeleton className="h-[18px] w-[148px] bg-[#d8e9d0] md:h-[26px] md:w-[10.3rem]" />
       ) : (
-        <span className="font-medium">{`${totalReserveValue.toFixed(2)} $`}</span>
+        <span className="font-medium">{`$${displayValue}`}</span>
       )}
     </span>
   );
