@@ -12,5 +12,4 @@ export const links = {
   mentoLabsTeam: "https://www.mentolabs.xyz/team",
   reserveSiteSource: "https://github.com/mento-protocol/reserve-site",
   privacy: "/legal/privacy",
-  terms: "/legal/terms",
 };
