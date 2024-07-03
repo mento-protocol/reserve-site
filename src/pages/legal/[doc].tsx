@@ -54,7 +54,7 @@ export async function getStaticProps({ params }) {
 
 export const getStaticPaths: GetStaticPaths = async function getStaticPaths() {
   return {
-    paths: [{ params: { doc: "privacy" } }, { params: { doc: "terms" } }],
+    paths: [{ params: { doc: "privacy" } }],
     fallback: false,
   };
 };
