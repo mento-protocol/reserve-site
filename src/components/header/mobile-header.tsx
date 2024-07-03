@@ -4,7 +4,7 @@ import React from "react";
 
 import { MotionConfig, motion } from "framer-motion";
 
-import { links } from "@/lib/constants/links";
+import { links } from "@/constants/links";
 
 import { cn } from "@/styles/helpers";
 import { MentoLogoIcon } from "@/components/icons/mento-logo.icon";

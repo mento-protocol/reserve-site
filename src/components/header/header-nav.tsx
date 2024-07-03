@@ -5,7 +5,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Menu } from "@headlessui/react";
 
-import { links } from "@/lib/constants/links";
+import { links } from "@/constants/links";
 import { ChevronIcon } from "@/components/icons/chevron.icon";
 const headerMenuItems: {
   name: string;
