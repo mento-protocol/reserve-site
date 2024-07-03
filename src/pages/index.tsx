@@ -3,10 +3,10 @@ import Head from "src/components/Head";
 import Holdings from "src/components/Holdings";
 import { StableTokens } from "@/components/StableTokens";
 import { Ratios } from "src/components/Ratios";
-import ReserveAddresses from "src/components/ReserveAddresses";
-import Section from "src/components/Section";
-import PieChart from "src/components/PieChart";
-import useTargets from "src/hooks/useTargets";
+// import ReserveAddresses from "src/components/ReserveAddresses";
+// import Section from "src/components/Section";
+// import PieChart from "src/components/PieChart";
+// import useTargets from "src/hooks/useTargets";
 import {
   combineTokenAddressesByLabel,
   ReserveAssetByLabel,

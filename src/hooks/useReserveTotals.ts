@@ -3,7 +3,7 @@ import StableValueTokensAPI from "@/interfaces/stable-value-tokens";
 import { fetcher } from "@/utils/fetcher";
 import { useMemo } from "react";
 import useSWR from "swr";
-import { sumTotalHoldings } from "../utils/holdings";
+import { sumTotalHoldings } from "@/helpers/holdings";
 
 export const useReserveTotals = () => {
   const stables = useSWR<StableValueTokensAPI>(

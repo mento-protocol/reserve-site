@@ -1,4 +1,4 @@
-import { StableToken, Token } from "@celo/contractkit";
+import { Token } from "@celo/contractkit";
 
 export type Tokens =
   | "CELO"

@@ -1,4 +1,4 @@
-import { useReserveTotals } from "@/lib/hooks/use-reserve-totals";
+import { useReserveTotals } from "@/hooks/useReserveTotals";
 import { cn } from "@/styles/helpers";
 import Head from "next/head";
 import Amount from "src/components/Amount";

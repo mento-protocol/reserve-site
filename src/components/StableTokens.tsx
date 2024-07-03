@@ -1,6 +1,6 @@
 import Amount from "src/components/Amount";
 import { skipZeros } from "../utils/skipZeros";
-import { useStableTokens } from "@/lib/hooks/use-stable-tokens";
+import { useStableTokens } from "@/hooks/useStableTokens";
 
 export function StableTokens() {
   const { stables, isLoading, error } = useStableTokens();

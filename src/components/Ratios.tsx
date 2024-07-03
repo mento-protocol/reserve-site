@@ -1,4 +1,4 @@
-import { useReserveTotals } from "@/lib/hooks/use-reserve-totals";
+import { useReserveTotals } from "@/hooks/useReserveTotals";
 import { Skeleton } from "./TextSkeleton";
 import { CardBackground } from "./CardBackground";
 

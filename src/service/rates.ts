@@ -6,7 +6,7 @@ import { getOrSave, Cachable } from "src/service/cache";
 import { HOUR, MINUTE } from "src/utils/TIME";
 import { duel, providerToDuel } from "./duel";
 import { DuelResult } from "src/utils/DuelResult";
-import { getCMC02Price } from "src/providers/UbeSwapGraph";
+// import { getCMC02Price } from "src/providers/UbeSwapGraph";
 import getCoinMarketCapPrice from "src/providers/CoinMarketCap";
 import { Tokens } from "./Data";
 import { allOkOrThrow } from "src/utils/Result";
