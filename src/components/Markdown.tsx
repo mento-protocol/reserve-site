@@ -7,15 +7,23 @@ export interface Attributes {
 }
 
 function Paragraph({ children }) {
-  return <p className="mb-[24px] max-w-[480px]">{children}</p>;
+  return <p className="mb-[24px]">{children}</p>;
 }
 
 function H3({ children }) {
-  return <h3 className="max-w-[480px]">{children}</h3>;
+  return (
+    <h3 className="my-3.5 max-w-[480px] font-fg text-3xl font-[600]	">
+      {children}
+    </h3>
+  );
 }
 
 function H4({ children }) {
-  return <h4 className="max-w-[480px]">{children}</h4>;
+  return (
+    <h4 className="my-3.5 max-w-[480px] font-fg text-3xl font-[600]	">
+      {children}
+    </h4>
+  );
 }
 
 const OPTIONS = {
