@@ -4,7 +4,7 @@ import { HoldingsApi } from "src/service/holdings";
 import { fetcher } from "src/utils/fetcher";
 import useSWR from "swr";
 
-const initalToken = {
+const initialToken = {
   value: NaN,
   units: NaN,
   hasError: false,
@@ -12,7 +12,7 @@ const initalToken = {
   updated: 0,
 };
 
-const initalOtherToken = {
+const initialOtherToken = {
   value: NaN,
   units: NaN,
   hasError: false,
@@ -22,20 +22,20 @@ const initalOtherToken = {
 
 const INITAL_DATA: HoldingsApi = {
   celo: {
-    custody: initalToken,
-    unfrozen: initalToken,
-    frozen: initalToken,
+    custody: initialToken,
+    unfrozen: initialToken,
+    frozen: initialToken,
   },
   otherAssets: [
-    initalOtherToken,
-    { ...initalOtherToken, token: "ETH" },
-    { ...initalOtherToken, token: "DAI" },
-    { ...initalOtherToken, token: "USDC" },
-    { ...initalOtherToken, token: "EUROC" },
-    { ...initalOtherToken, token: "stEUR" },
-    { ...initalOtherToken, token: "sDAI" },
-    { ...initalOtherToken, token: "stETH" },
-    { ...initalOtherToken, token: "USDT" },
+    initialOtherToken,
+    { ...initialOtherToken, token: "ETH" },
+    { ...initialOtherToken, token: "DAI" },
+    { ...initialOtherToken, token: "USDC" },
+    { ...initialOtherToken, token: "EUROC" },
+    { ...initialOtherToken, token: "stEUR" },
+    { ...initialOtherToken, token: "sDAI" },
+    { ...initialOtherToken, token: "stETH" },
+    { ...initialOtherToken, token: "USDT" },
   ],
 };
 

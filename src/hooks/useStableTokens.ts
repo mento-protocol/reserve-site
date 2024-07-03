@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import useSWR from "swr";
 
 export const useStableTokens = () => {
-  const initalOtherToken = {
+  const initialOtherToken = {
     value: NaN,
     units: NaN,
     hasError: false,
@@ -21,11 +21,11 @@ export const useStableTokens = () => {
       initialData: {
         totalStableValueInUSD: 0,
         tokens: [
-          { ...initalOtherToken, token: "cUSD" },
-          { ...initalOtherToken, token: "cEUR" },
-          { ...initalOtherToken, token: "cREAL" },
-          { ...initalOtherToken, token: "eXOF" },
-          { ...initalOtherToken, token: "cKES" },
+          { ...initialOtherToken, token: "cUSD" },
+          { ...initialOtherToken, token: "cEUR" },
+          { ...initialOtherToken, token: "cREAL" },
+          { ...initialOtherToken, token: "eXOF" },
+          { ...initialOtherToken, token: "cKES" },
         ],
       },
     },
