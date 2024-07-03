@@ -23,6 +23,7 @@ export default function Page(props: Props) {
               <span>{props.title}</span>
               <br className="md:hidden" />
             </h1>
+            <span>Last updated: {props.updated}</span>
             <br />
 
             <Markdown source={props.body} />

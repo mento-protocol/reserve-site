@@ -11,19 +11,15 @@ function Paragraph({ children }) {
 }
 
 function H3({ children }) {
-  return (
-    <h3 className="my-3.5 max-w-[480px] font-fg text-3xl font-[600]	">
-      {children}
-    </h3>
-  );
+  return <h3 className="my-3.5 font-fg text-3xl font-[600]	">{children}</h3>;
 }
 
 function H4({ children }) {
-  return (
-    <h4 className="my-3.5 max-w-[480px] font-fg text-3xl font-[600]	">
-      {children}
-    </h4>
-  );
+  return <h4 className="my-3.5 font-fg text-3xl font-[600]	">{children}</h4>;
+}
+
+function UL({ children }) {
+  return <ul className="mb-3.5 list-inside list-disc">{children}</ul>;
 }
 
 const OPTIONS = {
@@ -32,6 +28,7 @@ const OPTIONS = {
     h3: H3,
     h4: H4,
     button: Button,
+    ul: UL,
   },
 };
 
