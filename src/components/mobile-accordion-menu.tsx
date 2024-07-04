@@ -28,7 +28,6 @@ const mobileMenuAccordionMenuItems = [
     items: [
       { name: "Team", href: links.mentoLabsTeam },
       { name: "Privacy", href: links.privacy },
-      { name: "Terms", href: links.terms },
     ],
   },
 ];

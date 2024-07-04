@@ -46,6 +46,7 @@ export default function Home(props: Props) {
       >
         <main className="mx-auto w-full max-w-[calc(100vw_-_32px)] content:max-w-[1120px]">
           <Header />
+
           <section className="mb-[56px] flex flex-col items-center justify-center">
             <h1 className="text-center font-fg text-[56px] font-bold leading-[56px] md:flex md:gap-1 md:text-[56px] md:leading-[56px]">
               <span className="text-transparent [-webkit-text-stroke:1.2px_black] dark:[-webkit-text-stroke:1.2px_white]">

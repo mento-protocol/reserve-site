@@ -126,7 +126,6 @@ const footerMenuItems = {
   Other: [
     { title: "Team", href: links.mentoLabsTeam },
     { title: "Privacy", href: links.privacy },
-    { title: "Terms", href: links.terms },
   ],
 };
 

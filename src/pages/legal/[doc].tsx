@@ -1,9 +1,8 @@
 import { GetStaticPaths } from "next";
 import { Footer } from "@/components/Footer";
 import Head from "src/components/Head";
-import NavBar from "src/components/Navbar";
-import Section from "src/components/Section";
-import { flexCol, mainStyle, rootStyle } from "src/components/styles";
+import { Header } from "@/components/header";
+import Markdown from "src/components/Markdown";
 
 interface Props {
   body: string;
@@ -16,18 +15,22 @@ export default function Page(props: Props) {
   return (
     <>
       <Head />
-      <div className={rootStyle()}>
-        <div className={flexCol("w-full flex-1 items-center")}>
-          <NavBar />
-          <main className={mainStyle()}>
-            <Section
-              title={props.title}
-              // subHeading={<Updated humanDate={props.updated} />}
-              content={props.body}
-            />
-          </main>
-        </div>
-        <Footer />
+      <div>
+        <main className="mx-auto w-full max-w-[calc(100vw_-_32px)] content:max-w-[1120px]">
+          <Header />
+          <section className="mb-[56px] flex flex-col items-center justify-center">
+            <h1 className="text-center font-fg text-[56px] font-bold leading-[56px] md:flex md:gap-1 md:text-[56px] md:leading-[56px]">
+              <span>{props.title}</span>
+              <br className="md:hidden" />
+            </h1>
+            <span>Last updated: {props.updated}</span>
+            <br />
+
+            <Markdown source={props.body} />
+          </section>
+
+          <Footer />
+        </main>
       </div>
     </>
   );
@@ -51,7 +54,7 @@ export async function getStaticProps({ params }) {
 
 export const getStaticPaths: GetStaticPaths = async function getStaticPaths() {
   return {
-    paths: [{ params: { doc: "privacy" } }, { params: { doc: "terms" } }],
+    paths: [{ params: { doc: "privacy" } }],
     fallback: false,
   };
 };
