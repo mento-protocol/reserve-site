@@ -1,5 +1,5 @@
 import { Providers } from "src/providers/Providers";
-import { Result, ResultOk, ResultError, okResult, errorResult } from "./Result";
+import { ResultOk, ResultError, okResult, errorResult } from "./Result";
 
 interface ProviderResultOk<T> extends ResultOk<T> {
   source: Providers;
