@@ -3,7 +3,7 @@
 import { Disclosure } from "@headlessui/react";
 import { motion } from "framer-motion";
 
-import { links } from "@/lib/constants/links";
+import { links } from "@/constants/links";
 import { cn } from "@/styles/helpers";
 import { ChevronIcon } from "@/components/icons/chevron.icon";
 

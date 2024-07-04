@@ -1,4 +1,4 @@
-import { links } from "@/lib/constants/links";
+import { links } from "@/constants/links";
 import { MentoLogoIcon } from "@/components/icons/mento-logo.icon";
 import { MobileAccordionMenu } from "@/components/mobile-accordion-menu";
 import { TwitterIcon } from "@/components/icons/twitter.icon";

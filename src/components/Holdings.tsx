@@ -1,71 +1,13 @@
+import { useReserveTotals } from "@/hooks/useReserveTotals";
+import { cn } from "@/styles/helpers";
 import Head from "next/head";
-import Amount, { DollarDisplay } from "src/components/Amount";
-import Heading from "src/components/Heading";
-import PieChart, { ChartData } from "src/components/PieChart";
-import Section from "src/components/Section";
-import { Updated } from "src/components/Updated";
+import Amount from "src/components/Amount";
 import useHoldings from "src/hooks/useHoldings";
-import { HoldingsApi } from "src/service/holdings";
 import { skipZeros } from "src/utils/skipZeros";
-import { sumTotalHoldings } from "./sumTotalHoldings";
-
-export function sumCeloTotal(holdings: HoldingsApi) {
-  const { custody, frozen, unfrozen } = holdings.celo;
-  return custody.value + unfrozen.value + frozen.value;
-}
-
-export function sumNonCelo({ otherAssets }: HoldingsApi) {
-  return otherAssets.reduce((prev, current) => current.value + prev, 0);
-}
-
-function getPercents(holdings: HoldingsApi): ChartData[] {
-  const celoTotal = sumCeloTotal(holdings);
-  const total = celoTotal + sumNonCelo(holdings);
-
-  function toPercent(value: number) {
-    return (value / total) * 100;
-  }
-
-  return [{ token: "CELO", percent: toPercent(celoTotal) }].concat(
-    holdings.otherAssets
-      .map((asset) => {
-        return {
-          token: asset.token,
-          percent: toPercent(asset.value),
-        };
-      })
-      .filter((asset) => asset.percent > 0)
-      .sort((a, b) => b.percent - a.percent),
-  );
-}
-
-function findOldestValueUpdatedAt(data?: HoldingsApi): number {
-  if (!data) {
-    return 0;
-  }
-
-  return Math.min(
-    ...data.otherAssets
-      .map((token) => token.updated)
-      .concat([
-        data.celo.custody.updated,
-        data.celo.frozen.updated,
-        data.celo.unfrozen.updated,
-      ]),
-  );
-}
+import { Skeleton } from "./TextSkeleton";
+import { CardBackground } from "./CardBackground";
 
 export default function Holdings() {
-  const { data } = useHoldings();
-  const percentages = getPercents(data);
-  const isLoadingCelo =
-    data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0;
-  const isLoadingOther = !data.otherAssets.findIndex(
-    (coin) => coin.updated === 0,
-  );
-  const oldestUpdate = findOldestValueUpdatedAt(data);
-  const celo = data.celo;
-
   return (
     <>
       <Head>
@@ -82,54 +24,83 @@ export default function Holdings() {
           crossOrigin="anonymous"
         />
       </Head>
-      <Section title={"Current Reserve Holdings"}>
-        <div className="grid-areas-holdings-desktop tablet:grid-areas-holding-mobile grid grid-cols-3 gap-x-[20px] gap-y-[12px] tablet:grid-cols-1">
-          <Heading title="Celo Assets" gridArea="celo" />
-          {celo.frozen.value > 0 ? (
-            <Amount
-              iconSrc={"/assets/tokens/CELO.svg"}
-              context="Funds frozen in on-chain Reserve contract"
-              loading={isLoadingCelo}
-              label="Frozen"
-              units={celo.frozen.units}
-              value={celo.frozen.value}
-            />
-          ) : (
-            <div className="m-[50px] hidden"></div>
-          )}
-
-          <Amount
-            iconSrc={"/assets/tokens/CELO.svg"}
-            context="Funds in on-chain Reserve contract and in custody"
-            loading={isLoadingCelo}
-            label={celo.frozen.value > 0 ? "Unfrozen" : "CELO"}
-            units={celo.unfrozen.units + celo.custody.units}
-            value={celo.unfrozen.value + celo.custody.value}
-          />
-
-          <Heading
-            className="mt-[30px]"
-            title="Non-Celo Crypto Assets"
-            gridArea="crypto"
-          />
-          {data?.otherAssets
-            ?.filter(skipZeros)
-            ?.map((asset) => (
-              <Amount
-                key={asset.token}
-                loading={isLoadingOther}
-                label={asset.token}
-                units={asset.units}
-                value={asset.value}
-              />
-            ))}
+      <CardBackground className="hidden flex-col gap-8 md:flex">
+        <div className="flex flex-col items-center justify-center gap-8">
+          <Heading />
+          <TotalReserveHoldings />
         </div>
-        <PieChart
-          label={"Current Composition"}
-          slices={percentages}
-          isLoading={isLoadingCelo || isLoadingOther}
-        />
-      </Section>
+        <ReserveAssetGrid />
+      </CardBackground>
+      <article className="flex flex-col gap-8 md:hidden">
+        <div className="flex flex-col items-center justify-center gap-8">
+          <Heading />
+          <TotalReserveHoldings />
+        </div>
+        <ReserveAssetGrid />
+      </article>
     </>
   );
 }
+
+const Heading = () => {
+  return (
+    <h2 className="mx-auto text-center font-fg text-[32px] font-medium">
+      Current Reserve Holdings
+    </h2>
+  );
+};
+
+const ReserveAssetGrid = () => {
+  const {
+    data: { celo, otherAssets },
+    isLoadingOther,
+    isLoadingCelo,
+  } = useHoldings();
+
+  return (
+    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <Amount
+        iconSrc={"/assets/tokens/CELO.svg"}
+        context="Funds in on-chain Reserve contract and in custodyy"
+        loading={isLoadingCelo}
+        label={"CELO"}
+        units={celo.unfrozen.units + celo.custody.units}
+        value={celo.unfrozen.value + celo.custody.value}
+      />
+      {otherAssets
+        ?.filter(skipZeros)
+        .sort((a, b) => b.value - a.value)
+        ?.map((asset) => (
+          <Amount
+            iconSrc={`/assets/tokens/${asset.token}.svg`}
+            key={asset.token}
+            loading={isLoadingOther}
+            label={asset.token}
+            units={asset.units}
+            value={asset.value}
+          />
+        ))}
+    </section>
+  );
+};
+
+const TotalReserveHoldings = () => {
+  const { isLoading, totalReserveValue } = useReserveTotals();
+  const displayValue =
+    totalReserveValue && Math.round(totalReserveValue).toLocaleString();
+
+  return (
+    <span
+      className={cn(
+        "inline-flex h-[58px] w-full items-center justify-between gap-5 rounded-md border-[1px] border-black bg-mento-mint p-4 font-fg text-[22px] md:h-[58px] md:w-[530px] md:gap-[90px] md:text-[26px]",
+      )}
+    >
+      <span>Total reserve holdings:</span>
+      {isLoading || !totalReserveValue ? (
+        <Skeleton className="h-[18px] w-[148px] bg-[#d8e9d0] md:h-[26px] md:w-[10.3rem]" />
+      ) : (
+        <span className="font-medium">{`$${displayValue}`}</span>
+      )}
+    </span>
+  );
+};

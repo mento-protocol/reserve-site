@@ -3,10 +3,10 @@ import Head from "src/components/Head";
 import Holdings from "src/components/Holdings";
 import { StableTokens } from "@/components/StableTokens";
 import { Ratios } from "src/components/Ratios";
-import ReserveAddresses from "src/components/ReserveAddresses";
-import Section from "src/components/Section";
-import PieChart from "src/components/PieChart";
-import useTargets from "src/hooks/useTargets";
+// import ReserveAddresses from "src/components/ReserveAddresses";
+// import Section from "src/components/Section";
+// import PieChart from "src/components/PieChart";
+// import useTargets from "src/hooks/useTargets";
 import {
   combineTokenAddressesByLabel,
   ReserveAssetByLabel,
@@ -61,15 +61,14 @@ export default function Home(props: Props) {
               stable assets.
             </p>
           </section>
-          <CardBackground>
-            <StableTokens />
-          </CardBackground>
-          <CardBackground className="mt-[56px]">
+          <div className="flex flex-col gap-14">
+            <CardBackground>
+              <StableTokens />
+            </CardBackground>
             <Ratios />
-          </CardBackground>
-          <Holdings />
-
-          <Section title="Reserve Ratio"></Section>
+            <Holdings />
+          </div>
+          {/* <Section title="Reserve Ratio"></Section>
           <Section title={"Reserve Addresses"}>
             <ReserveAddresses reserveAssets={props.reserveCryptos} />
           </Section>
@@ -88,7 +87,7 @@ export default function Home(props: Props) {
           <Section
             title={props.ATTESTATIONS.attributes.title}
             content={props.ATTESTATIONS.body}
-          />
+          /> */}
           <Footer />
         </main>
       </div>
