@@ -55,25 +55,16 @@ export const ReserveComposition = () => {
 
   return (
     <article>
-      <Head>
-        <link
-          rel="preload"
-          href="/api/holdings/celo"
-          as="fetch"
-          crossOrigin="anonymous"
+      <h2 className="mb-8 text-center font-fg text-[32px] font-medium">
+        Current reserve composition
+      </h2>
+      <section className="flex flex-col-reverse items-center justify-center *:w-[50%] md:flex-row md:justify-between">
+        <div>Ratios</div>
+        <PieChart
+          slices={percentages}
+          isLoading={isLoadingCelo || isLoadingOther}
         />
-        <link
-          rel="preload"
-          href="/api/holdings/other"
-          as="fetch"
-          crossOrigin="anonymous"
-        />
-      </Head>
-      <PieChart
-        label={"Current Composition"}
-        slices={percentages}
-        isLoading={isLoadingCelo || isLoadingOther}
-      />
+      </section>
     </article>
   );
 };

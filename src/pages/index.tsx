@@ -15,6 +15,7 @@ import { cn } from "@/styles/helpers";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/Footer";
 import { CardBackground } from "@/components/CardBackground";
+import { ReserveComposition } from "@/components/ReserveComposition";
 
 interface ContentShape {
   title: string;
@@ -68,6 +69,9 @@ export default function Home(props: Props) {
             <Ratios />
             <Holdings />
           </div>
+          <CardBackground className="mt-14 p-10">
+            <ReserveComposition />
+          </CardBackground>
           {/* <Section title="Reserve Ratio"></Section>
           <Section title={"Reserve Addresses"}>
             <ReserveAddresses reserveAssets={props.reserveCryptos} />
