@@ -27,20 +27,26 @@ interface Props {
 
 export default function PieChart({ slices, isLoading }: Props) {
   Chart.register(ArcElement);
+  // Inconsistent spacing due to high numbers & borders,
+  // so injection of pseudo slices was done here with flat maps
   const data: ChartData<"doughnut", number[], string> = useMemo(
     () => ({
       labels: slices.map((i) => i.token),
       datasets: [
         {
-          label: "My First Dataset",
-          data: slices.map((i) => i.percent),
-          backgroundColor: slices.map((i) => TokenColor[i.token]),
+          label: "Current reserve composition",
+          data: slices.flatMap((i) => [1, i.percent]),
+          backgroundColor: slices.flatMap((i) => [
+            "transparent",
+            TokenColor[i.token],
+          ]),
           hoverOffset: 0,
           borderRadius: 10,
           offset: 0,
-          spacing: 5,
-          borderWidth: 1,
-          borderColor: "#FFF",
+          spacing: 0,
+          borderAlign: "center",
+          borderWidth: slices.flatMap(() => [0, 0.5]),
+          borderColor: "rgba(0,0,0,0.6)",
         },
       ],
     }),
