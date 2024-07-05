@@ -16,6 +16,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/Footer";
 import { CardBackground } from "@/components/CardBackground";
 import { ReserveComposition } from "@/components/ReserveComposition";
+import ReserveAddresses from "@/components/ReserveAddresses";
 
 interface ContentShape {
   title: string;
@@ -70,10 +71,10 @@ export default function Home(props: Props) {
             <Holdings />
           </div>
           <ReserveComposition />
+          <ReserveAddresses reserveAssets={props.reserveCryptos} />
 
           {/* <Section title="Reserve Ratio"></Section>
           <Section title={"Reserve Addresses"}>
-            <ReserveAddresses reserveAssets={props.reserveCryptos} />
           </Section>
           <Section
             title={props.INITIAL_TARGET.attributes.title}

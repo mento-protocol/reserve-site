@@ -1,10 +1,11 @@
+import { CardBackground } from "@/components/CardBackground";
+import { centerEllipsis } from "@/helpers/Strings";
 import * as React from "react";
 import {
   generateLink,
   ReserveAssetByLabel,
   ReserveCrypto,
 } from "src/addresses.config";
-import Button from "src/components/Button";
 import CopyIcon from "src/components/CopyIcon";
 
 interface Props {
@@ -13,14 +14,16 @@ interface Props {
 
 export default function ReserveAddresses(props: Props) {
   return (
-    <>
-      {Object.entries(props.reserveAssets).map(([label, assets]) => {
-        return <AssetDisplay key={label} label={label} assets={assets} />;
-      })}
-      <Button href="https://docs.celo.org/command-line-interface/reserve">
-        Query Reserve Holdings
-      </Button>
-    </>
+    <CardBackground className="mt-8">
+      <h2 className="mb-8 text-center font-fg text-[32px] font-medium">
+        Reserve addresses
+      </h2>
+      <section className="flex flex-row flex-wrap justify-between *:w-full lg:*:w-[50%]">
+        {Object.entries(props.reserveAssets).map(([label, assets]) => {
+          return <AssetDisplay key={label} label={label} assets={assets} />;
+        })}
+      </section>
+    </CardBackground>
   );
 }
 const MILLISECONDS = 5000;
@@ -46,7 +49,7 @@ const AssetDisplay = React.memo(function _TokenDisplay({
 }) {
   return (
     <div className="mb-[30px]">
-      <h5 className="mb-[5px] mt-[10px] [&_a]:no-underline">{label}</h5>
+      <h5 className="mb-6 mt-[10px] font-medium [&_a]:no-underline">{label}</h5>
       {assets
         .map((asset) =>
           asset.addresses.map((address) => (
@@ -63,26 +66,24 @@ const AssetDisplay = React.memo(function _TokenDisplay({
 });
 
 function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
-  const { onPress, justCopied } = useCopy(hex);
+  const { onPress } = useCopy(hex);
 
   return (
-    <div className="mx-0 my-[8px]">
+    <div className="mx-0 mb-[8px] flex flex-row items-center justify-start">
       <a
-        className="text-wrap no-underline"
+        className="text-wrap text-mento-blue no-underline hover:underline"
         href={generateLink(asset, hex)}
         target="_blank"
         rel="noopener noreferrer"
       >
-        {hex}
+        {centerEllipsis(hex, 15)}
         {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
       </a>
-      {/* TODO: check if all works as expected */}
       <span
         className="hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] ml-[0.5em] cursor-pointer p-[1px] [&.info]:ml-[3px] [&.info]:opacity-0"
         onClick={onPress}
       >
         <CopyIcon />
-        <span className="info">{justCopied ? "Copied" : "Copy"}</span>
       </span>
     </div>
   );
