@@ -2676,6 +2676,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kurkle/color@npm:^0.3.0":
+  version: 0.3.2
+  resolution: "@kurkle/color@npm:0.3.2"
+  checksum: 79e97b31f8f6efb28c69d373f94b0c7480226fe8ec95221f518ac998e156444a496727ce47de6d728eb5c3369288e794cba82cae34253deb0d472d3bfe080e49
+  languageName: node
+  linkType: hard
+
 "@mento-protocol/reserve-web@workspace:.":
   version: 0.0.0-use.local
   resolution: "@mento-protocol/reserve-web@workspace:."
@@ -2701,6 +2708,7 @@ __metadata:
     autoprefixer: ^10.4.19
     babel-jest: ^27.0.6
     bignumber.js: ^9.0.2
+    chart.js: ^4.4.3
     class-variance-authority: ^0.7.0
     clsx: ^2.1.0
     codecov: ^3.6.5
@@ -2731,6 +2739,7 @@ __metadata:
     pretty-quick: ^3.1.1
     raw-loader: ^4.0.1
     react: ^18.2.0
+    react-chartjs-2: ^5.2.0
     react-dom: ^18.2.0
     sass: ^1.77.6
     swr: ^0.5.6
@@ -5008,6 +5017,15 @@ __metadata:
   version: 0.7.0
   resolution: "chardet@npm:0.7.0"
   checksum: 6fd5da1f5d18ff5712c1e0aed41da200d7c51c28f11b36ee3c7b483f3696dabc08927fc6b227735eb8f0e1215c9a8abd8154637f3eff8cada5959df7f58b024d
+  languageName: node
+  linkType: hard
+
+"chart.js@npm:^4.4.3":
+  version: 4.4.3
+  resolution: "chart.js@npm:4.4.3"
+  dependencies:
+    "@kurkle/color": ^0.3.0
+  checksum: 94c8d174b0d3414d50f145d4faa00bd12417bc48b18f96ac6c56f6225ec23cdc085038dddf45f77e472c5034d97e44cc23fbe35beb70d906addddd632a8c2ada
   languageName: node
   linkType: hard
 
@@ -11825,6 +11843,16 @@ __metadata:
   peerDependencies:
     webpack: ^4.0.0 || ^5.0.0
   checksum: 51cc1b0d0e8c37c4336b5318f3b2c9c51d6998ad6f56ea09612afcfefc9c1f596341309e934a744ae907177f28efc9f1654eacd62151e82853fcc6d37450e795
+  languageName: node
+  linkType: hard
+
+"react-chartjs-2@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "react-chartjs-2@npm:5.2.0"
+  peerDependencies:
+    chart.js: ^4.1.1
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: ace702185be1450e5888a8bcd8b5fc1995067e3b11d236764a67f5567a3d7c32ff16923b8d48d3d39bda6e45135da6c044c9b43fbe8e1978f95aca9d2c0ce348
   languageName: node
   linkType: hard
 

@@ -69,9 +69,8 @@ export default function Home(props: Props) {
             <Ratios />
             <Holdings />
           </div>
-          <CardBackground className="mt-14 p-10">
-            <ReserveComposition />
-          </CardBackground>
+          <ReserveComposition />
+
           {/* <Section title="Reserve Ratio"></Section>
           <Section title={"Reserve Addresses"}>
             <ReserveAddresses reserveAssets={props.reserveCryptos} />

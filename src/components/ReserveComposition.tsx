@@ -1,7 +1,7 @@
-import PieChart, { ChartData } from "@/components/PieChart";
+import { CardBackground } from "@/components/CardBackground";
+import PieChart, { SliceData, TokenColor } from "@/components/PieChart";
 import useHoldings from "@/hooks/useHoldings";
 import { HoldingsApi } from "@/service/holdings";
-import { Head } from "next/document";
 
 export function sumCeloTotal(holdings: HoldingsApi) {
   const { custody, frozen, unfrozen } = holdings.celo;
@@ -12,12 +12,12 @@ export function sumNonCelo({ otherAssets }: HoldingsApi) {
   return otherAssets.reduce((prev, current) => current.value + prev, 0);
 }
 
-function getPercents(holdings: HoldingsApi): ChartData[] {
+function getPercents(holdings: HoldingsApi): SliceData[] {
   const celoTotal = sumCeloTotal(holdings);
   const total = celoTotal + sumNonCelo(holdings);
 
   function toPercent(value: number) {
-    return (value / total) * 100;
+    return (value * 100) / total;
   }
 
   return [{ token: "CELO", percent: toPercent(celoTotal) }].concat(
@@ -33,38 +33,47 @@ function getPercents(holdings: HoldingsApi): ChartData[] {
   );
 }
 
-function findOldestValueUpdatedAt(data?: HoldingsApi): number {
-  if (!data) {
-    return 0;
-  }
-
-  return Math.min(
-    ...data.otherAssets
-      .map((token) => token.updated)
-      .concat([
-        data.celo.custody.updated,
-        data.celo.frozen.updated,
-        data.celo.unfrozen.updated,
-      ]),
-  );
-}
-
 export const ReserveComposition = () => {
   const { data, isLoadingCelo, isLoadingOther } = useHoldings();
   const percentages = getPercents(data);
 
   return (
-    <article>
-      <h2 className="mb-8 text-center font-fg text-[32px] font-medium">
+    <>
+      <h2 className="mb-4 mt-8 block text-center font-fg text-[32px] font-medium lg:hidden">
         Current reserve composition
       </h2>
-      <section className="flex flex-col-reverse items-center justify-center *:w-[50%] md:flex-row md:justify-between">
-        <div>Ratios</div>
-        <PieChart
-          slices={percentages}
-          isLoading={isLoadingCelo || isLoadingOther}
-        />
-      </section>
-    </article>
+      <CardBackground className="mt-0 p-10 lg:mt-14">
+        <article>
+          <h2 className="mb-8 hidden text-center font-fg text-[32px] font-medium lg:block">
+            Current reserve composition
+          </h2>
+          <section className="flex flex-col-reverse items-center justify-center md:flex-row">
+            <div className="grid grid-cols-2 gap-x-16">
+              {percentages.map((item) => (
+                <div
+                  key={item.token}
+                  className="flex flex-row items-center justify-start"
+                >
+                  <div
+                    className="mr-[10px] h-[18px] w-[18px] rounded"
+                    style={{ backgroundColor: TokenColor[item.token] }}
+                  ></div>
+                  <div>
+                    <span className="font-medium">{`${item.percent.toFixed(2)}%`}</span>{" "}
+                    {item.token}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mb-8 ml-0 max-h-[300px] max-w-[300px] md:mb-0 md:ml-[64px] lg:ml-[128px]">
+              <PieChart
+                slices={percentages}
+                isLoading={isLoadingCelo || isLoadingOther}
+              />
+            </div>
+          </section>
+        </article>
+      </CardBackground>
+    </>
   );
 };
