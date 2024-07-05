@@ -48,7 +48,7 @@ export const ReserveComposition = () => {
             Current reserve composition
           </h2>
           <section className="flex flex-col-reverse items-center justify-center md:flex-row">
-            <div className="grid grid-cols-2 gap-x-16">
+            <div className="grid grid-cols-2 gap-x-16 gap-y-6">
               {percentages.map((item) => (
                 <div
                   key={item.token}
