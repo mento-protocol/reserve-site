@@ -73,8 +73,8 @@ export const ReserveComposition = () => {
                 </div>
               </div>
             ) : (
-              percentages.map((item) => (
-                <div className="grid grid-cols-2 gap-x-16 gap-y-6">
+              <div className="grid grid-cols-2 gap-x-16 gap-y-6">
+                {percentages.map((item) => (
                   <div
                     key={item.token}
                     className="flex flex-row items-center justify-start"
@@ -88,8 +88,8 @@ export const ReserveComposition = () => {
                       {item.token}
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
             <div className="mb-8 ml-0 max-h-[300px] max-w-[300px] md:mb-0 md:ml-[64px] lg:ml-[128px]">
               {isLoadingCelo || isLoadingOther ? (
