@@ -49,7 +49,9 @@ const AssetDisplay = React.memo(function _TokenDisplay({
 }) {
   return (
     <div className="mb-[30px]">
-      <h5 className="mb-6 mt-[10px] font-medium [&_a]:no-underline">{label}</h5>
+      <h5 className="mb-6 mt-[10px] font-fg text-[22px] font-medium [&_a]:no-underline">
+        {label}
+      </h5>
       {assets
         .map((asset) =>
           asset.addresses.map((address) => (
@@ -71,12 +73,12 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
   return (
     <div className="mx-0 mb-[8px] flex flex-row items-center justify-start">
       <a
-        className="text-wrap text-mento-blue no-underline hover:underline"
+        className="text-wrap font-fg text-[22px] font-normal text-mento-blue no-underline hover:underline"
         href={generateLink(asset, hex)}
         target="_blank"
         rel="noopener noreferrer"
       >
-        {centerEllipsis(hex, 15)}
+        {hex}
         {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
       </a>
       <span
