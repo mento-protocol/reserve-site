@@ -14,7 +14,7 @@ interface Props {
 
 export default function ReserveAddresses(props: Props) {
   return (
-    <CardBackground className="mt-8">
+    <CardBackground className="mt-8 px-4 pb-6 md:p-[40px]">
       <h2 className="mb-8 text-center font-fg text-[32px] font-medium">
         Reserve addresses
       </h2>
@@ -48,8 +48,8 @@ const AssetDisplay = React.memo(function _TokenDisplay({
   assets: ReserveCrypto[];
 }) {
   return (
-    <div className="mb-[30px]">
-      <h5 className="mb-6 mt-[10px] font-fg text-[22px] font-medium [&_a]:no-underline">
+    <div className="mb-[16px] md:mb-[30px]">
+      <h5 className="mb-2.5 mt-[10px] font-fg text-[18px] font-medium md:mb-6 md:text-[22px] [&_a]:no-underline">
         {label}
       </h5>
       {assets
@@ -73,14 +73,14 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
   return (
     <div className="mx-0 mb-[8px] flex flex-row items-center justify-start">
       <a
-        className="text-wrap font-fg text-[22px] font-normal text-mento-blue no-underline hover:underline"
+        className="text-wrap font-fg text-[16px] font-normal text-mento-blue no-underline hover:underline md:text-[22px]"
         href={generateLink(asset, hex)}
         target="_blank"
         rel="noopener noreferrer"
       >
         {/* Shorten addresses on mobile screens */}
         <span className="block md:hidden">
-          {centerEllipsis(hex, 8, 7)}
+          {centerEllipsis(hex, 18, 19)}
           {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
         </span>
 
