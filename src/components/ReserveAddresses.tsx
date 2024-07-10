@@ -14,16 +14,21 @@ interface Props {
 
 export default function ReserveAddresses(props: Props) {
   return (
-    <CardBackground className="mt-8 px-4 pb-6 md:p-[40px]">
-      <h2 className="mb-8 text-center font-fg text-[32px] font-medium">
+    <>
+      <h2 className="mb-8  block pt-8 text-center font-fg text-[32px] font-medium md:hidden">
         Reserve addresses
       </h2>
-      <section className="flex flex-row flex-wrap justify-between *:w-full lg:*:w-[50%]">
-        {Object.entries(props.reserveAssets).map(([label, assets]) => {
-          return <AssetDisplay key={label} label={label} assets={assets} />;
-        })}
-      </section>
-    </CardBackground>
+      <CardBackground className="mt-8 px-4 pb-6 pt-4 md:p-[40px]">
+        <h2 className="mb-8 hidden text-center font-fg text-[32px] font-medium md:block">
+          Reserve addresses
+        </h2>
+        <section className="flex flex-row flex-wrap justify-between *:w-full lg:*:w-[50%]">
+          {Object.entries(props.reserveAssets).map(([label, assets]) => {
+            return <AssetDisplay key={label} label={label} assets={assets} />;
+          })}
+        </section>
+      </CardBackground>
+    </>
   );
 }
 const MILLISECONDS = 5000;
