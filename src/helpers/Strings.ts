@@ -1,8 +1,12 @@
-export const centerEllipsis = (address: string, remaining = 6) => {
-  if (address.length <= remaining * 2) {
+export const centerEllipsis = (
+  address: string,
+  startLength = 4,
+  endLength = 4,
+) => {
+  if (address.length <= startLength + endLength) {
     return address;
   }
-  return `${address.substring(0, remaining)}...${address.substring(
-    address.length - remaining,
+  return `${address.substring(0, startLength)}...${address.substring(
+    address.length - endLength,
   )}`;
 };

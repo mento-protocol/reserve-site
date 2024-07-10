@@ -78,8 +78,17 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
         target="_blank"
         rel="noopener noreferrer"
       >
-        {hex}
-        {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
+        {/* Shorten addresses on mobile screens */}
+        <span className="block md:hidden">
+          {centerEllipsis(hex, 8, 7)}
+          {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
+        </span>
+
+        {/* Show full address on larger screens */}
+        <span className="hidden md:block">
+          {hex}
+          {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
+        </span>
       </a>
       <span
         className="hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] ml-[0.5em] cursor-pointer p-[1px] [&.info]:ml-[3px] [&.info]:opacity-0"
