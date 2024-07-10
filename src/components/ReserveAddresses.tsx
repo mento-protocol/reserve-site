@@ -80,7 +80,7 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
       >
         {/* Shorten addresses on mobile screens */}
         <span className="block md:hidden">
-          {centerEllipsis(hex, 18, 19)}
+          {centerEllipsis(hex, 16, 16)}
           {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
         </span>
 
