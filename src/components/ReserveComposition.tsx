@@ -47,7 +47,6 @@ export const ReserveComposition = () => {
       <h2 className="mb-4 mt-8 block text-center font-fg text-[32px] font-medium lg:hidden">
         Current reserve composition
       </h2>
-
       <CardBackground className="mt-0 p-10 lg:mt-14">
         <article>
           <h2 className="mb-8 hidden text-center font-fg text-[32px] font-medium lg:block">
