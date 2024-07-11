@@ -45,7 +45,7 @@ export default function Holdings() {
 const Heading = () => {
   return (
     <h2 className="mx-auto text-center font-fg text-[32px] font-medium">
-      Current Reserve Holdings
+      Current reserve holdings
     </h2>
   );
 };

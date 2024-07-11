@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import colors from "src/components/colors";
 import { Chart, ArcElement, ChartData } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { SkeletonPie } from "./PieSkeleton";
 
 export enum TokenColor {
   BTC = colors.orange,
@@ -54,6 +55,14 @@ export default function PieChart({ slices, isLoading }: Props) {
   );
 
   return <Doughnut data={data} />;
+}
+
+export function PieChartSkeleton() {
+  return (
+    <div className="flex h-[300px] w-[300px] items-center justify-center">
+      <SkeletonPie className="h-full w-full" />
+    </div>
+  );
 }
 
 export interface SliceData {
