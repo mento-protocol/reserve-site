@@ -15,7 +15,7 @@ interface Props {
 export default function ReserveAddresses(props: Props) {
   return (
     <>
-      <h2 className="mb-8  block pt-8 text-center font-fg text-[32px] font-medium md:hidden">
+      <h2 className="mb-8 block pt-8 text-center font-fg text-[32px] font-medium md:hidden">
         Reserve addresses
       </h2>
       <CardBackground className="mt-8 px-4 pb-6 pt-4 md:p-[40px]">
@@ -31,6 +31,7 @@ export default function ReserveAddresses(props: Props) {
     </>
   );
 }
+
 const MILLISECONDS = 5000;
 
 function useCopy(hex: string) {
@@ -78,7 +79,7 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
   return (
     <div className="mx-0 mb-[8px] flex flex-row items-center justify-start">
       <a
-        className="text-wrap font-fg text-[16px] font-normal text-mento-blue no-underline hover:underline md:text-[22px]"
+        className="flex-grow text-wrap font-fg text-[16px] font-normal text-mento-blue no-underline hover:underline md:text-[22px]"
         href={generateLink(asset, hex)}
         target="_blank"
         rel="noopener noreferrer"
@@ -95,12 +96,22 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
           {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
         </span>
       </a>
-      <span
-        className="hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] ml-[0.5em] cursor-pointer p-[1px] [&.info]:ml-[3px] [&.info]:opacity-0"
-        onClick={onPress}
-      >
-        <CopyIcon />
-      </span>
+
+      {asset.isWrappedAsset ? (
+        <span
+          className="hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] mr-[5em] flex-shrink-0 cursor-pointer p-[1px] md:mr-[1em] [&.info]:ml-[3px] [&.info]:opacity-0"
+          onClick={onPress}
+        >
+          <CopyIcon />
+        </span>
+      ) : (
+        <span
+          className="hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] mr-[9em] flex-shrink-0 cursor-pointer p-[1px] md:mr-[1em] [&.info]:ml-[3px] [&.info]:opacity-0"
+          onClick={onPress}
+        >
+          <CopyIcon />
+        </span>
+      )}
     </div>
   );
 }
