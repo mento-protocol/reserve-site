@@ -7,6 +7,7 @@ import {
   ReserveCrypto,
 } from "src/addresses.config";
 import CopyIcon from "src/components/CopyIcon";
+import { cn } from "@/styles/helpers";
 
 interface Props {
   reserveAssets: ReserveAssetByLabel;
@@ -75,6 +76,7 @@ const AssetDisplay = React.memo(function _TokenDisplay({
 
 function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
   const { onPress } = useCopy(hex);
+  const copyMargin = asset.isWrappedAsset ? "mr-[5em]" : "mr-[9em]";
 
   return (
     <div className="mx-0 mb-[8px] flex flex-row items-center justify-start">
@@ -96,22 +98,15 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
           {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
         </span>
       </a>
-
-      {asset.isWrappedAsset ? (
-        <span
-          className="hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] mr-[5em] flex-shrink-0 cursor-pointer p-[1px] md:mr-[1em] [&.info]:ml-[3px] [&.info]:opacity-0"
-          onClick={onPress}
-        >
-          <CopyIcon />
-        </span>
-      ) : (
-        <span
-          className="hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] mr-[9em] flex-shrink-0 cursor-pointer p-[1px] md:mr-[1em] [&.info]:ml-[3px] [&.info]:opacity-0"
-          onClick={onPress}
-        >
-          <CopyIcon />
-        </span>
-      )}
+      <span
+        className={cn(
+          "hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] flex-shrink-0 cursor-pointer p-[1px] md:mr-[1em] [&.info]:ml-[3px] [&.info]:opacity-0",
+          copyMargin,
+        )}
+        onClick={onPress}
+      >
+        <CopyIcon />
+      </span>
     </div>
   );
 }
