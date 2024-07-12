@@ -17,7 +17,7 @@ export const Footer = () => {
 
 const DesktopFooter = () => {
   return (
-    <footer className="mx-auto mt-36 hidden items-start justify-between gap-16 border-t border-black px-4 pb-20 pt-20 dark:border-[#343437] lg:mx-10 lg:flex xl:mx-auto xl:max-w-[1120px] xl:gap-36">
+    <footer className="mx-auto mt-[56px] hidden max-w-[1120px] items-start justify-between gap-16 border-t border-black pb-20 pt-20 dark:border-[#343437] lg:flex xl:mx-auto xl:gap-36">
       <div>
         <MentoLogoIcon />
         <CopyrightNotice className="pt-3" />
