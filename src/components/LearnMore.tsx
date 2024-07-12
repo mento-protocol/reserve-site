@@ -6,7 +6,7 @@ import { LearnMoreIcon } from "./icons/learn-more.icon";
 
 export const LearnMore = ({ className }) => {
   return (
-    <div className="mx-auto max-w-[1120px] bg-black px-4 pb-[24px] dark:bg-[#121316] lg:mb-[112px] lg:mt-[46px] lg:max-h-[354px] xl:px-16">
+    <div className="mx-auto max-w-[1120px] bg-black px-4 pb-[24px] dark:bg-[#121316] lg:mb-[56px] lg:mt-[46px] lg:max-h-[354px] xl:px-16">
       <div className="flex max-w-[1120px] flex-col items-center md:justify-between lg:flex-row lg:px-10 xl:gap-40 xl:px-0  ">
         <div className="flex-col items-center justify-center pt-16">
           <h2 className="text-center font-fg text-[40px] font-semibold leading-[90%] -tracking-[0.01em] text-white sm:text-[56px] lg:whitespace-nowrap lg:text-left ">
