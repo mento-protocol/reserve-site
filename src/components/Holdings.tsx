@@ -92,7 +92,7 @@ const TotalReserveHoldings = () => {
   return (
     <span
       className={cn(
-        "inline-flex h-[58px] w-full items-center justify-between gap-5 rounded-md border-[1px] border-black bg-mento-mint p-4 font-fg text-[22px] md:h-[58px] md:w-[530px] md:gap-[90px] md:text-[26px]",
+        "flex w-full items-center justify-between gap-2 rounded-md border-[1px] border-black bg-mento-mint p-4 font-fg text-[18px] sm:text-[16px] md:h-[58px] md:w-[530px] md:text-[22px]",
       )}
     >
       <span>Total reserve holdings:</span>

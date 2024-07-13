@@ -17,6 +17,7 @@ import { Footer } from "@/components/Footer";
 import { CardBackground } from "@/components/CardBackground";
 import { ReserveComposition } from "@/components/ReserveComposition";
 import ReserveAddresses from "@/components/ReserveAddresses";
+import { LearnMore } from "@/components/LearnMore";
 
 interface ContentShape {
   title: string;
@@ -64,54 +65,26 @@ export default function Home(props: Props) {
             </p>
           </section>
           <div className="flex flex-col gap-14">
-            <CardBackground>
-              <StableTokens />
-            </CardBackground>
+            <StableTokens />
             <Ratios />
             <Holdings />
           </div>
           <ReserveComposition />
           <ReserveAddresses reserveAssets={props.reserveCryptos} />
-
-          {/* <Section title="Reserve Ratio"></Section>
-          <Section title={"Reserve Addresses"}>
-          </Section>
-          <Section
-            title={props.INITIAL_TARGET.attributes.title}
-            content={props.INITIAL_TARGET.body}
-          />
-          <Section
-            title={props.ABOUT.attributes.title}
-            content={props.ABOUT.body}
-          />
-          <Section
-            title={props.RFP.attributes.title}
-            content={props.RFP.body}
-          />
-          <Section
-            title={props.ATTESTATIONS.attributes.title}
-            content={props.ATTESTATIONS.body}
-          /> */}
+          <section className="my-[32px] flex flex-col items-center justify-center md:my-[56px]">
+            <p className="mb-0 text-center font-inter text-lg">
+              <span className="font-semibold">Disclaimer:</span> nothing herein
+              constitutes an offer to sell, or the solicitation of an offer to
+              buy any securities or tokens.
+            </p>
+          </section>
+          <LearnMore className="pt-x5" />
           <Footer />
         </main>
       </div>
     </>
   );
 }
-
-// function_ Allocation() {
-//   const targets = useTargets()
-//   return (
-//     <>
-//       <PieChart
-//         label={"Target Allocation"}
-//         slices={targets.data}
-//         showFinePrint={true}
-//         isLoading={targets.isLoading}
-//       />
-//     </>
-//   )
-// }
 
 export async function getStaticProps() {
   try {
