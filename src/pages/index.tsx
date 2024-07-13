@@ -65,9 +65,7 @@ export default function Home(props: Props) {
             </p>
           </section>
           <div className="flex flex-col gap-14">
-            <CardBackground>
-              <StableTokens />
-            </CardBackground>
+            <StableTokens />
             <Ratios />
             <Holdings />
           </div>

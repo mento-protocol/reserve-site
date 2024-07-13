@@ -4,6 +4,7 @@ import { skipZeros } from "../utils/skipZeros";
 import { useStableTokens } from "@/hooks/useStableTokens";
 import { cn } from "@/styles/helpers";
 import { Skeleton } from "./TextSkeleton";
+import { CardBackground } from "./CardBackground";
 
 const TotalStableTokenValue = ({ stables, isLoading }) => {
   const totalValue = useMemo(() => {
@@ -28,7 +29,7 @@ const TotalStableTokenValue = ({ stables, isLoading }) => {
   );
 };
 
-export function StableTokens() {
+const StableTokenContent = () => {
   const { stables, isLoading, error } = useStableTokens();
 
   return (
@@ -54,5 +55,19 @@ export function StableTokens() {
         })}
       </div>
     </section>
+  );
+};
+
+export function StableTokens() {
+  return (
+    <>
+      <CardBackground className="hidden flex-col gap-8 md:flex">
+        <StableTokenContent />
+      </CardBackground>
+
+      <article className="flex flex-col gap-8 md:hidden">
+        <StableTokenContent />
+      </article>
+    </>
   );
 }
