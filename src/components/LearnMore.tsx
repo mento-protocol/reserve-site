@@ -16,7 +16,7 @@ export const LearnMore = ({ className }) => {
             <span className="inline !text-gray-500 xl:block">
               If you're interested in learning more about Mento, finding out
               what the team is working on now, or would like to contribute,
-              please join our discord server.
+              please join our Discord serve
             </span>
           </p>
           <div className="flex justify-center sm:mb-[42px] md:w-full lg:justify-start ">

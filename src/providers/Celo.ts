@@ -147,59 +147,16 @@ export async function getAddresses(): Promise<{
     const reserve = await kit.contracts.getReserve();
     const addresses = await reserve.getOtherReserveAddresses();
 
+    console.log({ addresses });
+
     // TODO: This shouldn't live here. It should be part of the addresses.config.ts.
     return {
       value: [
         {
           assetType: AssetType.Native,
-          label: "CELO in Reserve",
+          label: "Mento Reserve on Celo",
           token: "CELO",
           addresses: [reserve.address],
-          network: Network.CELO,
-        },
-        {
-          assetType: AssetType.Native,
-          label: "CELO with Custodian",
-          token: "CELO",
-          addresses: addresses,
-          network: Network.CELO,
-        },
-        {
-          assetType: AssetType.ERC20InCurvePool,
-          label: "USDC in Curve Pool",
-          token: "USDC",
-          addresses: [CURVE_FACTORY_POOL_ADDRESS],
-          network: Network.CELO,
-        },
-        {
-          assetType: AssetType.ERC20InCurvePool,
-          label: "cUSD in Curve Pool",
-          token: StableToken.cUSD,
-          addresses: [CURVE_FACTORY_POOL_ADDRESS],
-          network: Network.CELO,
-        },
-        {
-          assetType: AssetType.ERC20,
-          label: "cUSD in Multisig",
-          token: StableToken.cUSD,
-          addresses: [RESERVE_MULTISIG_CELO],
-          tokenAddress: CUSD_ADDRESS,
-          network: Network.CELO,
-        },
-        {
-          assetType: AssetType.ERC20,
-          label: "USDC in Multisig",
-          token: "USDC",
-          addresses: [RESERVE_MULTISIG_CELO],
-          tokenAddress: USDC_AXELAR_ADDRESS,
-          network: Network.CELO,
-        },
-        {
-          assetType: AssetType.ERC20,
-          label: "EUROC in Multisig",
-          token: "EUROC",
-          addresses: [RESERVE_MULTISIG_CELO],
-          tokenAddress: EUROC_AXELAR_ADDRESS,
           network: Network.CELO,
         },
       ],

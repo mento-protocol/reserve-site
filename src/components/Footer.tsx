@@ -17,7 +17,7 @@ export const Footer = () => {
 
 const DesktopFooter = () => {
   return (
-    <footer className="mx-auto mt-[56px] hidden max-w-[1120px] items-start justify-between gap-16 border-t border-black pb-20 pt-20 dark:border-[#343437] lg:flex xl:mx-auto xl:gap-36">
+    <footer className="mx-auto mt-[56px] hidden max-w-[1120px] items-start justify-between gap-16 border-t border-black px-4 pb-20 pt-20 dark:border-[#343437] lg:flex xl:mx-auto xl:gap-36">
       <div>
         <MentoLogoIcon />
         <CopyrightNotice className="pt-3" />
@@ -30,7 +30,7 @@ const DesktopFooter = () => {
 
 const MobileFooter = () => {
   return (
-    <footer className="pb-8 pt-10 lg:hidden">
+    <footer className="px-4 pb-8 pt-10 lg:hidden">
       <div className="border-t border-black dark:border-gray-light">
         <MobileAccordionMenu classNames="bg-transparent" />
         <div className="mt-6 flex justify-between">
@@ -121,7 +121,7 @@ const footerMenuItems = {
   Community: [
     { title: "Forum", href: links.forum },
     { title: "Discord", href: links.discord },
-    { title: "Twitter", href: links.twitter },
+    { title: "X", href: links.twitter },
   ],
   Other: [
     { title: "Team", href: links.mentoLabsTeam },
