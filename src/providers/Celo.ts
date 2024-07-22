@@ -158,6 +158,7 @@ export async function getAddresses(): Promise<{
           token: "CELO",
           addresses: [reserve.address],
           network: Network.CELO,
+          shouldDisplay: true,
         },
       ],
     };

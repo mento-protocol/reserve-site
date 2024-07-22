@@ -14,16 +14,25 @@ interface Props {
   reserveAssets: ReserveAssetByLabel;
 }
 
-export default function ReserveAddresses(props: Props) {
+export default function ReserveAddresses({ reserveAssets }: Props) {
+  const filteredAssets = Object.fromEntries(
+    Object.entries(reserveAssets)
+      .map(([label, assets]) => [
+        label,
+        assets.filter((asset) => asset.shouldDisplay),
+      ])
+      .filter(([, assets]) => assets.length > 0),
+  ) as ReserveAssetByLabel;
+
   return (
     <div className="flex flex-col gap-4">
       <Heading className="md:hidden">Reserve addresses</Heading>
       <CardBackground className="px-4 pb-6 pt-4 md:p-[40px]">
         <Heading className="mb-8 hidden md:block">Reserve addresses</Heading>
         <section className="grid md:grid-cols-2 md:gap-8">
-          {Object.entries(props.reserveAssets).map(([label, assets]) => {
-            return <AssetDisplay key={label} label={label} assets={assets} />;
-          })}
+          {Object.entries(filteredAssets).map(([label, assets]) => (
+            <AssetDisplay key={label} label={label} assets={assets} />
+          ))}
         </section>
       </CardBackground>
     </div>

@@ -106,10 +106,14 @@ export interface NativeReserveAsset extends BaseReserveAsset {
   assetType: AssetType.Native;
 }
 
+interface DisplayAsReserveAddress {
+  shouldDisplay: boolean;
+}
+
 export type ReserveCrypto =
-  | ERC20ReserveAsset
-  | NativeReserveAsset
-  | ERC20InCurvePoolReserveAsset;
+  | (ERC20ReserveAsset & DisplayAsReserveAddress)
+  | (NativeReserveAsset & DisplayAsReserveAddress)
+  | (ERC20InCurvePoolReserveAsset & DisplayAsReserveAddress);
 
 const ADDRESSES: ReserveCrypto[] = [
   {
@@ -119,6 +123,7 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [RESERVE_MULTISIG_CELO],
     tokenAddress: USDC_AXELAR_ADDRESS,
     network: Network.CELO,
+    shouldDisplay: true,
   },
   {
     assetType: AssetType.Native,
@@ -129,6 +134,7 @@ const ADDRESSES: ReserveCrypto[] = [
       "3Hc1Wje1DeJU5ahXdmD8Pt2yAfoYep331z",
     ],
     network: Network.BTC,
+    shouldDisplay: true,
   },
   {
     assetType: AssetType.ERC20,
@@ -138,6 +144,7 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [wallets.RESERVE_MULTISIG_ETH],
     tokenAddress: tokensAddresses.SAVINGS_DAI,
     network: Network.ETH,
+    shouldDisplay: true,
   },
   {
     assetType: AssetType.ERC20InCurvePool,
@@ -145,6 +152,7 @@ const ADDRESSES: ReserveCrypto[] = [
     token: "USDC",
     addresses: [CURVE_FACTORY_POOL_ADDRESS],
     network: Network.CELO,
+    shouldDisplay: true,
   },
   {
     assetType: AssetType.Native,
@@ -152,6 +160,104 @@ const ADDRESSES: ReserveCrypto[] = [
     token: "CELO",
     addresses: [wallets.CUSTODIAN_ETH],
     network: Network.CELO,
+    shouldDisplay: true,
+  },
+  {
+    assetType: AssetType.Native,
+    label: "ETH",
+    token: "ETH",
+    addresses: [
+      "0xe1955eA2D14e60414eBF5D649699356D8baE98eE",
+      "0x8331C987D9Af7b649055fa9ea7731d2edbD58E6B",
+      wallets.CUSTODIAN_ETH,
+      wallets.RESERVE_MULTISIG_ETH,
+    ],
+    network: Network.ETH,
+    shouldDisplay: false,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "DAI",
+    token: "DAI",
+    addresses: [
+      "0x16B34Ce9A6a6F7FC2DD25Ba59bf7308E7B38E186",
+      wallets.RESERVE_MULTISIG_ETH,
+    ],
+    tokenAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
+    decimals: 18,
+    network: Network.ETH,
+    shouldDisplay: false,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "USDC",
+    token: "USDC",
+    decimals: 6,
+    addresses: [wallets.RESERVE_MULTISIG_ETH, wallets.CUSTODIAN_ETH],
+    tokenAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    network: Network.ETH,
+    shouldDisplay: false,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "EUROC",
+    token: "EUROC",
+    decimals: 6,
+    addresses: [wallets.RESERVE_MULTISIG_ETH, wallets.CUSTODIAN_ETH],
+    tokenAddress: "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c",
+    network: Network.ETH,
+    shouldDisplay: false,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "ETH",
+    token: "WETH",
+    addresses: [wallets.RESERVE_MULTISIG_ETH, wallets.CUSTODIAN_ETH],
+    tokenAddress: tokensAddresses.WETH_ON_ETH,
+    network: Network.ETH,
+    isWrappedAsset: true,
+    shouldDisplay: false,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "BTC",
+    token: "WBTC",
+    decimals: 8,
+    addresses: [wallets.CUSTODIAN_ETH, wallets.RESERVE_MULTISIG_ETH],
+    tokenAddress: tokensAddresses.WBTC_ON_ETH,
+    network: Network.ETH,
+    isWrappedAsset: true,
+    shouldDisplay: false,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "Staked agEUR",
+    token: "stEUR",
+    decimals: 18,
+    addresses: [RESERVE_MULTISIG_CELO],
+    tokenAddress: tokensAddresses.STEUR_ON_CELO,
+    network: Network.CELO,
+    shouldDisplay: false,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "Lido Staked ETH",
+    token: "stETH",
+    decimals: 18,
+    addresses: [wallets.RESERVE_MULTISIG_ETH],
+    tokenAddress: tokensAddresses.LIDO_STAKED_ETH,
+    network: Network.ETH,
+    shouldDisplay: false,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "USDT",
+    token: "USDT",
+    decimals: 6,
+    addresses: [RESERVE_MULTISIG_CELO, RESERVE_ADDRESS],
+    tokenAddress: tokensAddresses.USDT_ON_CELO,
+    network: Network.CELO,
+    shouldDisplay: false,
   },
 ];
 // WHEN Adding new TOKENS also update the TokenColor enum in PieChart.tsx
