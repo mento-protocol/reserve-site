@@ -7,6 +7,7 @@ import PieChart, {
 import useHoldings from "@/hooks/useHoldings";
 import { HoldingsApi } from "@/service/holdings";
 import { Skeleton } from "./TextSkeleton";
+import Heading from "./Heading";
 
 export function sumCeloTotal(holdings: HoldingsApi) {
   const { custody, frozen, unfrozen } = holdings.celo;
@@ -43,15 +44,15 @@ export const ReserveComposition = () => {
   const percentages = getPercents(data);
 
   return (
-    <>
-      <h2 className="mb-4 mt-8 block text-center font-fg text-[32px] font-medium lg:hidden">
-        Current reserve composition
-      </h2>
-      <CardBackground className="mt-0 p-10 lg:mt-14">
+    <div>
+      <Heading className="mb-4 lg:hidden">
+        Current Reserve <br /> composition
+      </Heading>
+      <CardBackground className="mt-0 p-4 md:p-10">
         <article>
-          <h2 className="mb-8 hidden text-center font-fg text-[32px] font-medium lg:block">
-            Current reserve composition
-          </h2>
+          <Heading className="mb-8 hidden lg:block">
+            Current Reserve composition
+          </Heading>
 
           <section className="flex flex-col-reverse items-center justify-center md:flex-row">
             {isLoadingCelo || isLoadingOther ? (
@@ -72,7 +73,7 @@ export const ReserveComposition = () => {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-x-16 gap-y-6">
+              <div className="grid grid-cols-2 gap-x-16 gap-y-4">
                 {percentages.map((item) => (
                   <div
                     key={item.token}
@@ -81,9 +82,9 @@ export const ReserveComposition = () => {
                     <div
                       className="mr-[10px] h-[18px] w-[18px] rounded"
                       style={{ backgroundColor: TokenColor[item.token] }}
-                    ></div>
+                    />
                     <div>
-                      <span className="font-medium">{`${item.percent.toFixed(2)}%`}</span>{" "}
+                      <span className="font-fg text-[18px] font-medium">{`${item.percent.toFixed(2)}%`}</span>{" "}
                       {item.token}
                     </div>
                   </div>
@@ -103,6 +104,6 @@ export const ReserveComposition = () => {
           </section>
         </article>
       </CardBackground>
-    </>
+    </div>
   );
 };

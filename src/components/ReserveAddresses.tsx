@@ -8,28 +8,34 @@ import {
 } from "src/addresses.config";
 import CopyIcon from "src/components/CopyIcon";
 import { cn } from "@/styles/helpers";
+import Heading from "./Heading";
 
 interface Props {
   reserveAssets: ReserveAssetByLabel;
 }
 
-export default function ReserveAddresses(props: Props) {
+export default function ReserveAddresses({ reserveAssets }: Props) {
+  const filteredAssets = Object.fromEntries(
+    Object.entries(reserveAssets)
+      .map(([label, assets]) => [
+        label,
+        assets.filter((asset) => asset.shouldDisplay),
+      ])
+      .filter(([, assets]) => assets.length > 0),
+  ) as ReserveAssetByLabel;
+
   return (
-    <>
-      <h2 className="mb-8 block pt-8 text-center font-fg text-[32px] font-medium md:hidden">
-        Reserve addresses
-      </h2>
-      <CardBackground className="mt-8 px-4 pb-6 pt-4 md:p-[40px]">
-        <h2 className="mb-8 hidden text-center font-fg text-[32px] font-medium md:block">
-          Reserve addresses
-        </h2>
-        <section className="flex flex-row flex-wrap justify-between *:w-full lg:*:w-[50%]">
-          {Object.entries(props.reserveAssets).map(([label, assets]) => {
-            return <AssetDisplay key={label} label={label} assets={assets} />;
-          })}
+    <div className="flex flex-col gap-4">
+      <Heading className="md:hidden">Reserve addresses</Heading>
+      <CardBackground className="px-4 pb-6 pt-4 md:p-[40px]">
+        <Heading className="mb-8 hidden md:block">Reserve addresses</Heading>
+        <section className="grid md:grid-cols-2 md:gap-8">
+          {Object.entries(filteredAssets).map(([label, assets]) => (
+            <AssetDisplay key={label} label={label} assets={assets} />
+          ))}
         </section>
       </CardBackground>
-    </>
+    </div>
   );
 }
 
@@ -55,8 +61,8 @@ const AssetDisplay = React.memo(function _TokenDisplay({
   assets: ReserveCrypto[];
 }) {
   return (
-    <div className="mb-[16px] md:mb-[30px]">
-      <h5 className="mb-2.5 mt-[10px] font-fg text-[18px] font-medium md:mb-6 md:text-[22px] [&_a]:no-underline">
+    <div className="md:mb-4">
+      <h5 className="mb-2.5 mt-[10px] font-fg text-[18px] font-medium md:mb-4 md:text-[22px] [&_a]:no-underline">
         {label}
       </h5>
       {assets
@@ -76,32 +82,29 @@ const AssetDisplay = React.memo(function _TokenDisplay({
 
 function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
   const { onPress } = useCopy(hex);
-  const copyMargin = asset.isWrappedAsset ? "mr-[5em]" : "mr-[9em]";
 
   return (
-    <div className="mx-0 mb-[8px] flex flex-row items-center justify-start">
+    <div className="mb-4 flex justify-between">
       <a
-        className="flex-grow text-wrap font-fg text-[16px] font-normal text-mento-blue no-underline hover:underline md:text-[22px]"
+        className="block font-fg text-mento-blue no-underline hover:underline md:hidden md:text-[22px]"
         href={generateLink(asset, hex)}
         target="_blank"
         rel="noopener noreferrer"
       >
-        {/* Shorten addresses on mobile screens */}
-        <span className="block md:hidden">
-          {centerEllipsis(hex, 16, 16)}
-          {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
-        </span>
-
-        {/* Show full address on larger screens */}
-        <span className="hidden md:block">
-          {hex}
-          {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
-        </span>
+        {centerEllipsis(hex, 16, 16)}
+        {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
+      </a>
+      <a
+        className="hidden font-fg text-mento-blue no-underline hover:underline md:block md:text-[22px]"
+        href={generateLink(asset, hex)}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {hex}
       </a>
       <span
         className={cn(
-          "hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] flex-shrink-0 cursor-pointer p-[1px] md:mr-[1em] [&.info]:ml-[3px] [&.info]:opacity-0",
-          copyMargin,
+          "hover:[&_.info]:opacity-1 [&.info]:transitionProperty-[opacity] [&.info]:transitionDuration-[400ms] active:[&_svg]:transform-[scale(1.1)] cursor-pointer p-[1px] [&.info]:ml-[3px] [&.info]:opacity-0",
         )}
         onClick={onPress}
       >

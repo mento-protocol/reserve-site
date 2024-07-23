@@ -20,7 +20,7 @@ const mobileMenuAccordionMenuItems = [
     items: [
       { name: "Forum", href: links.forum },
       { name: "Discord", href: links.discord },
-      { name: "Twitter", href: links.twitter },
+      { name: "X", href: links.twitter },
     ],
   },
   {

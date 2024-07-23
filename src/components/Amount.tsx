@@ -32,8 +32,8 @@ export default function Amount({
   }
 
   return (
-    <CardBackground className="min-w-[220px] px-6 py-4">
-      <div className="flex flex-row items-center">
+    <CardBackground className="flex flex-col gap-2 px-6 py-4 md:min-w-[220px] md:gap-4">
+      <div className="flex items-center">
         {iconSrc && (
           <img
             width={32}
@@ -43,17 +43,19 @@ export default function Amount({
             alt=""
           />
         )}
-        <p id={id} className="mb-0 items-end text-left text-[22px] font-medium">
+        <p
+          id={id}
+          className="mb-0 items-end text-left text-[18px]  font-medium md:text-[22px]"
+        >
           <abbr className="cursor-help font-fg no-underline" title={context}>
             {label}
           </abbr>
         </p>
       </div>
-      {/* TODO: CVA */}
       <span
         aria-labelledby={id}
         className={cn(
-          "my-6 block text-left font-fg text-[32px] font-medium opacity-100 transition-opacity duration-500",
+          "block text-left font-fg text-[22px] font-medium opacity-100 transition-opacity duration-500 md:text-[32px]",
         )}
       >
         {display}
@@ -92,12 +94,12 @@ function dasherize(str: string) {
 
 const AmountSkeleton = () => {
   return (
-    <CardBackground className="flex min-w-[220px] flex-col gap-6 px-6 py-4">
+    <CardBackground className="flex flex-col gap-3 px-6 py-4 md:min-w-[220px] md:gap-7 ">
       <div className="flex flex-row items-center gap-2">
         <Skeleton className="h-[32px] w-[32px] rounded-full bg-black/10 " />
         <Skeleton className="h-[22px] w-[65px]  bg-black/10" />
       </div>
-      <Skeleton className="h-[22px] w-[198px] bg-black/10" />
+      <Skeleton className="h-[22px] bg-black/10 md:w-[198px]" />
       <Skeleton className="h-[22px] w-[105px] bg-black/10" />
     </CardBackground>
   );

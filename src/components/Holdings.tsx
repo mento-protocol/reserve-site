@@ -6,6 +6,7 @@ import useHoldings from "src/hooks/useHoldings";
 import { skipZeros } from "src/utils/skipZeros";
 import { Skeleton } from "./TextSkeleton";
 import { CardBackground } from "./CardBackground";
+import Heading from "./Heading";
 
 export default function Holdings() {
   return (
@@ -24,31 +25,11 @@ export default function Holdings() {
           crossOrigin="anonymous"
         />
       </Head>
-      <CardBackground className="hidden flex-col gap-8 md:flex">
-        <div className="flex flex-col items-center justify-center gap-8">
-          <Heading />
-          <TotalReserveHoldings />
-        </div>
-        <ReserveAssetGrid />
-      </CardBackground>
-      <article className="flex flex-col gap-8 md:hidden">
-        <div className="flex flex-col items-center justify-center gap-8">
-          <Heading />
-          <TotalReserveHoldings />
-        </div>
-        <ReserveAssetGrid />
-      </article>
+      <DesktopReserveAssetGrid />
+      <MobileReserveAssetGrid />
     </>
   );
 }
-
-const Heading = () => {
-  return (
-    <h2 className="mx-auto text-center font-fg text-[32px] font-medium">
-      Current reserve holdings
-    </h2>
-  );
-};
 
 const ReserveAssetGrid = () => {
   const {
@@ -58,7 +39,7 @@ const ReserveAssetGrid = () => {
   } = useHoldings();
 
   return (
-    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="grid grid-cols-2 gap-2 lg:grid-cols-4">
       <Amount
         iconSrc={"/assets/tokens/CELO.svg"}
         context="Funds in on-chain Reserve contract and in custodyy"
@@ -102,5 +83,31 @@ const TotalReserveHoldings = () => {
         <span className="font-medium">{`$${displayValue}`}</span>
       )}
     </span>
+  );
+};
+
+const DesktopReserveAssetGrid = () => {
+  return (
+    <CardBackground className="hidden flex-col gap-8 md:flex">
+      <div className="flex flex-col items-center justify-center gap-8">
+        <Heading>Current Reserve holdings</Heading>
+        <TotalReserveHoldings />
+      </div>
+      <ReserveAssetGrid />
+    </CardBackground>
+  );
+};
+
+const MobileReserveAssetGrid = () => {
+  return (
+    <div className="flex flex-col gap-2 md:hidden">
+      <div className="flex flex-col items-center justify-center gap-3">
+        <Heading>
+          Current Reserve <br /> holdings
+        </Heading>
+        <TotalReserveHoldings />
+      </div>
+      <ReserveAssetGrid />
+    </div>
   );
 };

@@ -5,8 +5,10 @@ import { useStableTokens } from "@/hooks/useStableTokens";
 import { cn } from "@/styles/helpers";
 import { Skeleton } from "./TextSkeleton";
 import { CardBackground } from "./CardBackground";
+import Heading from "./Heading";
 
-const TotalStableTokenValue = ({ stables, isLoading }) => {
+const TotalStableTokenValue = ({ className }: { className?: string }) => {
+  const { stables, isLoading } = useStableTokens();
   const totalValue = useMemo(() => {
     return stables.reduce((sum, token) => sum + token.value, 0);
   }, [stables]);
@@ -16,7 +18,8 @@ const TotalStableTokenValue = ({ stables, isLoading }) => {
   return (
     <div
       className={cn(
-        "flex w-full items-center justify-between gap-2 rounded-md border-[1px] border-black bg-mento-mint p-4 font-fg text-[18px] sm:text-[16px] md:h-[58px] md:w-[530px] md:text-[22px]",
+        "mx-auto flex w-full items-center justify-between gap-2 rounded-md border-[1px] border-black bg-mento-mint p-4 font-fg text-[18px] sm:text-[16px] md:h-[58px] md:w-[530px] md:text-[22px]",
+        className,
       )}
     >
       <span className="whitespace-nowrap">Total stablecoin supply:</span>
@@ -30,17 +33,14 @@ const TotalStableTokenValue = ({ stables, isLoading }) => {
 };
 
 const StableTokenContent = () => {
-  const { stables, isLoading, error } = useStableTokens();
+  const { stables, isLoading } = useStableTokens();
 
   return (
     <section>
-      <h2 className="mb-8 text-center font-fg text-[32px] font-medium">
-        Outstanding supply of Mento stablecoins
-      </h2>
-      <div className="mb-8 flex flex-col items-center justify-center gap-8">
+      {/* <div className="mb-8 flex flex-col items-center justify-center gap-8">
         <TotalStableTokenValue stables={stables} isLoading={isLoading} />
-      </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      </div> */}
+      <div className="grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-4">
         {stables.filter(skipZeros).map((token) => {
           return (
             <Amount
@@ -61,13 +61,23 @@ const StableTokenContent = () => {
 export function StableTokens() {
   return (
     <>
-      <CardBackground className="hidden flex-col gap-8 md:flex">
+      <CardBackground className="hidden flex-col md:flex">
+        <Heading className="mb-8">
+          Outstanding supply of Mento stablecoins
+        </Heading>
+        <TotalStableTokenValue className="mb-6" />
         <StableTokenContent />
       </CardBackground>
 
-      <article className="flex flex-col gap-8 md:hidden">
+      <div className="flex flex-col gap-2 md:hidden">
+        <div className="flex flex-col items-center justify-center gap-3">
+          <Heading>
+            Outstanding supply of <br className="md:hidden" /> Mento stablecoins
+          </Heading>
+          <TotalStableTokenValue />
+        </div>
         <StableTokenContent />
-      </article>
+      </div>
     </>
   );
 }

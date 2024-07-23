@@ -35,7 +35,7 @@ export default function PieChart({ slices, isLoading }: Props) {
       labels: slices.map((i) => i.token),
       datasets: [
         {
-          label: "Current reserve composition",
+          label: "Current Reserve composition",
           data: slices.flatMap((i) => [1, i.percent]),
           backgroundColor: slices.flatMap((i) => [
             "transparent",
@@ -46,7 +46,7 @@ export default function PieChart({ slices, isLoading }: Props) {
           offset: 0,
           spacing: 0,
           borderAlign: "center",
-          borderWidth: slices.flatMap(() => [0, 0.5]),
+          borderWidth: slices.flatMap(() => [0, 1]),
           borderColor: "rgba(0,0,0,0.6)",
         },
       ],
