@@ -9,6 +9,7 @@ import {
   ETH_WORMHOLE_ADDRESS,
   RESERVE_MULTISIG_CELO,
   STAKED_CELO_ERC20_ADDRESS,
+  USDT_CELO_NATIVE_ADDRESS,
 } from "src/contract-addresses"
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
 import { getBTCBalance as getBlockChainBTCBalance } from "src/providers/BlockchainDotCom"
@@ -241,6 +242,8 @@ export async function getHoldingsOther() {
   btcHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, BTC_WORMHOLE_ADDRESS)
   btcHeld.value += wbtcHeld.value
   ethHeld.value += wethHeld.value
+
+  usdtHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, USDT_CELO_NATIVE_ADDRESS)
 
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
   usdcHeld.value += valueOrThrow(await multisigUSDC())
