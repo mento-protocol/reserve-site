@@ -13,6 +13,7 @@ import {
   ETH_WORMHOLE_ADDRESS,
   RESERVE_MULTISIG_CELO,
   STAKED_CELO_ERC20_ADDRESS,
+  USDT_CELO_NATIVE_ADDRESS,
 } from "src/contract-addresses";
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider";
 import { getBTCBalance as getBlockChainBTCBalance } from "src/providers/BlockchainDotCom";
@@ -278,6 +279,11 @@ export async function getHoldingsOther() {
       erc20Balance("stETH", Network.ETH),
       erc20Balance("USDT", Network.CELO),
     ]),
+  );
+
+  usdtHeld.value += await uniV3HoldingsForToken(
+    RESERVE_MULTISIG_CELO,
+    USDT_CELO_NATIVE_ADDRESS,
   );
 
   ethHeld.value += await uniV3HoldingsForToken(
