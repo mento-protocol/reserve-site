@@ -3,20 +3,17 @@ import Head from "src/components/Head";
 import Holdings from "src/components/Holdings";
 import { StableTokens } from "@/components/StableTokens";
 import { CollateralizationRatio } from "src/components/CollateralizationRatio";
-// import ReserveAddresses from "src/components/ReserveAddresses";
-// import Section from "src/components/Section";
-// import PieChart from "src/components/PieChart";
-// import useTargets from "src/hooks/useTargets";
+
 import {
   combineTokenAddressesByLabel,
   ReserveAssetByLabel,
 } from "src/addresses.config";
-import { cn } from "@/styles/helpers";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/Footer";
 import { ReserveComposition } from "@/components/ReserveComposition";
 import ReserveAddresses from "@/components/ReserveAddresses";
 import { LearnMore } from "@/components/LearnMore";
+import { ReactNode } from "react";
 
 interface ContentShape {
   title: string;
@@ -34,45 +31,58 @@ interface Props {
 
 export default function Home(props: Props) {
   return (
-    <>
+    <div className="relative max-w-full overflow-x-hidden">
       <Head />
-      <div
-        className={cn(
-          "min-h-screen w-full overscroll-none bg-white text-base antialiased dark:bg-black",
-          "[background-origin:border-box,_border-box]",
-          "[background-position:_0_0,_0_0]",
-          "[background-repeat:_repeat]",
-          "[background-size:_100vw_200vh]",
-          "[background-image:radial-gradient(circle_at_calc(100%+210px)_37.5%,_#4D62F0_0%,_transparent_540px),radial-gradient(circle_at_calc(0%-210px)_75%,_#4D62F0_0%,_transparent_540px)]",
-        )}
-      >
-        <main className="mx-auto w-full max-w-[calc(100vw_-_32px)] content:max-w-[1120px]">
-          <Header />
-          <section className="mb-8 mt-6 flex flex-col items-center justify-center md:mb-[56px]">
-            <MainHeading />
-            <SubHeading />
-          </section>
-          <div className="flex flex-col gap-8 md:gap-14">
-            <StableTokens />
-            <CollateralizationRatio />
-            <Holdings />
-            <ReserveComposition />
-            <ReserveAddresses reserveAssets={props.reserveCryptos} />
-          </div>
-          <section className="my-[32px] flex flex-col items-center justify-center md:my-[56px]">
-            <p className="mb-0 text-center font-inter md:text-lg">
-              <span className="font-semibold">Disclaimer:</span> nothing herein
-              constitutes an offer to sell, or the solicitation of an offer to
-              buy any securities or tokens.
-            </p>
-          </section>
-        </main>
-        <LearnMore className="pt-x5" />
-        <Footer />
-      </div>
-    </>
+      <main className="mx-auto w-full max-w-[calc(100vw_-_32px)] content:max-w-[1120px]">
+        <Header />
+        <section className="mb-8 mt-6 flex flex-col items-center justify-center md:mb-[56px]">
+          <MainHeading />
+          <SubHeading />
+        </section>
+        <div className="flex flex-col gap-8 md:gap-14">
+          <StableTokens />
+          <CollateralizationRatio />
+          <Holdings />
+          <ReserveComposition />
+          <ReserveAddresses reserveAssets={props.reserveCryptos} />
+        </div>
+        <DisclaimerText />
+      </main>
+      <LearnMore />
+      <Footer />
+      {/* Top Left Gradient */}
+      <GradientPrimaryLight className="-left-[600px] top-[950px] overflow-x-hidden dark:hidden " />
+      <GradientPrimaryLightMobile className=" -left-[328px] top-[260.58px] h-[602px] w-[654px] overflow-x-hidden " />
+      <GradientPrimaryLightMobile className=" -left-[231px] top-[1651px] h-[368px] w-[411px] overflow-x-hidden " />
+      {/* Bottom Right Gradient */}
+      <GradientPrimaryLight className="-right-[600px] top-[300px] overflow-x-hidden dark:hidden " />
+      <GradientPrimaryLight className="-right-[600px] top-[1850px] overflow-x-hidden dark:hidden " />
+    </div>
   );
 }
+const GradientPrimaryLight = ({ className }: { className?: string }) => {
+  return (
+    <div
+      className={`bg-gradient-radial-primary-light absolute -z-20 hidden h-[1100px] w-[1100px] bg-contain bg-center md:block ${className} `}
+    />
+  );
+};
+
+const GradientPrimaryLightMobile = ({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) => {
+  return (
+    <div
+      className={`bg-gradient-radial-primary-light-mobile absolute -z-10 bg-contain bg-center md:hidden  ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
 
 export async function getStaticProps() {
   try {
@@ -138,5 +148,17 @@ const MainHeading = () => {
       <br className="md:hidden" />
       <span className={``}>RESERVE</span>
     </h1>
+  );
+};
+
+const DisclaimerText = () => {
+  return (
+    <section className="my-[32px] flex flex-col items-center justify-center md:my-[56px]">
+      <p className="mb-0 text-center font-inter md:text-lg">
+        <span className="font-semibold">Disclaimer:</span> nothing herein
+        constitutes an offer to sell, or the solicitation of an offer to buy any
+        securities or tokens.
+      </p>
+    </section>
   );
 };

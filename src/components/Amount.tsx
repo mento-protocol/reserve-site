@@ -32,7 +32,7 @@ export default function Amount({
   }
 
   return (
-    <CardBackground className="flex flex-col gap-2 px-6 py-4 md:min-w-[220px] md:gap-4">
+    <CardBackground className="flex flex-col gap-2 px-6 py-4 md:min-w-[220px] md:gap-4 ">
       <div className="flex items-center">
         {iconSrc && (
           <img

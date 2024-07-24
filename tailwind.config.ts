@@ -61,6 +61,10 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-radial-primary-light":
+          "radial-gradient(ellipse 544px 501px, #8CA5FE, transparent)",
+        "gradient-radial-primary-light-mobile":
+          "radial-gradient(ellipse 200px 217px, #8CA5FE, transparent)",
       },
       fontFamily: { fg: ["var(--font-fg)"], inter: ["var(--font-inter)"] },
       spacing: {

@@ -26,7 +26,9 @@ export const MobileHeader = () => {
   return (
     <header className="w-full lg:hidden">
       <div className="flex items-center justify-between border-b border-black p-4 dark:border-[#343437]">
-        <MentoLogoIcon className="h-5 w-[90px]" />
+        <a rel="noopener noreferrer" href="https://mento.org" target="_blank">
+          <MentoLogoIcon className="h-5 w-[90px]" />
+        </a>
         <AnimatedHamburgerButton
           className="pr-4"
           isOpen={isOpen}
