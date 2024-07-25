@@ -16,8 +16,8 @@ export const useReserveTotals = () => {
     return !holdings.data || !stables.data;
   }, [holdings.data, stables.data]);
 
-  const outstanding = useMemo(() => {
-    return stables.data?.totalStableValueInUSD || 1;
+  const outstanding: number | null = useMemo(() => {
+    return stables?.data?.totalStableValueInUSD || null;
   }, [stables.data]);
 
   const totalReserveValue = useMemo(() => {
@@ -27,6 +27,7 @@ export const useReserveTotals = () => {
   const collateralisationRatio = useMemo(() => {
     if (isLoading) return;
     const processed = totalReserveValue / outstanding;
+
     if (!Number.isNaN(processed)) return processed.toFixed(2);
   }, [totalReserveValue, isLoading, outstanding]);
 

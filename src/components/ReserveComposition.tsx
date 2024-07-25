@@ -84,7 +84,7 @@ export const ReserveComposition = () => {
                       style={{ backgroundColor: TokenColor[item.token] }}
                     />
                     <div>
-                      <span className="font-fg text-[18px] font-medium">{`${item.percent.toFixed(2)}%`}</span>{" "}
+                      <span className="font-fg text-[22px] font-medium">{`${item.percent.toFixed(2)}%`}</span>{" "}
                       {item.token}
                     </div>
                   </div>

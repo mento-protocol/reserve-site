@@ -39,7 +39,7 @@ const ReserveAssetGrid = () => {
   } = useHoldings();
 
   return (
-    <section className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+    <section className="grid grid-cols-2 gap-2 md:gap-x-4 md:gap-y-8 lg:grid-cols-4">
       <Amount
         iconSrc={"/assets/tokens/CELO.svg"}
         context="Funds in on-chain Reserve contract and in custodyy"
@@ -73,7 +73,7 @@ const TotalReserveHoldings = () => {
   return (
     <span
       className={cn(
-        "flex w-full items-center justify-between gap-2 rounded-md border-[1px] border-black bg-mento-mint p-4 font-fg text-[18px] sm:text-[16px] md:h-[58px] md:w-[530px] md:text-[22px]",
+        "flex w-full items-center justify-between gap-2 rounded-md border-[1px] border-black bg-mento-mint p-4 font-fg md:h-[58px] md:w-[530px] md:text-[26px]",
       )}
     >
       <span>Total reserve holdings:</span>
