@@ -14,8 +14,6 @@ import { ProviderResult } from "src/utils/ProviderResult";
 import { valueOrThrow, okOrThrow } from "src/utils/Result";
 import { SECOND } from "src/utils/TIME";
 import { STABLES } from "../stables.config";
-import { uniV3HoldingsForToken } from "./holdings";
-import { RESERVE_MULTISIG_CELO, CUSD_ADDRESS } from "src/contract-addresses";
 
 async function cStableSupply(token: StableToken) {
   return getOrSave(
@@ -76,10 +74,6 @@ export default async function stables(): Promise<TokenModel[]> {
   // We need to get the reserve owned stables that have already been minted so we can adjust the total supply displayed
   const curveCUSDAmount = valueOrThrow(await curveCUSD());
   const multisigCUSDAmount = valueOrThrow(await multisigCUSD());
-  const uniCUSDAmount = await uniV3HoldingsForToken(
-    RESERVE_MULTISIG_CELO,
-    CUSD_ADDRESS,
-  );
 
   const tokens: TokenModel[] = circulations.map((tokenData) => {
     if (tokenData.units.hasError == true) {
@@ -99,9 +93,6 @@ export default async function stables(): Promise<TokenModel[]> {
     if (tokenData.symbol === StableToken.cUSD) {
       value -= curveCUSDAmount * prices.value[tokenData.iso4217];
       units -= curveCUSDAmount;
-
-      value -= uniCUSDAmount * prices.value[tokenData.iso4217];
-      units -= uniCUSDAmount;
 
       value -= multisigCUSDAmount * prices.value[tokenData.iso4217];
       units -= multisigCUSDAmount;

@@ -49,7 +49,7 @@ const CommunityText = () => {
     <p className="mb-8 mt-4 max-w-[456px] text-center text-[15px] leading-[147%] text-gray-light md:text-left md:text-base lg:leading-[162%]">
       If you're interested in learning more about Mento, finding out what the
       team is working on now, or would like to contribute, please join our
-      Discord server.
+      Discord server
     </p>
   );
 };

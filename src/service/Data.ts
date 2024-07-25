@@ -1,4 +1,4 @@
-import { StableToken, Token } from "@celo/contractkit";
+import { Token } from "@celo/contractkit";
 
 export type Tokens =
   | "CELO"
@@ -19,8 +19,7 @@ export type Tokens =
   | "cREAL"
   | "cKES"
   | "eXOF"
-  | Token
-  | StableToken;
+  | Token;
 
 export interface Address {
   address: string;

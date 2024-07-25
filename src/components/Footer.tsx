@@ -19,9 +19,7 @@ const DesktopFooter = () => {
   return (
     <footer className="mx-auto mt-[56px] hidden max-w-[1120px] items-start justify-between gap-16 border-t border-black px-4 pb-20 pt-20 dark:border-[#343437] lg:flex xl:mx-auto xl:gap-36">
       <div>
-        <a rel="noopener noreferrer" href="https://mento.org" target="_blank">
-          <MentoLogoIcon />
-        </a>
+        <MentoLogoIcon />
         <CopyrightNotice className="pt-3" />
       </div>
       <FooterNav />
@@ -37,13 +35,7 @@ const MobileFooter = () => {
         <MobileAccordionMenu classNames="bg-transparent" />
         <div className="mt-6 flex justify-between">
           <div className="flex flex-col">
-            <a
-              rel="noopener noreferrer"
-              href="https://mento.org"
-              target="_blank"
-            >
-              <MentoLogoIcon className="h-5 w-[90px]" />
-            </a>
+            <MentoLogoIcon className="h-5 w-[90px]" />
             <CopyrightNotice className="pt-4" />
           </div>
           <SocialLinks />
