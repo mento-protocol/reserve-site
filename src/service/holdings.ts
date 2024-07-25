@@ -281,6 +281,11 @@ export async function getHoldingsOther() {
     ]),
   );
 
+  usdtHeld.value += await uniV3HoldingsForToken(
+    RESERVE_MULTISIG_CELO,
+    USDT_CELO_NATIVE_ADDRESS,
+  );
+
   ethHeld.value += await uniV3HoldingsForToken(
     RESERVE_MULTISIG_CELO,
     ETH_AXELAR_ADDRESS,
