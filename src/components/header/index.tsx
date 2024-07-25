@@ -15,13 +15,11 @@ export const Header = () => {
 
 const DesktopHeader = () => {
   return (
-    <header className="mx-auto hidden h-32 w-full items-center justify-center bg-white py-10 dark:border-[#343437] dark:bg-black lg:flex">
+    <header className="mx-auto hidden h-32 w-full items-center justify-center  py-10 dark:border-[#343437] dark:bg-black lg:flex">
       <div className="flex w-full items-center justify-between">
-        <Link href="/">
-          <a>
-            <MentoLogoIcon className="h-6 w-[108px]" />
-          </a>
-        </Link>
+        <a rel="noopener noreferrer" href="https://mento.org" target="_blank">
+          <MentoLogoIcon className="h-6 w-[108px]" />
+        </a>
         <HeaderNav />
       </div>
     </header>

@@ -7,8 +7,11 @@
   --font-inter: "Inter", sans-serif;
 }
 
-body {
+body,
+#_next,
+html {
   font-family: var(--font-inter);
+  max-width: 100%;
 }
 
 @layer base {
