@@ -13,10 +13,11 @@ import {
   ETH_WORMHOLE_ADDRESS,
   RESERVE_MULTISIG_CELO,
   STAKED_CELO_ERC20_ADDRESS,
-} from "src/contract-addresses";
-import { StakedCeloProvider } from "src/helpers/StakedCeloProvider";
-import { getBTCBalance as getBlockChainBTCBalance } from "src/providers/BlockchainDotCom";
-import getBlockStreamBTCBalance from "src/providers/Blockstream";
+  USDT_CELO_NATIVE_ADDRESS,
+} from "src/contract-addresses"
+import { StakedCeloProvider } from "src/helpers/StakedCeloProvider"
+import { getBTCBalance as getBlockChainBTCBalance } from "src/providers/BlockchainDotCom"
+import getBlockStreamBTCBalance from "src/providers/Blockstream"
 import {
   getCurveUSDC,
   getFrozenBalance,
@@ -299,9 +300,11 @@ export async function getHoldingsOther() {
   btcHeld.value += wbtcHeld.value;
   ethHeld.value += wethHeld.value;
 
-  usdcHeld.value += valueOrThrow(await getCurvePoolUSDC());
-  usdcHeld.value += valueOrThrow(await multisigUSDC());
-  usdcHeld.value += valueOrThrow(await reserveUSDC());
+  usdtHeld.value += await uniV3HoldingsForToken(RESERVE_MULTISIG_CELO, USDT_CELO_NATIVE_ADDRESS)
+
+  usdcHeld.value += valueOrThrow(await getCurvePoolUSDC())
+  usdcHeld.value += valueOrThrow(await multisigUSDC())
+  usdcHeld.value += valueOrThrow(await reserveUSDC())
 
   eurocHeld.value += valueOrThrow(await multisigEUROC());
   eurocHeld.value += valueOrThrow(await reserveEUROC());
