@@ -29,7 +29,7 @@ export default function ReserveAddresses({ reserveAssets }: Props) {
       <Heading className="md:hidden">Reserve addresses</Heading>
       <CardBackground className="px-4 pb-6 pt-4 md:p-[40px]">
         <Heading className="mb-8 hidden md:block">Reserve addresses</Heading>
-        <section className="grid md:grid-cols-2 md:gap-8">
+        <section className="grid md:grid-cols-2 md:gap-x-8">
           {Object.entries(filteredAssets).map(([label, assets]) => (
             <AssetDisplay key={label} label={label} assets={assets} />
           ))}
@@ -61,7 +61,7 @@ const AssetDisplay = React.memo(function _TokenDisplay({
   assets: ReserveCrypto[];
 }) {
   return (
-    <div className="md:mb-4">
+    <div>
       <h5 className="mb-2.5 mt-[10px] font-fg text-[18px] font-medium md:mb-4 md:text-[22px] [&_a]:no-underline">
         {label}
       </h5>
@@ -84,7 +84,7 @@ function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
   const { onPress } = useCopy(hex);
 
   return (
-    <div className="mb-4 flex justify-between">
+    <div className="mb-2 flex justify-between">
       <a
         className="block font-fg text-mento-blue no-underline hover:underline md:hidden md:text-[22px]"
         href={generateLink(asset, hex)}

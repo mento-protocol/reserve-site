@@ -18,7 +18,7 @@ const TotalStableTokenValue = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "mx-auto flex w-full items-center justify-between gap-2 rounded-md border-[1px] border-black bg-mento-mint p-4 font-fg text-[18px] sm:text-[16px] md:h-[58px] md:w-[530px] md:text-[22px]",
+        "mx-auto flex w-full items-center justify-between gap-2 rounded-md border-[1px] border-black bg-mento-mint p-4 font-fg md:h-[58px] md:w-[530px] md:text-[26px]",
         className,
       )}
     >
@@ -37,22 +37,22 @@ const StableTokenContent = () => {
 
   return (
     <section>
-      {/* <div className="mb-8 flex flex-col items-center justify-center gap-8">
-        <TotalStableTokenValue stables={stables} isLoading={isLoading} />
-      </div> */}
       <div className="grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-4">
-        {stables.filter(skipZeros).map((token) => {
-          return (
-            <Amount
-              loading={isLoading}
-              key={token.token}
-              iconSrc={`/assets/tokens/${token.token}.svg`}
-              label={token.token}
-              units={token.units}
-              value={token.value}
-            />
-          );
-        })}
+        {stables
+          .filter(skipZeros)
+          .sort((a, b) => b.value - a.value)
+          ?.map((token) => {
+            return (
+              <Amount
+                loading={isLoading}
+                key={token.token}
+                iconSrc={`/assets/tokens/${token.token}.svg`}
+                label={token.token}
+                units={token.units}
+                value={token.value}
+              />
+            );
+          })}
       </div>
     </section>
   );

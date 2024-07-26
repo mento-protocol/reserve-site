@@ -2,7 +2,6 @@ import { newKit, StableToken } from "@celo/contractkit";
 import BigNumber from "bignumber.js";
 import { AssetType, Network, ReserveCrypto } from "src/addresses.config";
 import {
-  CURVE_FACTORY_POOL_ADDRESS,
   CUSD_ADDRESS,
   EXOF_ADDRESS,
   RESERVE_ADDRESS,
