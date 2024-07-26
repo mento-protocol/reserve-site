@@ -12,4 +12,4 @@ enum colors {
   darkolivegreen = "#556B2F",
 }
 
-export default colors
+export default colors;

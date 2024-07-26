@@ -1,61 +1,148 @@
-import { css } from "@emotion/react"
-import ChangeStory from "./ChangeStory"
-import { fineStyle } from "./styles"
+import { links } from "@/constants/links";
+import { MentoLogoIcon } from "@/components/icons/mento-logo.icon";
+import { MobileAccordionMenu } from "@/components/mobile-accordion-menu";
+import { TwitterIcon } from "@/components/icons/twitter.icon";
+import { GithubIcon } from "@/components/icons/github.icon";
+import { DiscordIcon } from "@/components/icons/discord.icon";
+import { cn } from "@/styles/helpers";
 
-export default function Footer({ year }) {
+export const Footer = () => {
   return (
-    <footer css={rootStyle}>
-      <div css={contentStyle}>
-        <div css={wordMark}>Mento Reserve</div>
-        <div css={fineStyle}>
-          <strong>Disclaimer</strong> Nothing herein constitutes an offer to sell, or the
-          solicitation of an offer to buy, any securities or tokens.
-        </div>
-        <div css={copyRightStyle}>© {year} AP Reserve Foundation</div>
-      </div>
+    <>
+      <DesktopFooter />
+      <MobileFooter />
+    </>
+  );
+};
+
+const DesktopFooter = () => {
+  return (
+    <footer className="mx-auto mt-[56px] hidden max-w-[1120px] items-start justify-between gap-16 border-t border-black px-4 pb-20 pt-20 dark:border-[#343437] lg:flex xl:mx-auto xl:gap-36">
       <div>
-        <a css={navStyle} href="https://github.com/mento-protocol/reserve-site">
-          Source
+        <a rel="noopener noreferrer" href="https://mento.org" target="_blank">
+          <MentoLogoIcon />
         </a>
-        <a css={navStyle} href="/legal/terms">
-          Terms
-        </a>
-        <a css={navStyle} href="/legal/privacy">
-          Privacy
-        </a>
-        <ChangeStory />
+        <CopyrightNotice className="pt-3" />
+      </div>
+      <FooterNav />
+      <SocialLinks />
+    </footer>
+  );
+};
+
+const MobileFooter = () => {
+  return (
+    <footer className="px-4 pb-8 pt-10 lg:hidden">
+      <div className="border-t border-black dark:border-gray-light">
+        <MobileAccordionMenu classNames="bg-transparent" />
+        <div className="mt-6 flex justify-between">
+          <div className="flex flex-col">
+            <a
+              rel="noopener noreferrer"
+              href="https://mento.org"
+              target="_blank"
+            >
+              <MentoLogoIcon className="h-5 w-[90px]" />
+            </a>
+            <CopyrightNotice className="pt-4" />
+          </div>
+          <SocialLinks />
+        </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-const copyRightStyle = css(fineStyle, {
-  marginTop: 15,
-})
+const FooterNav = () => {
+  return (
+    <nav className="flex flex-1 justify-between">
+      {Object.entries(footerMenuItems).map(([heading, links]) => {
+        return (
+          <div key={heading}>
+            <h4 className="mb-[10px] font-fg text-[20px] font-medium leading-none text-[#636768] dark:text-[#8F9394]">
+              {heading}
+            </h4>
+            <ul className="flex flex-col gap-2 font-inter text-[15px]">
+              {links.map(
+                ({
+                  title,
+                  href,
+                  isDownloadable,
+                }: {
+                  title: string;
+                  href: string;
+                  isDownloadable?: boolean;
+                }) => {
+                  return (
+                    <a
+                      key={title}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={href}
+                      download={isDownloadable}
+                    >
+                      {title}
+                    </a>
+                  );
+                },
+              )}
+            </ul>
+          </div>
+        );
+      })}
+    </nav>
+  );
+};
 
-const rootStyle = css({
-  boxSizing: "border-box",
-  display: "flex",
-  maxWidth: 1280,
-  width: "100%",
-  paddingLeft: 16,
-  paddingRight: 16,
-  paddingBottom: 24,
-  justifyContent: "space-between",
-  alignItems: "flex-end",
-  flexWrap: "wrap",
-})
+const SocialLinks = () => {
+  return (
+    <nav className="dark:text-clean-white -mt-[10px] flex items-center justify-center">
+      <a target="_blank" rel="noopener noreferrer" href={links.twitter}>
+        <TwitterIcon className="text-black dark:text-white" />
+      </a>
+      <a
+        className="p-2.5"
+        target="_blank"
+        rel="noopener noreferrer"
+        href={links.github}
+      >
+        <GithubIcon className="dark:text-clean-white" />
+      </a>
+      <a
+        className="p-2.5"
+        target="_blank"
+        rel="noopener noreferrer"
+        href={links.discord}
+      >
+        <DiscordIcon className="dark:text-clean-white" />
+      </a>
+    </nav>
+  );
+};
 
-const wordMark = css({
-  fontSize: 20,
-  paddingBottom: 12,
-})
+const footerMenuItems = {
+  Developers: [
+    { title: "Docs", href: links.docs },
+    { title: "Github", href: links.github },
+    { title: "Source", href: links.reserveSiteSource },
+  ],
+  Community: [
+    { title: "Forum", href: links.forum },
+    { title: "Discord", href: links.discord },
+    { title: "X", href: links.twitter },
+  ],
+  Other: [
+    { title: "Team", href: links.mentoLabsTeam },
+    { title: "Privacy", href: links.privacy },
+  ],
+};
 
-const contentStyle = css({
-  maxWidth: 380,
-})
-
-const navStyle = css({
-  padding: 10,
-  marginLeft: 10,
-})
+const CopyrightNotice = ({ className }) => {
+  const year = new Date().getFullYear();
+  return (
+    <p className={cn("text-[#636768]", className)}>
+      Mento © {year}. <br />
+      All rights reserved.
+    </p>
+  );
+};

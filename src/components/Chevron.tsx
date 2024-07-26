@@ -1,5 +1,5 @@
-import * as React from "react"
-import colors from "./colors"
+import * as React from "react";
+import colors from "./colors";
 
 export enum Direction {
   right = 0,
@@ -9,15 +9,15 @@ export enum Direction {
 }
 
 interface Props {
-  size?: number | string
-  direction?: Direction
+  size?: number | string;
+  direction?: Direction;
 }
 
 export default class Chevron extends React.PureComponent<Props> {
   static defaultProps = {
     size: 14,
     direction: Direction.right,
-  }
+  };
 
   render() {
     return (
@@ -35,6 +35,6 @@ export default class Chevron extends React.PureComponent<Props> {
           fill={colors.dark}
         />
       </svg>
-    )
+    );
   }
 }

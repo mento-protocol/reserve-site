@@ -1,46 +1,32 @@
-import { css } from "@emotion/react"
-import Footer from "src/components/Footer"
-import Head from "src/components/Head"
-import NavBar from "src/components/Navbar"
-import { flexCol, mainStyle, rootStyle } from "src/components/styles"
+import { Footer } from "src/components/Footer";
+import Head from "src/components/Head";
+import NavBar from "src/components/Navbar";
+import { flexCol, mainStyle, rootStyle } from "src/components/styles";
 interface Props {
-  year: string
+  year: string;
 }
 
 export default function Page(props: Props) {
   return (
     <>
       <Head />
-      <div css={rootStyle}>
-        <div css={containerStyle}>
+      <div className={rootStyle()}>
+        <div className={flexCol("flex w-full items-center")}>
           <NavBar />
-          <main css={bodyStyle}>
-            <img src="assets/unique.png" css={imageStyle} />
-            <h1 css={titleStyle}>Page Not Found</h1>
+          <main
+            className={mainStyle(
+              "flex flex-col content-center items-center justify-center",
+            )}
+          >
+            <img className="max-w-[400px] p-[24px]" src="assets/unique.png" />
+            <h1 className="mt-[30px] text-center">Page Not Found</h1>
           </main>
         </div>
-        <Footer year={props.year} />
+        <Footer />
       </div>
     </>
-  )
+  );
 }
-
-const bodyStyle = css(mainStyle, {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  alignContent: "center",
-})
-
-const imageStyle = css({
-  maxWidth: 400,
-  padding: 24,
-})
-
-const titleStyle = css({ textAlign: "center", marginTop: 30 })
-
-const containerStyle = css(flexCol, { flex: 1, width: "100%", alignItems: "center" })
 
 export async function getStaticProps() {
   return {
@@ -48,5 +34,5 @@ export async function getStaticProps() {
       year: new Date().getFullYear(),
     },
     revalidate: 86400, // day
-  }
+  };
 }

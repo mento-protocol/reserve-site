@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-fg: "Founders Grotesk", sans-serif;
+  --font-inter: "Inter", sans-serif;
+}
+
+body,
+#_next,
+html {
+  font-family: var(--font-inter);
+  max-width: 100%;
+}
+
+@layer base {
+  @font-face {
+    font-family: "Founders Grotesk";
+    src: url("/fonts/founders-grotesk-light.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Founders Grotesk";
+    src: url("/fonts/founders-grotesk-regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Founders Grotesk";
+    src: url("/fonts/founders-grotesk-medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Founders Grotesk";
+    src: url("/fonts/founders-grotesk-semibold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Founders Grotesk";
+    src: url("/fonts/founders-grotesk-bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Inter";
+    src: url("/fonts/Inter-Light.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Inter";
+    src: url("/fonts/Inter-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Inter";
+    src: url("/fonts/Inter-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Inter";
+    src: url("/fonts/Inter-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Inter";
+    src: url("/fonts/Inter-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+  }
+}

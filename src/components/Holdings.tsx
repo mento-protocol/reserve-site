@@ -1,156 +1,113 @@
-import { css } from "@emotion/react"
-import Head from "next/head"
-import Amount, { DollarDisplay } from "src/components/Amount"
-import Heading from "src/components/Heading"
-import PieChart, { ChartData } from "src/components/PieChart"
-import Section from "src/components/Section"
-import { Updated } from "src/components/Updated"
-import { BreakPoints } from "src/components/styles"
-import useHoldings from "src/hooks/useHoldings"
-import { HoldingsApi } from "src/service/holdings"
-import { skipZeros } from "src/utils/skipZeros"
-import { sumTotalHoldings } from "./sumTotalHoldings"
-
-export function sumCeloTotal(holdings: HoldingsApi) {
-  const { custody, frozen, unfrozen } = holdings.celo
-  return custody.value + unfrozen.value + frozen.value
-}
-
-export function sumNonCelo({ otherAssets }: HoldingsApi) {
-  return otherAssets.reduce((prev, current) => current.value + prev, 0)
-}
-
-function getPercents(holdings: HoldingsApi): ChartData[] {
-  const celoTotal = sumCeloTotal(holdings)
-  const total = celoTotal + sumNonCelo(holdings)
-
-  function toPercent(value: number) {
-    return (value / total) * 100
-  }
-
-  return [{ token: "CELO", percent: toPercent(celoTotal) }].concat(
-    holdings.otherAssets
-      .map((asset) => {
-        return {
-          token: asset.token,
-          percent: toPercent(asset.value),
-        }
-      })
-      .filter((asset) => asset.percent > 0)
-      .sort((a, b) => b.percent - a.percent)
-  )
-}
-
-function findOldestValueUpdatedAt(data?: HoldingsApi): number {
-  if (!data) {
-    return 0
-  }
-
-  return Math.min(
-    ...data.otherAssets
-      .map((token) => token.updated)
-      .concat([data.celo.custody.updated, data.celo.frozen.updated, data.celo.unfrozen.updated])
-  )
-}
+import { useReserveTotals } from "@/hooks/useReserveTotals";
+import { cn } from "@/styles/helpers";
+import Head from "next/head";
+import Amount from "src/components/Amount";
+import useHoldings from "src/hooks/useHoldings";
+import { skipZeros } from "src/utils/skipZeros";
+import { Skeleton } from "./TextSkeleton";
+import { CardBackground } from "./CardBackground";
+import Heading from "./Heading";
 
 export default function Holdings() {
-  const { data } = useHoldings()
-  const percentages = getPercents(data)
-  const isLoadingCelo = data.celo.frozen.updated === 0 || data.celo.unfrozen.updated === 0
-  const isLoadingOther = !data.otherAssets.findIndex((coin) => coin.updated === 0)
-  const oldestUpdate = findOldestValueUpdatedAt(data)
-  const celo = data.celo
-
   return (
     <>
       <Head>
-        <link rel="preload" href="/api/holdings/celo" as="fetch" crossOrigin="anonymous" />
-        <link rel="preload" href="/api/holdings/other" as="fetch" crossOrigin="anonymous" />
-      </Head>
-      <Section
-        title={"Current Reserve Holdings"}
-        subHeading={
-          <>
-            <DollarDisplay
-              loading={isLoadingCelo || isLoadingOther}
-              label="Liquidity"
-              value={sumTotalHoldings(data)}
-            />
-            <Updated date={oldestUpdate} />
-          </>
-        }
-      >
-        <div css={rootStyle}>
-          <Heading title="Celo Assets" gridArea="celo" />
-          {celo.frozen.value > 0 ? (
-            <Amount
-              iconSrc={"/assets/tokens/CELO.svg"}
-              context="Funds frozen in on-chain Reserve contract"
-              loading={isLoadingCelo}
-              label="Frozen"
-              units={celo.frozen.units}
-              value={celo.frozen.value}
-              gridArea="frozen"
-            />
-          ) : (
-            <div css={hiddenCelo}></div>
-          )}
-
-          <Amount
-            iconSrc={"/assets/tokens/CELO.svg"}
-            context="Funds in on-chain Reserve contract and in custody"
-            loading={isLoadingCelo}
-            label={celo.frozen.value > 0 ? "Unfrozen" : "CELO"}
-            units={celo.unfrozen.units + celo.custody.units}
-            value={celo.unfrozen.value + celo.custody.value}
-            gridArea="unfrozen"
-          />
-
-          <Heading title="Non-Celo Crypto Assets" gridArea="crypto" marginTop={30} />
-          {data?.otherAssets?.filter(skipZeros)?.map((asset) => (
-            <Amount
-              key={asset.token}
-              loading={isLoadingOther}
-              label={asset.token}
-              units={asset.units}
-              value={asset.value}
-              gridArea={""}
-            />
-          ))}
-        </div>
-        <PieChart
-          label={"Current Composition"}
-          slices={percentages}
-          isLoading={isLoadingCelo || isLoadingOther}
+        <link
+          rel="preload"
+          href="/api/holdings/celo"
+          as="fetch"
+          crossOrigin="anonymous"
         />
-      </Section>
+        <link
+          rel="preload"
+          href="/api/holdings/other"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
+      </Head>
+      <DesktopReserveAssetGrid />
+      <MobileReserveAssetGrid />
     </>
-  )
+  );
 }
 
-const rootStyle = css({
-  display: "grid",
-  gridColumnGap: 20,
-  gridRowGap: 12,
-  gridAutoColumns: "1fr 1fr 1fr",
-  gridTemplateAreas: `"celo celo celo"
-                    "unfrozen unfrozen frozen"
-                    "crypto crypto crypto"
-                    "btc eth dai"
-                    `,
-  [BreakPoints.tablet]: {
-    gridAutoColumns: "1fr",
-    gridTemplateAreas: `"celo"
-                        "unfrozen"
-                        "frozen"
-                        "crypto"
-                        "btc"
-                        "eth"
-                        "dai"`,
-  },
-})
+const ReserveAssetGrid = () => {
+  const {
+    data: { celo, otherAssets },
+    isLoadingOther,
+    isLoadingCelo,
+  } = useHoldings();
 
-const hiddenCelo = css({
-  visibility: "hidden",
-  margin: 50,
-})
+  return (
+    <section className="grid grid-cols-2 gap-2 md:gap-x-4 md:gap-y-8 lg:grid-cols-4">
+      <Amount
+        iconSrc={"/assets/tokens/CELO.svg"}
+        context="Funds in on-chain Reserve contract and in custodyy"
+        loading={isLoadingCelo}
+        label={"CELO"}
+        units={celo.unfrozen.units + celo.custody.units}
+        value={celo.unfrozen.value + celo.custody.value}
+      />
+      {otherAssets
+        ?.filter(skipZeros)
+        .sort((a, b) => b.value - a.value)
+        ?.map((asset) => (
+          <Amount
+            iconSrc={`/assets/tokens/${asset.token}.svg`}
+            key={asset.token}
+            loading={isLoadingOther}
+            label={asset.token}
+            units={asset.units}
+            value={asset.value}
+          />
+        ))}
+    </section>
+  );
+};
+
+const TotalReserveHoldings = () => {
+  const { isLoading, totalReserveValue } = useReserveTotals();
+  const displayValue =
+    totalReserveValue && Math.round(totalReserveValue).toLocaleString();
+
+  return (
+    <span
+      className={cn(
+        "flex w-full items-center justify-between gap-2 rounded-md border-[1px] border-black bg-mento-mint p-4 font-fg md:h-[58px] md:w-[530px] md:text-[26px]",
+      )}
+    >
+      <span>Total reserve holdings:</span>
+      {isLoading || !totalReserveValue ? (
+        <Skeleton className="h-[18px] w-[148px] bg-[#d8e9d0] md:h-[26px] md:w-[10.3rem]" />
+      ) : (
+        <span className="font-medium">{`$${displayValue}`}</span>
+      )}
+    </span>
+  );
+};
+
+const DesktopReserveAssetGrid = () => {
+  return (
+    <CardBackground className="hidden flex-col gap-8 md:flex">
+      <div className="flex flex-col items-center justify-center gap-8">
+        <Heading>Current Reserve holdings</Heading>
+        <TotalReserveHoldings />
+      </div>
+      <ReserveAssetGrid />
+    </CardBackground>
+  );
+};
+
+const MobileReserveAssetGrid = () => {
+  return (
+    <div className="flex flex-col gap-2 md:hidden">
+      <div className="flex flex-col items-center justify-center gap-3">
+        <Heading>
+          Current Reserve <br /> holdings
+        </Heading>
+        <TotalReserveHoldings />
+      </div>
+      <ReserveAssetGrid />
+    </div>
+  );
+};

@@ -1,5 +1,4 @@
 import {
-  getCeloPrice,
   getInCustodyBalance,
   getCStableSupply,
   getUnFrozenBalance,
@@ -8,6 +7,7 @@ import {
 } from "./Celo"
 
 import { newKit, StableToken } from "@celo/contractkit"
+import { getCELOPrice } from "./Coinbase"
 
 describe("celo", () => {
   it("uses contractKit", () => {
@@ -35,7 +35,7 @@ describe("getTargetAllocation", () => {
 
 describe("getCeloPrice", () => {
   it("returns account balance of address", async () => {
-    const balance = await getCeloPrice()
+    const balance = await getCELOPrice()
     expect(balance).toEqual({
       hasError: false,
       source: "celoNode",

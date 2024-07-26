@@ -1,15 +1,15 @@
-import currencyInUSD from "./ExchangeRateAPI"
+import currencyInUSD from "./ExchangeRateAPI";
 
 describe("currencyInUSD", () => {
   it("returns conversion rate of EURO to USD", async () => {
-    const price = await currencyInUSD()
+    const price = await currencyInUSD();
     expect(price).toEqual(
       expect.objectContaining({
         source: "exchangeratesapi.io",
         time: 1614211200000,
         hasError: false,
-      })
-    )
+      }),
+    );
     expect(price).toEqual(
       expect.objectContaining({
         value: {
@@ -182,7 +182,7 @@ describe("currencyInUSD", () => {
           ZMW: 0.06223105339880756,
           ZWL: 0.0031055934966763062,
         },
-      })
-    )
-  })
-})
+      }),
+    );
+  });
+});

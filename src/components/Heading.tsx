@@ -1,32 +1,18 @@
-import { css } from "@emotion/react"
-import bottomBorder from "src/styles/bottomBorder"
+import { cn } from "@/styles/helpers";
 
 interface HeadingProps {
-  title: string
-  gridArea: string
-  iconSrc?: string
-  marginTop?: number
+  children?: React.ReactNode;
+  className?: string;
 }
-export default function Heading({ title, gridArea, iconSrc, marginTop }: HeadingProps) {
+export default function Heading({ className, children }: HeadingProps) {
   return (
-    <div css={css(bottomBorder, { gridArea, marginTop })}>
-      <h2 css={headingTextStyle}>
-        {iconSrc && (
-          <img src={iconSrc} width={30} height={30} css={iconStyle} alt={`${title} token icon`} />
-        )}
-        {title}
-      </h2>
-    </div>
-  )
+    <h2
+      className={cn(
+        "text-center font-fg text-[26px] font-medium md:text-[32px]",
+        className,
+      )}
+    >
+      {children}
+    </h2>
+  );
 }
-
-const headingTextStyle = css({
-  display: "inline-flex",
-  alignItems: "center",
-  marginBottom: 16,
-  fontWeight: "normal",
-  fontSize: 28,
-  lineHeight: "36px",
-})
-
-const iconStyle = css({ height: 30, width: 30, marginRight: 8 })

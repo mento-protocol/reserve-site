@@ -1,22 +1,25 @@
-import { css } from "@emotion/react"
-import MarkdownJSX from "markdown-to-jsx"
-import Button from "./Button"
+import MarkdownJSX from "markdown-to-jsx";
+import Button from "./Button";
 
 export interface Attributes {
-  title: string
-  description?: string
+  title: string;
+  description?: string;
 }
 
 function Paragraph({ children }) {
-  return <p css={paragraphStyle}>{children}</p>
+  return <p className="mb-[24px]">{children}</p>;
 }
 
 function H3({ children }) {
-  return <h3 css={contentStyle}>{children}</h3>
+  return <h3 className="my-3.5 font-fg text-3xl font-[600]	">{children}</h3>;
 }
 
 function H4({ children }) {
-  return <h4 css={contentStyle}>{children}</h4>
+  return <h4 className="my-3.5 font-fg text-3xl font-[600]	">{children}</h4>;
+}
+
+function UL({ children }) {
+  return <ul className="mb-3.5 list-inside list-disc">{children}</ul>;
 }
 
 const OPTIONS = {
@@ -25,13 +28,10 @@ const OPTIONS = {
     h3: H3,
     h4: H4,
     button: Button,
+    ul: UL,
   },
-}
+};
 
 export default function Markdown({ source }) {
-  return <MarkdownJSX children={source} options={OPTIONS} />
+  return <MarkdownJSX children={source} options={OPTIONS} />;
 }
-
-const contentStyle = css({ maxWidth: 480 })
-
-const paragraphStyle = css(contentStyle, { marginBottom: 24 })
