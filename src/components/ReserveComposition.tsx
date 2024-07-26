@@ -43,6 +43,12 @@ export const ReserveComposition = () => {
   const { data, isLoadingCelo, isLoadingOther } = useHoldings();
   const percentages = getPercents(data);
 
+  if (isLoadingCelo || isLoadingOther) {
+    return (
+      <ReserveCompositionSkeleton assets={[...data.otherAssets, data.celo]} />
+    );
+  }
+
   return (
     <div>
       <Heading className="mb-4 lg:hidden">
@@ -53,57 +59,68 @@ export const ReserveComposition = () => {
           <Heading className="mb-8 hidden lg:block">
             Current Reserve composition
           </Heading>
-
           <section className="flex flex-col-reverse items-center justify-center md:flex-row">
-            {isLoadingCelo || isLoadingOther ? (
-              <div className="grid grid-cols-1 gap-x-4 gap-y-4 md:gap-y-6">
-                <div className="space-y-4">
-                  <div className="flex flex-row items-center gap-2">
-                    <Skeleton className="h-[32px] w-[32px] rounded-full bg-black/10 " />
-                    <Skeleton className="h-[22px] w-[198px] bg-black/10" />
-                  </div>
-                  <div className="flex flex-row items-center gap-2">
-                    <Skeleton className="h-[32px] w-[32px] rounded-full bg-black/10 " />
-                    <Skeleton className="h-[22px] w-[198px] bg-black/10" />
-                  </div>
-                  <div className="flex flex-row items-center gap-2">
-                    <Skeleton className="h-[32px] w-[32px] rounded-full bg-black/10 " />
-                    <Skeleton className="h-[22px] w-[198px] bg-black/10" />
+            <div className="grid grid-cols-2 gap-x-16 gap-y-4">
+              {percentages.map((item) => (
+                <div
+                  key={item.token}
+                  className="flex flex-row items-center justify-start"
+                >
+                  <div
+                    className="mr-[10px] h-[18px] w-[18px] rounded"
+                    style={{ backgroundColor: TokenColor[item.token] }}
+                  />
+                  <div className="font-fg text-[18px] md:text-[22px]">
+                    <span className="font-medium">{`${item.percent.toFixed(2)}%`}</span>{" "}
+                    {item.token}
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-x-16 gap-y-4">
-                {percentages.map((item) => (
-                  <div
-                    key={item.token}
-                    className="flex flex-row items-center justify-start"
-                  >
-                    <div
-                      className="mr-[10px] h-[18px] w-[18px] rounded"
-                      style={{ backgroundColor: TokenColor[item.token] }}
-                    />
-                    <div>
-                      <span className="font-fg text-[22px] font-medium">{`${item.percent.toFixed(2)}%`}</span>{" "}
-                      {item.token}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+              ))}
+            </div>
             <div className="mb-8 ml-0 max-h-[300px] max-w-[300px] md:mb-0 md:ml-[64px] lg:ml-[128px]">
-              {isLoadingCelo || isLoadingOther ? (
-                <PieChartSkeleton />
-              ) : (
-                <PieChart
-                  slices={percentages}
-                  isLoading={isLoadingCelo || isLoadingOther}
-                />
-              )}
+              <PieChart
+                slices={percentages}
+                isLoading={isLoadingCelo || isLoadingOther}
+              />
             </div>
           </section>
         </article>
       </CardBackground>
     </div>
+  );
+};
+
+const ReserveCompositionSkeleton = ({ assets }) => {
+  return (
+    <>
+      <h2 className="mb-4 mt-8 block text-center font-fg text-[32px] font-medium lg:hidden">
+        Current Reserve <br /> composition
+      </h2>
+      <CardBackground className="mt-0 p-10 lg:mt-14">
+        <article>
+          <h2 className="mb-8 hidden text-center font-fg text-[32px] font-medium lg:block">
+            Current Reserve composition
+          </h2>
+          <section className="flex flex-col-reverse items-center justify-center md:flex-row">
+            <div className="grid grid-cols-2 gap-x-16 gap-y-6">
+              {assets?.map((item) => (
+                <div
+                  key={item.token}
+                  className="flex flex-row items-center justify-start gap-4"
+                >
+                  <Skeleton className="h-[18px] w-[18px] rounded" />
+                  <Skeleton className="h-[22px] w-[107px]" />
+                </div>
+              ))}
+            </div>
+            <div className="mb-8 ml-0 max-h-[300px] max-w-[300px] md:mb-0 md:ml-[64px] lg:ml-[128px]">
+              <Skeleton className="flex h-[300px] w-[300px] items-center justify-center rounded-full bg-black/10">
+                <div className="h-[150px] w-[150px] rounded-full bg-white" />
+              </Skeleton>
+            </div>
+          </section>
+        </article>
+      </CardBackground>
+    </>
   );
 };
