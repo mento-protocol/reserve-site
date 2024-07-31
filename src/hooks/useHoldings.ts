@@ -66,7 +66,9 @@ export default function useHoldings(): {
   const data: HoldingsApi = { ...celoHoldings.data, ...otherHoldings.data };
 
   const isLoadingCelo = useMemo(() => {
-    return data?.celo?.frozen?.updated === 0 || data?.celo?.unfrozen?.updated === 0;
+    return (
+      data?.celo?.frozen?.updated === 0 || data?.celo?.unfrozen?.updated === 0
+    );
   }, [data?.celo?.frozen?.updated, data?.celo?.unfrozen?.updated]);
 
   const isLoadingOther = useMemo(() => {

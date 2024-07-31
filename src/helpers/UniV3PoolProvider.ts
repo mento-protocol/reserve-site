@@ -48,15 +48,13 @@ export class UniV3PoolProvider implements IUniV3PoolProvider {
     return await this.UniV3PositionToken.positions(tokenId);
   }
 
-  public async getTotalLiquidityForPool(
-    poolAddress: string,
-  ): Promise<BigNumber[]> {
+  public async getSlot0(poolAddress: string): Promise<any> {
     const UniV3PoolContract: Contract = new Contract(
       poolAddress,
       UNIV3_POOL_ABI,
       this.celoProvider,
     );
-    return await UniV3PoolContract.liquidity();
+    return await UniV3PoolContract.slot0();
   }
 
   public async getPoolAddress(
@@ -65,26 +63,6 @@ export class UniV3PoolProvider implements IUniV3PoolProvider {
     fee: number,
   ): Promise<string> {
     return await this.UniV3FactoryContract.getPool(token0, token1, fee);
-  }
-
-  public async getPoolBalance(
-    poolAddress: string,
-    _asset0: string,
-    _asset1: string,
-  ): Promise<BigNumber[]> {
-    const asset0: Contract = new Contract(
-      _asset0,
-      ERC20_ABI,
-      this.celoProvider,
-    );
-    const asset1: Contract = new Contract(
-      _asset1,
-      ERC20_ABI,
-      this.celoProvider,
-    );
-    const balanceAsset0 = await asset0.balanceOf(poolAddress);
-    const balanceAsset1 = await asset1.balanceOf(poolAddress);
-    return [balanceAsset0, balanceAsset1];
   }
 
   public async getERC20Decimals(tokenAddress: string): Promise<number> {

@@ -10,7 +10,6 @@ import getCoinMarketCapPrice from "src/providers/CoinMarketCap";
 import { Tokens } from "./Data";
 import { allOkOrThrow } from "src/utils/Result";
 
-
 async function fetchBTCPrice() {
   const price = await duel(
     coinbase.getBTCInUSD(),
