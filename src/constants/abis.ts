@@ -14,7 +14,9 @@ export const STAKED_CELO_MANAGER_ABI = [
   "function toCelo(uint256 amount) view returns (uint256)",
 ];
 
-export const UNIV3_POOL_ABI = ["function liquidity() view returns (uint256)"];
+export const UNIV3_POOL_ABI = [
+  "function slot0() view returns (uint160, int24, uint16, uint16, uint16, uint8, bool)",
+];
 
 export const UNIV3_POSITION_TOKEN_ABI = [
   "function balanceOf(address) view returns (uint256)",
