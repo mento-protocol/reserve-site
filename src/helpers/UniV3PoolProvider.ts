@@ -1,4 +1,4 @@
-import { BigNumber, Contract } from "ethers";
+import { Contract } from "ethers";
 import { JsonRpcProvider } from "@ethersproject/providers";
 
 import {

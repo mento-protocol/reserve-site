@@ -24,6 +24,42 @@ export class UniV3PoolBalanceCalculator {
     return new UniV3PoolBalanceCalculator(new UniV3PoolProvider());
   }
 
+  // Iterate through all the positions and calculate the holdings for each:
+  // In order to calculate the holdings, we need to get the following information:
+  // - liquidity l: from the NonfungiblePositionManager -> positions(tokenId)
+  // - tickLower, tickUpper: from the NonfungiblePositionManager -> positions(tokenId)
+  //   these two are the ticks that define the trading range of the position
+  // - sqrtPriceX96: from the Pool -> slot0
+  //   this is the square root of the current price of the pool
+  //
+  // In UniswapV3 liquidity is provided in a certain price range.
+  // The price range is defined by two ticks. If the current price of the pool is
+  // in that range then the holdings of the LP are in both assets.
+  // If the current price is outside that range the LP's holdings are in only one asset.
+  //
+  // Step 1: Get the current tick of the pool
+  // - Formula: currentTick = log((sqrtPrice / Q96) ** 2) / log(1.0001)
+  // - with being Q96 = 2 ** 96
+  //
+  // Step 2: Depending on the current tick calculate the amount
+  // of each asset the LP holds
+  // For all cases the formula needs sqrtRatioLower and sqrtRatioUpper which are
+  // - sqrtRatioLower = sqrt(1.0001 ** tickLower)
+  // - sqrtRatioUpper = sqrt(1.0001 ** tickUpper)
+  //
+  // Case 1: currentTick < tickLower:
+  // - amount0 = liquidity * (sqrtRatioUpper - sqrtRatioLower) / (sqrtRatioUpper * sqrtRatioLower)
+  // - amount1 = 0
+  //
+  // Case 2: tickLower <= currentTick < tickUpper (position is in range):
+  // - amount0 = liquidity * (sqrtRatioUpper - sqrtPrice) / (sqrtPrice * sqrtRatioUpper)
+  // - amount1 = liquidity * (sqrtPrice - sqrtRatioLower)
+  // with sqrtPrice = sqrtPriceX96 / Q96
+  //
+  // Case 3: tickUpper <= currentTick:
+  // - amount0 = 0
+  // - amount1 = liquidity * (sqrtRatioUpper - sqrtRatioLower)
+  //
   private async queryPositions(
     positions: BigNumber[],
   ): Promise<Map<string, number>> {
@@ -59,13 +95,13 @@ export class UniV3PoolBalanceCalculator {
       const sqrtPriceX96 = new BigNumber(poolSlot0[0]._hex);
       const Q96 = new BigNumber(2).exponentiatedBy(96);
 
-      // Calculate the current tick
-      // Formula: currentTick = log((sqrtPrice / Q96) ** 2) / log(1.0001)
+      // Step 1: Calculate the current tick
       const currentTick = Math.floor(
         Math.log((sqrtPriceX96.toNumber() / Q96.toNumber()) ** 2) /
           Math.log(1.0001),
       );
 
+      // Calculate values that are used to calculate the amounts
       const sqrtRatioLower = Math.sqrt(1.0001 ** tickLower);
       const sqrtRatioUpper = Math.sqrt(1.0001 ** tickUpper);
       const sqrtPrice = sqrtPriceX96.dividedBy(Q96);
@@ -73,8 +109,7 @@ export class UniV3PoolBalanceCalculator {
       let amount0 = new BigNumber(0);
       let amount1 = new BigNumber(0);
 
-      // Formula for all cases comes from
-      // https://atiselsts.github.io/pdfs/uniswap-v3-liquidity-math.pdf
+      // Step 2: Calculate the amounts
       if (currentTick < tickLower) {
         const amount0Numerator = new BigNumber(sqrtRatioUpper).minus(
           sqrtRatioLower,

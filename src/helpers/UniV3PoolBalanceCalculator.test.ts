@@ -4,13 +4,18 @@ import { UniV3PoolBalanceCalculator } from "./UniV3PoolBalanceCalculator";
 
 class FakeUniV3PoolProvider implements IUniV3PoolProvider {
   public positionTokenIds = [BigNumber.from(3115), BigNumber.from(3113)];
+
+  public cUSD = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
+  public axlWBTC = "0x1a35EE4640b0A3B87705B0A4B45D227Ba60Ca2ad";
+  public wormholeWBTC = "0xd71Ffd0940c920786eC4DbB5A12306669b5b81EF";
+
   //data comes from:
   //https://app.uniswap.org/pool/3115?chain=celo
   public position1 = [
     0,
     "0",
-    "0x1a35EE4640b0A3B87705B0A4B45D227Ba60Ca2ad", // token0
-    "0x765DE816845861e75A25fCA122bb6898B8B1282a", // token1
+    this.axlWBTC, // token0
+    this.cUSD, // token1
     3000, // fee
     330120, // tickLower
     333900, // tickUpper
@@ -22,8 +27,8 @@ class FakeUniV3PoolProvider implements IUniV3PoolProvider {
   public position2 = [
     0,
     "0",
-    "0x765DE816845861e75A25fCA122bb6898B8B1282a", // token0
-    "0xd71Ffd0940c920786eC4DbB5A12306669b5b81EF", // token1
+    this.cUSD, // token0
+    this.wormholeWBTC, // token1
     3001, // fee
     -332580, // tickLower
     -331800, // tickUpper
@@ -79,11 +84,9 @@ class FakeUniV3PoolProvider implements IUniV3PoolProvider {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async getERC20Decimals(tokenAddress: string): Promise<number> {
-    if (tokenAddress === "0x765DE816845861e75A25fCA122bb6898B8B1282a")
-      return 18;
-    if (tokenAddress === "0x1a35EE4640b0A3B87705B0A4B45D227Ba60Ca2ad") return 8;
-    if (tokenAddress === "0xd71Ffd0940c920786eC4DbB5A12306669b5b81EF")
-      return 18;
+    if (tokenAddress === this.cUSD) return 18;
+    if (tokenAddress === this.axlWBTC) return 8;
+    if (tokenAddress === this.wormholeWBTC) return 8;
     return 0;
   }
 }
@@ -107,14 +110,8 @@ describe("CurvePoolBalanceCalculator", () => {
   it("should correctly calculate the balance for multiple positions", async () => {
     const balances =
       await uniV3PoolBalanceCalculator.calculateUniV3PoolBalance("0x1234");
-    expect(balances.get("0x765DE816845861e75A25fCA122bb6898B8B1282a")).toEqual(
-      69.65842801756224,
-    );
-    expect(balances.get("0x1a35EE4640b0A3B87705B0A4B45D227Ba60Ca2ad")).toEqual(
-      0,
-    );
-    expect(balances.get("0xd71Ffd0940c920786eC4DbB5A12306669b5b81EF")).toEqual(
-      0,
-    );
+    expect(balances.get(fakeUniV3PoolProvider.cUSD)).toEqual(69.65842801756224);
+    expect(balances.get(fakeUniV3PoolProvider.axlWBTC)).toEqual(0);
+    expect(balances.get(fakeUniV3PoolProvider.wormholeWBTC)).toEqual(0);
   });
 });
