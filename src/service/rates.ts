@@ -10,7 +10,6 @@ import getCoinMarketCapPrice from "src/providers/CoinMarketCap";
 import { Tokens } from "./Data";
 import { allOkOrThrow } from "src/utils/Result";
 
-
 async function fetchBTCPrice() {
   const price = await duel(
     coinbase.getBTCInUSD(),
@@ -56,7 +55,10 @@ export async function eurocPrice() {
 }
 
 async function fetchDAIPrice() {
-  const price = await getCoinMarketCapPrice("DAI");
+  const price = await duel(
+    getCoinMarketCapPrice("DAI"),
+    coinbase.getDAIInUSD(),
+  );
   return price;
 }
 
@@ -102,7 +104,7 @@ export async function fiatPrices() {
 }
 
 async function fetchCELOPrice() {
-  return getCoinMarketCapPrice("CELO");
+  return await duel(getCoinMarketCapPrice("CELO"), coinbase.getDAIInUSD());
 }
 
 export async function celoPrice() {

@@ -38,7 +38,7 @@ const ReserveAssetGrid = () => {
     isLoadingCelo,
   } = useHoldings();
 
-  console.log({ celo });
+  console.log({ celo }); 
 
   return (
     <section className="grid grid-cols-2 gap-2 md:gap-x-4 md:gap-y-8 lg:grid-cols-4">
