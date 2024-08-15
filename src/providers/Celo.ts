@@ -146,8 +146,6 @@ export async function getAddresses(): Promise<{
     const reserve = await kit.contracts.getReserve();
     const addresses = await reserve.getOtherReserveAddresses();
 
-    console.log({ addresses });
-
     // TODO: This shouldn't live here. It should be part of the addresses.config.ts.
     return {
       value: [
