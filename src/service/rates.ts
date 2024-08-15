@@ -56,8 +56,8 @@ export async function eurocPrice() {
 
 async function fetchDAIPrice() {
   const price = await duel(
-    coinbase.getDAIInUSD(),
     getCoinMarketCapPrice("DAI"),
+    coinbase.getDAIInUSD(),
   );
   return price;
 }
@@ -104,7 +104,7 @@ export async function fiatPrices() {
 }
 
 async function fetchCELOPrice() {
-  return coinbase.getCELOPrice();
+  return await duel(getCoinMarketCapPrice("CELO"), coinbase.getCELOPrice());
 }
 
 export async function celoPrice() {

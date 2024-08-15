@@ -43,7 +43,7 @@ function getTotalReserveUSD(reserveHoldings: HoldingsApi): number {
   const { custody, frozen, unfrozen } = reserveHoldings.celo;
   const totalCelo = custody.value + unfrozen.value + frozen.value;
 
-  const totalOtherAssets = reserveHoldings.otherAssets.reduce(
+  const totalOtherAssets = reserveHoldings?.otherAssets?.reduce(
     (prev, current) => current.value + prev,
     0,
   );

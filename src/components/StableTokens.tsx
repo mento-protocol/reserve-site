@@ -10,7 +10,7 @@ import Heading from "./Heading";
 const TotalStableTokenValue = ({ className }: { className?: string }) => {
   const { stables, isLoading } = useStableTokens();
   const totalValue = useMemo(() => {
-    return stables.reduce((sum, token) => sum + token.value, 0);
+    return stables?.reduce((sum, token) => sum + token.value, 0);
   }, [stables]);
 
   const displayValue = Math.round(totalValue).toLocaleString();
