@@ -38,15 +38,17 @@ const ReserveAssetGrid = () => {
     isLoadingCelo,
   } = useHoldings();
 
+  console.log({ celo });
+
   return (
     <section className="grid grid-cols-2 gap-2 md:gap-x-4 md:gap-y-8 lg:grid-cols-4">
       <Amount
         iconSrc={"/assets/tokens/CELO.svg"}
-        context="Funds in on-chain Reserve contract and in custodyy"
+        context="Funds in on-chain Reserve contract and in custody"
         loading={isLoadingCelo}
         label={"CELO"}
-        units={celo.unfrozen.units + celo.custody.units}
-        value={celo.unfrozen.value + celo.custody.value}
+        units={celo?.unfrozen?.units + celo?.custody?.units}
+        value={celo?.unfrozen?.value + celo?.custody?.value}
       />
       {otherAssets
         ?.filter(skipZeros)

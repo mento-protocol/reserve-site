@@ -8,15 +8,7 @@ import useHoldings from "@/hooks/useHoldings";
 import { HoldingsApi } from "@/service/holdings";
 import { Skeleton } from "./TextSkeleton";
 import Heading from "./Heading";
-
-export function sumCeloTotal(holdings: HoldingsApi) {
-  const { custody, frozen, unfrozen } = holdings.celo;
-  return custody.value + unfrozen.value + frozen.value;
-}
-
-export function sumNonCelo({ otherAssets }: HoldingsApi) {
-  return otherAssets.reduce((prev, current) => current.value + prev, 0);
-}
+import { sumCeloTotal, sumNonCelo } from "@/helpers/holdings";
 
 function getPercents(holdings: HoldingsApi): SliceData[] {
   const celoTotal = sumCeloTotal(holdings);
