@@ -104,7 +104,7 @@ export async function fiatPrices() {
 }
 
 async function fetchCELOPrice() {
-  return await duel(getCoinMarketCapPrice("CELO"), coinbase.getDAIInUSD());
+  return await duel(getCoinMarketCapPrice("CELO"), coinbase.getCELOPrice());
 }
 
 export async function celoPrice() {
