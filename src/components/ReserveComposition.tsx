@@ -1,14 +1,11 @@
 import { CardBackground } from "@/components/CardBackground";
-import PieChart, {
-  PieChartSkeleton,
-  SliceData,
-  TokenColor,
-} from "@/components/PieChart";
-import useHoldings from "@/hooks/useHoldings";
-import { HoldingsApi } from "@/service/holdings";
-import { Skeleton } from "./TextSkeleton";
-import Heading from "./Heading";
+import PieChart, { SliceData, TokenColor } from "@/components/PieChart";
 import { sumCeloTotal, sumNonCelo } from "@/helpers/holdings";
+import useHoldings from "@/hooks/useHoldings";
+import { TokenModel } from "@/service/Data";
+import { HoldingsApi } from "@/service/holdings";
+import Heading from "./Heading";
+import { Skeleton } from "./TextSkeleton";
 
 function getPercents(holdings: HoldingsApi): SliceData[] {
   const celoTotal = sumCeloTotal(holdings);
@@ -36,9 +33,7 @@ export const ReserveComposition = () => {
   const percentages = getPercents(data);
 
   if (isLoadingCelo || isLoadingOther) {
-    return (
-      <ReserveCompositionSkeleton assets={[...data.otherAssets, data.celo]} />
-    );
+    return <ReserveCompositionSkeleton assets={[...data.otherAssets]} />;
   }
 
   return (
@@ -82,7 +77,12 @@ export const ReserveComposition = () => {
   );
 };
 
-const ReserveCompositionSkeleton = ({ assets }) => {
+interface ReserveCompositionSkeletonProps {
+  assets: TokenModel[];
+}
+const ReserveCompositionSkeleton: React.FC<ReserveCompositionSkeletonProps> = ({
+  assets,
+}) => {
   return (
     <>
       <h2 className="mb-4 mt-8 block text-center font-fg text-[32px] font-medium lg:hidden">
@@ -95,7 +95,7 @@ const ReserveCompositionSkeleton = ({ assets }) => {
           </h2>
           <section className="flex flex-col-reverse items-center justify-center md:flex-row">
             <div className="grid grid-cols-2 gap-x-16 gap-y-6">
-              {assets?.map((item) => (
+              {assets.map((item) => (
                 <div
                   key={item.token}
                   className="flex flex-row items-center justify-start gap-4"
