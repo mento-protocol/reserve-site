@@ -286,7 +286,9 @@ export function generateLink(token: ReserveCrypto, address: string) {
       case "WETH":
       case "stETH":
       case "sDAI":
-        return `https://etherscan.io/address/${address}`;
+        return token.network === Network.CELO
+          ? `https://celoscan.io/tokenholdings?a=${address}`
+          : `https://etherscan.io/tokenholdings?a=${address}`;
       case "stEUR":
         return `https://celoscan.io/tokenholdings?a=${address}`;
       case "USDT":
