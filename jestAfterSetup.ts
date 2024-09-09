@@ -1,15 +1,18 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import { server } from "src/mocks/server";
-import fetch from "node-fetch";
+import dotenv from "dotenv";
 import MockDate from "mockdate";
+import fetch from "node-fetch";
+import { server } from "src/mocks/server";
 
 import "@testing-library/jest-dom";
-import "@testing-library/jest-dom/extend-expect";
-// @ts-nocheck
-global.fetch = window.fetch = fetch;
-global.Request = window.Request = fetch.Request;
-global.Response = window.Response = fetch.Response;
-// must require not import airtable so that the global fetch lines above run first
+
+// @ts-expect-error
+global.fetch = fetch;
+// @ts-expect-error
+global.Headers = fetch.Headers;
+// @ts-expect-error
+global.Request = fetch.Request;
+// @ts-expect-error
+global.Response = fetch.Response;
 
 // Establish API mocking before all tests.
 beforeAll(() => {
@@ -25,4 +28,4 @@ afterAll(() => {
   server.close();
 });
 
-require("dotenv").config({ path: ".env.local" });
+dotenv.config({ path: ".env.local" });
