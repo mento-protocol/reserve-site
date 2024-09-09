@@ -21,7 +21,6 @@
     "view": "gcloud app browse",
     "kill-dev": "kill -9 $(lsof -ti :3000)",
     "clean-next-cache": "rm -rf .next",
-    "postinstall": "yarn secrets:get",
     "start": "next start -p ${PORT:-8080}",
     "test": "jest",
     "lint": "eslint --fix .",
