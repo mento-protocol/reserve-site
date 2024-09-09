@@ -24,7 +24,7 @@
     "start": "next start -p ${PORT:-8080}",
     "test": "jest",
     "lint": "eslint --fix .",
-    "pretty": "prettier --config .prettierrc 'src/**/*.{ts, tsx}' '*.yaml' --write",
+    "prettier": "prettier --config .prettierrc 'src/**/*.{ts, tsx}' '*.yaml' --write --list-different",
     "prepare": "husky",
     "secrets:get": "./scripts/get-secrets.sh"
   },
