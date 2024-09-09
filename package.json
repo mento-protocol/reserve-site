@@ -2,6 +2,10 @@
   "name": "@mento-protocol/reserve-web",
   "version": "3.0.0",
   "private": true,
+  "packageManager": "yarn@3.3.1",
+  "engines": {
+    "node": "18"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "tsc",
@@ -84,13 +88,9 @@
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
     "pretty-quick": "^3.1.1",
-  "engines": {
-    "node": "18"
-  },
   "lint-staged": {
     "*.{ts,tsx,md,yaml}": "prettier --write"
   },
-  "packageManager": "yarn@3.3.1"
     "sass": "^1.78.0",
     "tailwindcss": "^3.4.10",
     "ts-jest": "^29.2.5",
