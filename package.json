@@ -21,7 +21,7 @@
     "kill-dev": "kill -9 $(lsof -ti :3000)",
     "clean-next-cache": "rm -rf .next",
     "postinstall": "yarn secrets:get",
-    "start": "next start -p $PORT",
+    "start": "next start -p ${PORT:-8080}",
     "test": "jest",
     "lint": "eslint --fix .",
     "pretty": "prettier --config .prettierrc 'src/**/*.{ts, tsx}' '*.yaml' --write",
