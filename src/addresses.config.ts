@@ -156,14 +156,6 @@ const ADDRESSES: ReserveCrypto[] = [
   },
   {
     assetType: AssetType.Native,
-    label: "Funds with Custodian",
-    token: "CELO",
-    addresses: [wallets.CUSTODIAN_ETH],
-    network: Network.CELO,
-    shouldDisplay: true,
-  },
-  {
-    assetType: AssetType.Native,
     label: "ETH",
     token: "ETH",
     addresses: [
