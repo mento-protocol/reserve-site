@@ -275,7 +275,7 @@ export function generateLink(token: ReserveCrypto, address: string) {
   ) {
     switch (token.token) {
       case "CELO":
-        return `https://explorer.celo.org/address/${address}/coin_balances`;
+        return `https://celoscan.io/tokenholdings?a=${address}`;
       case "BTC":
         return `https://blockchain.info/address/${address}`;
       case "ETH":
@@ -288,9 +288,9 @@ export function generateLink(token: ReserveCrypto, address: string) {
       case "sDAI":
         return `https://etherscan.io/address/${address}`;
       case "stEUR":
-        return `https://explorer.celo.org/mainnet/address/${address}`;
+        return `https://celoscan.io/tokenholdings?a=${address}`;
       case "USDT":
-        return `https://explorer.celo.org/address/${address}/coin_balances`;
+        return `https://celoscan.io/tokenholdings?a=${address}`;
     }
   } else if (token.assetType === AssetType.ERC20InCurvePool) {
     // TODO: This mimics the existing implementation but we can think of a better
@@ -298,7 +298,7 @@ export function generateLink(token: ReserveCrypto, address: string) {
     switch (token.token) {
       case "cUSD":
       case "USDC":
-        return `https://explorer.celo.org/mainnet/address/${address}/tokens#address-tabs`;
+        return `https://celoscan.io/tokenholdings?a=${address}`;
     }
   }
 }
