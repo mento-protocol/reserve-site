@@ -73,7 +73,7 @@ export default function useHoldings(): {
   }, [data?.celo?.frozen?.updated, data?.celo?.unfrozen?.updated]);
 
   const isLoadingOther = useMemo(() => {
-    return !data?.otherAssets?.findIndex((coin) => coin.updated === 0) ?? true;
+    return data?.otherAssets?.findIndex((coin) => coin.updated === 0) !== -1;
   }, [data.otherAssets]);
 
   return { data, error, isLoadingCelo, isLoadingOther };

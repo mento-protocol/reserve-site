@@ -32,8 +32,8 @@ export const useStableTokens = () => {
   );
 
   const isLoading = useMemo(() => {
-    return !data?.tokens?.findIndex((coin) => coin.updated === 0) ?? true;
-  }, [data.tokens]);
+    return data?.tokens?.findIndex((coin) => coin.updated === 0) !== -1;
+  }, [data?.tokens]);
 
   return { stables: data?.tokens, isLoading, error };
 };

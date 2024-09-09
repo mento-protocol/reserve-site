@@ -1,4 +1,4 @@
-import getHoldings, { getGroupedNonCeloAddresses } from "./holdings";
+import getHoldings from "./holdings";
 
 describe("getHoldings", () => {
   let info;

@@ -1,10 +1,11 @@
+import { ArcElement, Chart, ChartData } from "chart.js";
 import { useMemo } from "react";
-import colors from "src/components/colors";
-import { Chart, ArcElement, ChartData } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import colors from "src/components/colors";
 import { SkeletonPie } from "./PieSkeleton";
 
 export enum TokenColor {
+  /* eslint-disable @typescript-eslint/prefer-literal-enum-member */
   BTC = colors.orange,
   ETH = colors.purpleGray,
   CELO = colors.gold,
@@ -19,6 +20,7 @@ export enum TokenColor {
   sDAI = colors.blue,
   stETH = colors.green,
   USDT = colors.darkolivegreen,
+  /* eslint-enable @typescript-eslint/prefer-literal-enum-member */
 }
 
 interface Props {

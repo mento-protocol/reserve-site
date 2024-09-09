@@ -1,19 +1,20 @@
 import { newKit, StableToken } from "@celo/contractkit";
+import { JsonRpcProvider } from "@ethersproject/providers";
 import BigNumber from "bignumber.js";
+import { Contract } from "ethers";
 import { AssetType, Network, ReserveCrypto } from "src/addresses.config";
+import { ERC20_ABI } from "src/constants/abis";
 import {
+  CKES_ADDRESS,
   CUSD_ADDRESS,
+  EUROC_AXELAR_ADDRESS,
   EXOF_ADDRESS,
   RESERVE_ADDRESS,
   RESERVE_MULTISIG_CELO,
   USDC_AXELAR_ADDRESS,
-  EUROC_AXELAR_ADDRESS,
-  USDC_WORMHOLE_ADDRESS,
   USDC_CELO_NATIVE_ADDRESS,
-  CKES_ADDRESS,
+  USDC_WORMHOLE_ADDRESS,
 } from "src/contract-addresses";
-import { ERC20_ABI } from "src/constants/abis";
-import { JsonRpcProvider } from "@ethersproject/providers";
 import { CurvePoolBalanceCalculator } from "src/helpers/CurvePoolBalanceCalculator";
 import { StakedCeloProvider } from "src/helpers/StakedCeloProvider";
 import { UniV3PoolBalanceCalculator } from "src/helpers/UniV3PoolBalanceCalculator";
@@ -25,7 +26,6 @@ import {
 } from "src/utils/ProviderResult";
 import { allOkOrThrow, okOrThrow } from "src/utils/Result";
 import { Providers } from "./Providers";
-import { Contract } from "ethers";
 
 export const ERC20_SUBSET = [
   {
@@ -144,7 +144,6 @@ export async function getAddresses(): Promise<{
 }> {
   try {
     const reserve = await kit.contracts.getReserve();
-    const addresses = await reserve.getOtherReserveAddresses();
 
     // TODO: This shouldn't live here. It should be part of the addresses.config.ts.
     return {

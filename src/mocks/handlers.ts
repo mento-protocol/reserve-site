@@ -541,8 +541,8 @@ export const handlers = [
     (req, res, ctx) => {
       return res(
         ctx.xml(
-          `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-    <gesmes:Envelope xmlns:gesmes=\"http://www.gesmes.org/xml/2002-08-01\" xmlns=\"http://www.ecb.int/vocabulary/2002-08-01/eurofxref\">
+          `<?xml version="1.0" encoding="UTF-8"?>
+    <gesmes:Envelope xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01" xmlns="http://www.ecb.int/vocabulary/2002-08-01/eurofxref">
     	<gesmes:subject>Reference rates</gesmes:subject>
     	<gesmes:Sender>
     		<gesmes:name>European Central Bank</gesmes:name>

@@ -51,19 +51,19 @@ export default function Home(props: Props) {
       <LearnMore />
       <Footer />
       {/* Top Left Gradient */}
-      <GradientPrimaryLight className="-left-[600px] top-[950px] overflow-x-hidden dark:hidden " />
-      <GradientPrimaryLightMobile className=" -left-[328px] top-[260.58px] h-[602px] w-[654px] overflow-x-hidden " />
-      <GradientPrimaryLightMobile className=" -left-[231px] top-[1651px] h-[368px] w-[411px] overflow-x-hidden " />
+      <GradientPrimaryLight className="-left-[600px] top-[950px] overflow-x-hidden dark:hidden" />
+      <GradientPrimaryLightMobile className="-left-[328px] top-[260.58px] h-[602px] w-[654px] overflow-x-hidden" />
+      <GradientPrimaryLightMobile className="-left-[231px] top-[1651px] h-[368px] w-[411px] overflow-x-hidden" />
       {/* Bottom Right Gradient */}
-      <GradientPrimaryLight className="-right-[600px] top-[300px] overflow-x-hidden dark:hidden " />
-      <GradientPrimaryLight className="-right-[600px] top-[1850px] overflow-x-hidden dark:hidden " />
+      <GradientPrimaryLight className="-right-[600px] top-[300px] overflow-x-hidden dark:hidden" />
+      <GradientPrimaryLight className="-right-[600px] top-[1850px] overflow-x-hidden dark:hidden" />
     </div>
   );
 }
 const GradientPrimaryLight = ({ className }: { className?: string }) => {
   return (
     <div
-      className={`bg-gradient-radial-primary-light absolute -z-20 hidden h-[1100px] w-[1100px] bg-contain bg-center md:block ${className} `}
+      className={`absolute -z-20 hidden h-[1100px] w-[1100px] bg-gradient-radial-primary-light bg-contain bg-center md:block ${className} `}
     />
   );
 };
@@ -77,7 +77,7 @@ const GradientPrimaryLightMobile = ({
 }) => {
   return (
     <div
-      className={`bg-gradient-radial-primary-light-mobile absolute -z-10 bg-contain bg-center md:hidden  ${className}`}
+      className={`absolute -z-10 bg-gradient-radial-primary-light-mobile bg-contain bg-center md:hidden ${className}`}
     >
       {children}
     </div>
@@ -141,7 +141,7 @@ const SubHeading = () => {
 
 const MainHeading = () => {
   return (
-    <h1 className="text-center font-fg text-[32px]/none font-bold  md:flex md:gap-1 md:text-[56px]/none">
+    <h1 className="text-center font-fg text-[32px]/none font-bold md:flex md:gap-1 md:text-[56px]/none">
       <span className="text-transparent [-webkit-text-stroke:1.2px_black] dark:[-webkit-text-stroke:1.2px_white]">
         THE MENTO
       </span>

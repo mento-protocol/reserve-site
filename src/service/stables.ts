@@ -1,21 +1,21 @@
 import { StableToken } from "@celo/contractkit";
+import { CUSD_ADDRESS, RESERVE_MULTISIG_CELO } from "src/contract-addresses";
 import { ISO427SYMBOLS } from "src/interfaces/ISO427SYMBOLS";
 import {
+  getCKESSupply,
   getCStableSupply,
   getCurveCUSD,
-  getMultisigCUSD,
   getEXOFSupply,
-  getCKESSupply,
+  getMultisigCUSD,
 } from "src/providers/Celo";
 import { TokenModel } from "src/service/Data";
 import { getOrSave } from "src/service/cache";
 import { fiatPrices } from "src/service/rates";
 import { ProviderResult } from "src/utils/ProviderResult";
-import { valueOrThrow, okOrThrow } from "src/utils/Result";
+import { okOrThrow, valueOrThrow } from "src/utils/Result";
 import { SECOND } from "src/utils/TIME";
 import { STABLES } from "../stables.config";
 import { uniV3HoldingsForToken } from "./holdings";
-import { RESERVE_MULTISIG_CELO, CUSD_ADDRESS } from "src/contract-addresses";
 
 async function cStableSupply(token: StableToken) {
   return getOrSave(
@@ -135,7 +135,7 @@ export async function getEXOFData(): Promise<TokenModel> {
       updated: result.time,
       hasError: result.hasError,
     };
-  } catch (error) {
+  } catch {
     return {
       token: "eXOF",
       units: null,
@@ -166,7 +166,7 @@ export async function getCKESData(): Promise<TokenModel> {
       kesData.value = result.value * (await fiatPrices()).value["KES"];
       kesData.updated = result.time;
     }
-  } catch (error) {
+  } catch {
     kesData.hasError = true;
   }
   return kesData;
