@@ -101,4 +101,4 @@ You have certain data protection rights, including the right to:
 
 ### Contact us
 
-We are committed to processing your personal data lawfully and to respecting your data protection rights. Please contact us if you have any questions about this notice or the personal data we hold about you. Our contact details are: contact@mento.org marking your communication "Data Protection Enquiry".
+We are committed to processing your personal data lawfully and to respecting your data protection rights. Please contact us if you have any questions about this notice or the personal data we hold about you. Our contact details are: <contact@mento.org> marking your communication "Data Protection Enquiry".
