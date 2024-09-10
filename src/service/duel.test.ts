@@ -1,9 +1,5 @@
 import { Providers } from "src/providers/Providers";
-import {
-  providerError,
-  providerOk,
-  ProviderResult,
-} from "src/utils/ProviderResult";
+import { providerError, providerOk } from "src/utils/ProviderResult";
 import { duel } from "./duel";
 
 async function Alfie() {

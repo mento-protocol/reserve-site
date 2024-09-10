@@ -1,5 +1,6 @@
 import { CardBackground } from "@/components/CardBackground";
 import { centerEllipsis } from "@/helpers/Strings";
+import { cn } from "@/styles/helpers";
 import * as React from "react";
 import {
   generateLink,
@@ -7,7 +8,6 @@ import {
   ReserveCrypto,
 } from "src/addresses.config";
 import CopyIcon from "src/components/CopyIcon";
-import { cn } from "@/styles/helpers";
 import Heading from "./Heading";
 
 interface Props {

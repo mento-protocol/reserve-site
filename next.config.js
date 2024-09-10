@@ -3,7 +3,8 @@
 // https://nextjs.org/docs/api-reference/next.config.js/introduction
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// TODO: Migrate next.config.js to TypeScript or ESM
+// eslint-disable-next-line no-undef, @typescript-eslint/no-require-imports
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const moduleExports = {
@@ -111,4 +112,7 @@ const sentryWebpackPluginOptions = {
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
+
+// TODO: Migrate next.config.js to TypeScript or ESM
+// eslint-disable-next-line no-undef
 module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);

@@ -57,12 +57,10 @@ class FakeUniV3PoolProvider implements IUniV3PoolProvider {
   public pool1Address = "pool1";
   public pool2Address = "pool2";
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async getPositionTokenIds(address: string): Promise<BigNumber[]> {
     return this.positionTokenIds;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async getPosition(tokenId: number): Promise<any> {
     if (tokenId === 3115) return this.position1;
     if (tokenId === 3113) return this.position2;
@@ -82,7 +80,6 @@ class FakeUniV3PoolProvider implements IUniV3PoolProvider {
     if (poolAddress === this.pool2Address) return this.slot02;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async getERC20Decimals(tokenAddress: string): Promise<number> {
     if (tokenAddress === this.cUSD) return 18;
     if (tokenAddress === this.axlWBTC) return 8;
