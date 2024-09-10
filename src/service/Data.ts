@@ -19,6 +19,7 @@ export type Tokens =
   | "cREAL"
   | "cKES"
   | "eXOF"
+  | "PUSO"
   | Token
   | StableToken;
 
