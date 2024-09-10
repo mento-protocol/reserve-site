@@ -122,6 +122,7 @@ export default async function stables(): Promise<TokenModel[]> {
   });
   tokens.push(await getEXOFData());
   tokens.push(await getCKESData());
+  tokens.push(await getPUSOData());
   return tokens;
 }
 
