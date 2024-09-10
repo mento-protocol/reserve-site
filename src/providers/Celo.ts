@@ -9,6 +9,7 @@ import {
   CUSD_ADDRESS,
   EUROC_AXELAR_ADDRESS,
   EXOF_ADDRESS,
+  PUSO_ADDRESS,
   RESERVE_ADDRESS,
   RESERVE_MULTISIG_CELO,
   USDC_AXELAR_ADDRESS,
@@ -50,7 +51,7 @@ const uniV3BalanceCalculator = UniV3PoolBalanceCalculator.Instance;
 const provider = new JsonRpcProvider(process.env.CELO_NODE_RPC_URL);
 const eXOFContract = new Contract(EXOF_ADDRESS, ERC20_ABI, provider);
 const cKESContract = new Contract(CKES_ADDRESS, ERC20_ABI, provider);
-
+const PUSOContract = new Contract(PUSO_ADDRESS, ERC20_ABI, provider);
 export async function getFrozenBalance(): Promise<ProviderResult> {
   try {
     const [reserve, nativeToken] = await Promise.all([
@@ -287,6 +288,16 @@ export async function getCKESSupply(): Promise<ProviderResult> {
     let cKesSupply = (await cKESContract.totalSupply()).toString();
     cKesSupply = formatNumber(new BigNumber(cKesSupply));
     return providerOk(cKesSupply, Providers.celoNode);
+  } catch (error) {
+    return providerError(error, Providers.celoNode);
+  }
+}
+
+export async function getPUSOSupply(): Promise<ProviderResult> {
+  try {
+    let pusoSupply = (await PUSOContract.totalSupply()).toString();
+    pusoSupply = formatNumber(new BigNumber(pusoSupply));
+    return providerOk(pusoSupply, Providers.celoNode);
   } catch (error) {
     return providerError(error, Providers.celoNode);
   }

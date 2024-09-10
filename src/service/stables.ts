@@ -7,6 +7,7 @@ import {
   getCurveCUSD,
   getEXOFSupply,
   getMultisigCUSD,
+  getPUSOSupply,
 } from "src/providers/Celo";
 import { TokenModel } from "src/service/Data";
 import { getOrSave } from "src/service/cache";
@@ -39,6 +40,10 @@ async function eXOFSupply() {
 
 async function cKESSupply() {
   return getOrSave("cKESSupply", () => getCKESSupply(), 5 * SECOND);
+}
+
+async function PUSOSupply() {
+  return getOrSave("PUSOSupply", () => getPUSOSupply(), 5 * SECOND);
 }
 
 interface Circulation {
@@ -117,6 +122,7 @@ export default async function stables(): Promise<TokenModel[]> {
   });
   tokens.push(await getEXOFData());
   tokens.push(await getCKESData());
+  tokens.push(await getPUSOData());
   return tokens;
 }
 
@@ -170,4 +176,30 @@ export async function getCKESData(): Promise<TokenModel> {
     kesData.hasError = true;
   }
   return kesData;
+}
+
+export async function getPUSOData(): Promise<TokenModel> {
+  const pusoData: TokenModel = {
+    token: "PUSO",
+    units: null,
+    value: null,
+    updated: null,
+    hasError: false,
+  } as TokenModel;
+
+  try {
+    const result: ProviderResult<number> = await PUSOSupply();
+
+    if (result.hasError) {
+      pusoData.hasError = true;
+      return pusoData;
+    } else if (result.hasError == false) {
+      pusoData.units = result.value;
+      pusoData.value = result.value * (await fiatPrices()).value["PHP"];
+      pusoData.updated = result.time;
+    }
+  } catch {
+    pusoData.hasError = true;
+  }
+  return pusoData;
 }
