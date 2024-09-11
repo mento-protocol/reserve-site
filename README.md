@@ -2,7 +2,7 @@
 
 Code for [reserve.mento.org](https://reserve.mento.org)
 
-_For more information about the Reserve itself please refer to:_
+_For more information about the Reserve please refer to:_
 
 - [reserve.mento.org](https://reserve.mento.org)
 - [Stability WhitePaper](https://celo.org/papers/stability)
