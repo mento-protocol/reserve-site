@@ -57,6 +57,7 @@ stableToken.totalSupply()
 For stable coins other than cUSD exchangeratesapi.io is used to convert value to USD to compare and sum values
 ```
 
+
 ### Historic Rebalancings
 
 Reserve rebalancings figures are updated manually at the moment. However they can be verified by using a block explorer to check the historic balances of the reserve addresses.
