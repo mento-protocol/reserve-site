@@ -305,11 +305,6 @@ export async function getHoldingsOther() {
   btcHeld.value += wbtcHeld.value;
   ethHeld.value += wethHeld.value;
 
-  usdtHeld.value += await uniV3HoldingsForToken(
-    RESERVE_MULTISIG_CELO,
-    USDT_CELO_NATIVE_ADDRESS,
-  );
-
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC());
   usdcHeld.value += valueOrThrow(await multisigUSDC());
   usdcHeld.value += valueOrThrow(await reserveUSDC());
