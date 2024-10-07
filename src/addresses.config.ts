@@ -163,7 +163,7 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [RESERVE_MULTISIG_CELO],
     tokenAddress: tokensAddresses.GLO_ON_CELO,
     network: Network.CELO,
-    shouldDisplay: true,
+    shouldDisplay: false,
   },
   {
     assetType: AssetType.Native,
