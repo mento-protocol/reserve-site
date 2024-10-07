@@ -12,6 +12,7 @@ const tokensAddresses = {
   SAVINGS_DAI: "0x83f20f44975d03b1b09e64809b757c47f942beea",
   LIDO_STAKED_ETH: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
   USDT_ON_CELO: "0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e",
+  GLO_ON_CELO: "0x4f604735c1cf31399c6e711d5962b2b3e0225ad3",
 };
 
 // TODO: These should be consolidated in the addresses.config.ts file.
@@ -153,6 +154,16 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [CURVE_FACTORY_POOL_ADDRESS],
     network: Network.CELO,
     shouldDisplay: true,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "GloDollar",
+    token: "USDGLO",
+    decimals: 18,
+    addresses: [RESERVE_MULTISIG_CELO],
+    tokenAddress: tokensAddresses.GLO_ON_CELO,
+    network: Network.CELO,
+    shouldDisplay: false,
   },
   {
     assetType: AssetType.Native,

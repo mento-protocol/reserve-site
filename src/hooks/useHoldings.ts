@@ -36,6 +36,7 @@ const INITAL_DATA: HoldingsApi = {
     { ...initialOtherToken, token: "sDAI" },
     { ...initialOtherToken, token: "stETH" },
     { ...initialOtherToken, token: "USDT" },
+    { ...initialOtherToken, token: "USDGLO" },
   ],
 };
 
