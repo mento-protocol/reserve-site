@@ -20,6 +20,7 @@ export enum TokenColor {
   sDAI = colors.blue,
   stETH = colors.green,
   USDT = colors.darkolivegreen,
+  USDGLO = colors.lightGreen,
   /* eslint-enable @typescript-eslint/prefer-literal-enum-member */
 }
 
