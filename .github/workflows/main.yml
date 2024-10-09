@@ -1,0 +1,39 @@
+name: CI
+on: [pull_request]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "21.1.0"
+          cache: "yarn"
+
+      - name: Install deps
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test
+        env:
+          COINMARKETCAP_KEY: ${{secrets.COINMARKETCAP_KEY}}
+          ETHERSCAN_API: ${{secrets.ETHERSCAN_API}}
+          ETHPLORER_KEY: ${{secrets.ETHPLORER_KEY}}
+          EXCHANGE_RATE_API: ${{secrets.EXCHANGE_RATE_API}}
+          SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+          ETHEREUM_RPC_URL: ${{secrets.ETHEREUM_RPC_URL}}
+          CELO_NODE_RPC_URL: "https://forno.celo.org"
