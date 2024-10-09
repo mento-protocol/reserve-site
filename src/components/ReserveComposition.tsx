@@ -29,12 +29,17 @@ function getPercents(holdings: HoldingsApi): SliceData[] {
 }
 
 export const ReserveComposition = () => {
-  const { data, isLoadingCelo, isLoadingOther } = useHoldings();
-  const percentages = getPercents(data);
+  const { data, error, isLoadingCelo, isLoadingOther } = useHoldings();
 
-  if (isLoadingCelo || isLoadingOther) {
-    return <ReserveCompositionSkeleton assets={[...data.otherAssets]} />;
+  if (isLoadingCelo || isLoadingOther || error) {
+    return (
+      <ReserveCompositionSkeleton
+        assets={[...data.otherAssets, data.celo.custody]}
+      />
+    );
   }
+
+  const percentages = getPercents(data);
 
   return (
     <div>

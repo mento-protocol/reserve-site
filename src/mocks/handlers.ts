@@ -56,6 +56,14 @@ export const handlers = [
         );
       }
 
+      if (symbol === "CELO") {
+        return res(
+          ctx.json({
+            data: { base: "CGLD", currency: "USD", amount: "3.9619" },
+          }),
+        );
+      }
+
       return res(
         ctx.json({
           status: {

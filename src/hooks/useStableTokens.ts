@@ -1,7 +1,6 @@
 import StableValueTokensAPI from "@/interfaces/stable-value-tokens";
 import { SECOND } from "@/utils/TIME";
 import { fetcher } from "@/utils/fetcher";
-import { useMemo } from "react";
 import useSWR from "swr";
 
 export const useStableTokens = () => {
@@ -13,12 +12,12 @@ export const useStableTokens = () => {
     updated: 0,
   } as const;
 
-  const { data, error } = useSWR<StableValueTokensAPI>(
+  const { data, error, isLoading } = useSWR<StableValueTokensAPI>(
     "/api/stable-value-tokens",
     fetcher,
     {
       refreshInterval: SECOND * 10,
-      initialData: {
+      fallbackData: {
         totalStableValueInUSD: 0,
         tokens: [
           { ...initialOtherToken, token: "cUSD" },
@@ -32,9 +31,5 @@ export const useStableTokens = () => {
     },
   );
 
-  const isLoading = useMemo(() => {
-    return data?.tokens?.findIndex((coin) => coin.updated === 0) !== -1;
-  }, [data?.tokens]);
-
-  return { stables: data?.tokens, isLoading, error };
+  return { stables: data.tokens, isLoading, error };
 };

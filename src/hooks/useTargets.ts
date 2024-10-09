@@ -14,23 +14,31 @@ const EMPTY_TARGETS: Allocation[] = [
 ];
 
 export default function useTargets() {
-  const stablesData = useSWR<StableValueTokensAPI>(
-    "/api/stable-value-tokens",
-    fetcher,
-    {
-      shouldRetryOnError: true,
-    },
-  );
+  const {
+    data: stableTokensData,
+    error: stableTokensError,
+    isLoading: stableTokensLoading,
+  } = useSWR<StableValueTokensAPI>("/api/stable-value-tokens", fetcher, {
+    shouldRetryOnError: true,
+  });
 
-  const holdingsApi = useHoldings();
+  const {
+    data: holdingsData,
+    error: holdingsError,
+    isLoadingCelo,
+    isLoadingOther,
+  } = useHoldings();
 
-  if (stablesData.error || holdingsApi.error || !stablesData.data) {
+  const isLoading = stableTokensLoading || isLoadingCelo || isLoadingOther;
+  const error = stableTokensError || holdingsError;
+
+  if (error || isLoading || !stableTokensData || !holdingsData) {
     return { data: EMPTY_TARGETS, isLoading: true };
   }
 
   const allocationData = calculateTargetAllocation(
-    stablesData.data,
-    getTotalReserveUSD(holdingsApi.data),
+    stableTokensData,
+    getTotalReserveUSD(holdingsData),
   );
 
   return {
