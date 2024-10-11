@@ -14,7 +14,7 @@ export function CollateralizationRatio() {
             Collateralization ratio
           </Heading>
           <p className="mx-1 inline-block text-center md:mb-0 md:text-left md:text-[18px]/[1.2]">
-            It is the ratio of the value of the reserve
+            The ratio of the value of the reserve
             <br className="md:hidden" /> in USD to the value of all outstanding
             <br className="md:hidden" /> stablecoins. Mento stablecoins are{" "}
             <br className="md:hidden" /> backed by a basket of Reserve assets.
