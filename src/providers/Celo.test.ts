@@ -38,9 +38,9 @@ describe("getCeloPrice", () => {
     const balance = await getCELOPrice();
     expect(balance).toEqual({
       hasError: false,
-      source: "celoNode",
+      source: "coinbase",
       time: 1587686400000,
-      value: 3.892,
+      value: 3.9619,
     });
   });
 });

@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Tokens } from "src/service/Data";
 import { HoldingsApi } from "src/service/holdings";
 import { fetcher } from "src/utils/fetcher";
@@ -46,36 +45,26 @@ export default function useHoldings(): {
   isLoadingCelo: boolean;
   isLoadingOther: boolean;
 } {
-  const celoHoldings = useSWR<Pick<HoldingsApi, "celo">>(
-    "/api/holdings/celo",
-    fetcher,
-    {
-      initialData: { celo: INITAL_DATA.celo },
-      revalidateOnMount: true,
-    },
-  );
-  const otherHoldings = useSWR<Pick<HoldingsApi, "otherAssets">>(
-    "/api/holdings/other",
-    fetcher,
-    {
-      initialData: { otherAssets: INITAL_DATA.otherAssets },
-      revalidateOnMount: true,
-    },
-  );
-  const error = celoHoldings.error || otherHoldings.error;
+  const {
+    data: celoHoldings,
+    error: celoError,
+    isLoading: isLoadingCelo,
+  } = useSWR<Pick<HoldingsApi, "celo">>("/api/holdings/celo", fetcher, {
+    fallbackData: { celo: INITAL_DATA.celo },
+    revalidateOnMount: true,
+  });
+  const {
+    data: otherHoldings,
+    error: otherError,
+    isLoading: isLoadingOther,
+  } = useSWR<Pick<HoldingsApi, "otherAssets">>("/api/holdings/other", fetcher, {
+    fallbackData: { otherAssets: INITAL_DATA.otherAssets },
+    revalidateOnMount: true,
+  });
+  const error = celoError || otherError;
   //TODO: Refactor holdings data return to avoid conditional chaining & undefined values
   // See: https://github.com/mento-protocol/reserve-site/issues/107
-  const data: HoldingsApi = { ...celoHoldings.data, ...otherHoldings.data };
-
-  const isLoadingCelo = useMemo(() => {
-    return (
-      data?.celo?.frozen?.updated === 0 || data?.celo?.unfrozen?.updated === 0
-    );
-  }, [data?.celo?.frozen?.updated, data?.celo?.unfrozen?.updated]);
-
-  const isLoadingOther = useMemo(() => {
-    return data?.otherAssets?.findIndex((coin) => coin.updated === 0) !== -1;
-  }, [data.otherAssets]);
+  const data: HoldingsApi = { ...celoHoldings, ...otherHoldings };
 
   return { data, error, isLoadingCelo, isLoadingOther };
 }

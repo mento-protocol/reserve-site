@@ -6,19 +6,15 @@ import useSWR from "swr";
 import { sumTotalHoldings } from "@/helpers/holdings";
 
 export const useReserveTotals = () => {
-  const stables = useSWR<StableValueTokensAPI>(
+  const { data: stables, isLoading } = useSWR<StableValueTokensAPI>(
     "/api/stable-value-tokens",
     fetcher,
   );
   const holdings = useHoldings();
 
-  const isLoading = useMemo(() => {
-    return !holdings.data || !stables.data;
-  }, [holdings.data, stables.data]);
-
   const outstanding: number | null = useMemo(() => {
-    return stables?.data?.totalStableValueInUSD || null;
-  }, [stables.data]);
+    return stables?.totalStableValueInUSD || null;
+  }, [stables]);
 
   const totalReserveValue = useMemo(() => {
     return holdings.data ? sumTotalHoldings(holdings.data) : 1;
