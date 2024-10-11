@@ -6,6 +6,10 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -15,7 +19,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: "21.1.0"
+          node-version: ${{ matrix.node-version }}
           cache: "yarn"
 
       - name: Install deps
