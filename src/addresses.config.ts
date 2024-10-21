@@ -286,7 +286,11 @@ const ADDRESSES: ReserveCrypto[] = [
     label: "USDT",
     token: "USDT",
     decimals: 6,
-    addresses: [RESERVE_MULTISIG_CELO, RESERVE_ADDRESS],
+    addresses: [
+      RESERVE_MULTISIG_CELO,
+      RESERVE_ADDRESS,
+      wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+    ],
     tokenAddress: tokensAddresses.USDT_ON_CELO,
     network: Network.CELO,
     shouldDisplay: false,
