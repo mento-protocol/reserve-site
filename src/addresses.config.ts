@@ -3,6 +3,8 @@ import { Tokens } from "./service/Data";
 const wallets = {
   RESERVE_MULTISIG_ETH: "0xd0697f70E79476195B742d5aFAb14BE50f98CC1E",
   CUSTODIAN_ETH: "0x26ac3A7b8a675b741560098fff54F94909bE5E73",
+  ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1:
+    "0x13a9803d547332c81Ebc6060F739821264DBcf1E",
 };
 
 const tokensAddresses = {
@@ -153,7 +155,7 @@ const ADDRESSES: ReserveCrypto[] = [
     token: "USDC",
     addresses: [
       CURVE_FACTORY_POOL_ADDRESS,
-      "0x13a9803d547332c81Ebc6060F739821264DBcf1E",
+      wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     network: Network.CELO,
     shouldDisplay: true,
@@ -202,7 +204,7 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       wallets.RESERVE_MULTISIG_ETH,
       wallets.CUSTODIAN_ETH,
-      "0x13a9803d547332c81Ebc6060F739821264DBcf1E",
+      wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     network: Network.ETH,
