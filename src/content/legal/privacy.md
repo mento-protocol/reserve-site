@@ -19,7 +19,7 @@ By virtue of your business with the Company or by virtue of you otherwise provid
 
 You may provide us with personal data in the context of the following: (i) engaging in transactions with the Company; (ii) in the course of your provision of services to, or contracts with, the Company (e.g. contractors, consultants, counterparties); or (iii) any other circumstances in which you provide the Company with personal information relating to individuals.
 
-We may also obtain personal data on you from other public accessible directories and sources. These may include websites; bankruptcy registers; tax authorities; governmental agencies and departments, and regulatory authorities, to whom we have regulatory obligations; credit reference agencies; sanctions screening databases; and fraud prevention and detection agencies and organisations, including law enforcement.
+We may also obtain personal data on you from other publicly accessible directories and sources. These may include websites; bankruptcy registers; tax authorities; governmental agencies and departments, and regulatory authorities, to whom we have regulatory obligations; credit reference agencies; sanctions screening databases; and fraud prevention and detection agencies and organisations, including law enforcement.
 
 This includes information relating to you and/or any individuals connected otherwise connected with you in relation to your business with the Company such as: name, residential address, email address, contact details, corporate contact information, signature, nationality, place of birth, date of birth, tax identification, credit history, correspondence records, passport number, bank account details, and source of funds details.
 
