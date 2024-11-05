@@ -26,6 +26,7 @@ export const useStableTokens = () => {
           { ...initialOtherToken, token: "eXOF" },
           { ...initialOtherToken, token: "cKES" },
           { ...initialOtherToken, token: "PUSO" },
+          { ...initialOtherToken, token: "cCOP" },
         ],
       },
     },

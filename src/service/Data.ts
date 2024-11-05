@@ -20,6 +20,7 @@ export type Tokens =
   | "cKES"
   | "eXOF"
   | "PUSO"
+  | "cCOP"
   | "USDGLO"
   | Token
   | StableToken;
