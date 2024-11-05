@@ -7,6 +7,7 @@ import { ERC20_ABI } from "src/constants/abis";
 import {
   CKES_ADDRESS,
   CUSD_ADDRESS,
+  CCOP_Address,
   EUROC_AXELAR_ADDRESS,
   EXOF_ADDRESS,
   PUSO_ADDRESS,
@@ -52,6 +53,8 @@ const provider = new JsonRpcProvider(process.env.CELO_NODE_RPC_URL);
 const eXOFContract = new Contract(EXOF_ADDRESS, ERC20_ABI, provider);
 const cKESContract = new Contract(CKES_ADDRESS, ERC20_ABI, provider);
 const PUSOContract = new Contract(PUSO_ADDRESS, ERC20_ABI, provider);
+const cCOPContract = new Contract(CCOP_Address, ERC20_ABI, provider);
+
 export async function getFrozenBalance(): Promise<ProviderResult> {
   try {
     const [reserve, nativeToken] = await Promise.all([
@@ -298,6 +301,16 @@ export async function getPUSOSupply(): Promise<ProviderResult> {
     let pusoSupply = (await PUSOContract.totalSupply()).toString();
     pusoSupply = formatNumber(new BigNumber(pusoSupply));
     return providerOk(pusoSupply, Providers.celoNode);
+  } catch (error) {
+    return providerError(error, Providers.celoNode);
+  }
+}
+
+export async function getCCOPSupply(): Promise<ProviderResult> {
+  try {
+    let cCOPSupply = (await cCOPContract.totalSupply()).toString();
+    cCOPSupply = formatNumber(new BigNumber(cCOPSupply));
+    return providerOk(cCOPSupply, Providers.celoNode);
   } catch (error) {
     return providerError(error, Providers.celoNode);
   }

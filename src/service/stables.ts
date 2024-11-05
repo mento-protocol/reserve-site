@@ -8,6 +8,7 @@ import {
   getEXOFSupply,
   getMultisigCUSD,
   getPUSOSupply,
+  getCCOPSupply,
 } from "src/providers/Celo";
 import { TokenModel } from "src/service/Data";
 import { getOrSave } from "src/service/cache";
@@ -44,6 +45,10 @@ async function cKESSupply() {
 
 async function PUSOSupply() {
   return getOrSave("PUSOSupply", () => getPUSOSupply(), 5 * SECOND);
+}
+
+async function cCOPSupply() {
+  return getOrSave("cCOPSupply", () => getCCOPSupply(), 5 * SECOND);
 }
 
 interface Circulation {
@@ -123,6 +128,7 @@ export default async function stables(): Promise<TokenModel[]> {
   tokens.push(await getEXOFData());
   tokens.push(await getCKESData());
   tokens.push(await getPUSOData());
+  tokens.push(await getCCOPData());
   return tokens;
 }
 
@@ -202,4 +208,29 @@ export async function getPUSOData(): Promise<TokenModel> {
     pusoData.hasError = true;
   }
   return pusoData;
+}
+
+export async function getCCOPData(): Promise<TokenModel> {
+  const ccopData: TokenModel = {
+    token: "cCOP",
+    units: null,
+    value: null,
+    updated: null,
+    hasError: false,
+  } as TokenModel;
+
+  try {
+    const result: ProviderResult<number> = await cCOPSupply();
+    if (result.hasError) {
+      ccopData.hasError = true;
+      return ccopData;
+    } else if (result.hasError == false) {
+      ccopData.units = result.value;
+      ccopData.value = result.value * (await fiatPrices()).value["COP"];
+      ccopData.updated = result.time;
+    }
+  } catch {
+    ccopData.hasError = true;
+  }
+  return ccopData;
 }
