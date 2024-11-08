@@ -5,7 +5,6 @@ const wallets = {
   CUSTODIAN_ETH: "0x26ac3A7b8a675b741560098fff54F94909bE5E73",
   ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1:
     "0x13a9803d547332c81Ebc6060F739821264DBcf1E",
-  RESERVE_REBALANCING_ADDRESS: "0xDA7BFEF937F0944551a24b4C68B054bfA7127570",
 };
 
 const tokensAddresses = {
@@ -126,7 +125,6 @@ const ADDRESSES: ReserveCrypto[] = [
     token: "USDC",
     addresses: [
       RESERVE_MULTISIG_CELO,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: USDC_AXELAR_ADDRESS,
@@ -151,7 +149,6 @@ const ADDRESSES: ReserveCrypto[] = [
     decimals: 18,
     addresses: [
       wallets.RESERVE_MULTISIG_ETH,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: tokensAddresses.SAVINGS_DAI,
@@ -176,7 +173,6 @@ const ADDRESSES: ReserveCrypto[] = [
     decimals: 18,
     addresses: [
       RESERVE_MULTISIG_CELO,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: tokensAddresses.GLO_ON_CELO,
@@ -192,7 +188,6 @@ const ADDRESSES: ReserveCrypto[] = [
       "0x8331C987D9Af7b649055fa9ea7731d2edbD58E6B",
       wallets.CUSTODIAN_ETH,
       wallets.RESERVE_MULTISIG_ETH,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     network: Network.ETH,
@@ -205,7 +200,6 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       "0x16B34Ce9A6a6F7FC2DD25Ba59bf7308E7B38E186",
       wallets.RESERVE_MULTISIG_ETH,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
@@ -221,7 +215,6 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       wallets.RESERVE_MULTISIG_ETH,
       wallets.CUSTODIAN_ETH,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
@@ -236,7 +229,6 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       wallets.RESERVE_MULTISIG_ETH,
       wallets.CUSTODIAN_ETH,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c",
@@ -250,7 +242,6 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       wallets.RESERVE_MULTISIG_ETH,
       wallets.CUSTODIAN_ETH,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: tokensAddresses.WETH_ON_ETH,
@@ -266,7 +257,6 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       wallets.CUSTODIAN_ETH,
       wallets.RESERVE_MULTISIG_ETH,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: tokensAddresses.WBTC_ON_ETH,
@@ -281,7 +271,6 @@ const ADDRESSES: ReserveCrypto[] = [
     decimals: 18,
     addresses: [
       RESERVE_MULTISIG_CELO,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: tokensAddresses.STEUR_ON_CELO,
@@ -295,7 +284,6 @@ const ADDRESSES: ReserveCrypto[] = [
     decimals: 18,
     addresses: [
       wallets.RESERVE_MULTISIG_ETH,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: tokensAddresses.LIDO_STAKED_ETH,
@@ -310,25 +298,11 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       RESERVE_MULTISIG_CELO,
       RESERVE_ADDRESS,
-      wallets.RESERVE_REBALANCING_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
     ],
     tokenAddress: tokensAddresses.USDT_ON_CELO,
     network: Network.CELO,
     shouldDisplay: false,
-  },
-  {
-    assetType: AssetType.ERC20,
-    label: "USDC Celo Native",
-    token: "nativeUSDC",
-    decimals: 6,
-    addresses: [
-      wallets.RESERVE_REBALANCING_ADDRESS,
-      wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
-    ],
-    tokenAddress: USDC_CELO_NATIVE_ADDRESS,
-    network: Network.CELO,
-    shouldDisplay: true,
   },
 ];
 // WHEN Adding new TOKENS also update the TokenColor enum in PieChart.tsx

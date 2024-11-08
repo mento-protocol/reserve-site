@@ -266,7 +266,6 @@ export async function getHoldingsOther() {
     stEthHeld,
     usdtHeld,
     usdgloHeld,
-    usdcHeldCelo,
   ] = allOkOrThrow(
     await Promise.all([
       btcBalance(),
@@ -281,7 +280,6 @@ export async function getHoldingsOther() {
       erc20Balance("stETH", Network.ETH),
       erc20Balance("USDT", Network.CELO),
       erc20Balance("USDGLO", Network.CELO),
-      erc20Balance("nativeUSDC", Network.CELO),
     ]),
   );
 
@@ -309,7 +307,6 @@ export async function getHoldingsOther() {
   btcHeld.value += wbtcHeld.value;
   ethHeld.value += wethHeld.value;
 
-  usdcHeld.value += usdcHeldCelo.value;
   usdcHeld.value += valueOrThrow(await getCurvePoolUSDC());
   usdcHeld.value += valueOrThrow(await multisigUSDC());
   usdcHeld.value += valueOrThrow(await reserveUSDC());
