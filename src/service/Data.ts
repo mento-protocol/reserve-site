@@ -7,6 +7,7 @@ export type Tokens =
   | "ETH"
   | "cMCO2"
   | "USDC"
+  | "nativeUSDC"
   | "EUROC"
   | "WBTC"
   | "WETH"
