@@ -5,6 +5,7 @@ const wallets = {
   CUSTODIAN_ETH: "0x26ac3A7b8a675b741560098fff54F94909bE5E73",
   ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1:
     "0x13a9803d547332c81Ebc6060F739821264DBcf1E",
+  RESERVE_REBALANCING_ADDRESS: "0xDA7BFEF937F0944551a24b4C68B054bfA7127570",
 };
 
 const tokensAddresses = {
@@ -121,11 +122,12 @@ export type ReserveCrypto =
 const ADDRESSES: ReserveCrypto[] = [
   {
     assetType: AssetType.ERC20,
-    label: "Operational Multisig on Celo",
+    label: "USDC Axelar Celo",
     token: "USDC",
     addresses: [
       RESERVE_MULTISIG_CELO,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: USDC_AXELAR_ADDRESS,
     network: Network.CELO,
@@ -150,6 +152,7 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       wallets.RESERVE_MULTISIG_ETH,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: tokensAddresses.SAVINGS_DAI,
     network: Network.ETH,
@@ -162,6 +165,7 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       CURVE_FACTORY_POOL_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     network: Network.CELO,
     shouldDisplay: true,
@@ -174,6 +178,7 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       RESERVE_MULTISIG_CELO,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: tokensAddresses.GLO_ON_CELO,
     network: Network.CELO,
@@ -189,6 +194,7 @@ const ADDRESSES: ReserveCrypto[] = [
       wallets.CUSTODIAN_ETH,
       wallets.RESERVE_MULTISIG_ETH,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     network: Network.ETH,
     shouldDisplay: false,
@@ -201,6 +207,7 @@ const ADDRESSES: ReserveCrypto[] = [
       "0x16B34Ce9A6a6F7FC2DD25Ba59bf7308E7B38E186",
       wallets.RESERVE_MULTISIG_ETH,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
     decimals: 18,
@@ -216,6 +223,7 @@ const ADDRESSES: ReserveCrypto[] = [
       wallets.RESERVE_MULTISIG_ETH,
       wallets.CUSTODIAN_ETH,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     network: Network.ETH,
@@ -230,6 +238,7 @@ const ADDRESSES: ReserveCrypto[] = [
       wallets.RESERVE_MULTISIG_ETH,
       wallets.CUSTODIAN_ETH,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c",
     network: Network.ETH,
@@ -243,6 +252,7 @@ const ADDRESSES: ReserveCrypto[] = [
       wallets.RESERVE_MULTISIG_ETH,
       wallets.CUSTODIAN_ETH,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: tokensAddresses.WETH_ON_ETH,
     network: Network.ETH,
@@ -258,6 +268,7 @@ const ADDRESSES: ReserveCrypto[] = [
       wallets.CUSTODIAN_ETH,
       wallets.RESERVE_MULTISIG_ETH,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: tokensAddresses.WBTC_ON_ETH,
     network: Network.ETH,
@@ -272,6 +283,7 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       RESERVE_MULTISIG_CELO,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: tokensAddresses.STEUR_ON_CELO,
     network: Network.CELO,
@@ -285,6 +297,7 @@ const ADDRESSES: ReserveCrypto[] = [
     addresses: [
       wallets.RESERVE_MULTISIG_ETH,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: tokensAddresses.LIDO_STAKED_ETH,
     network: Network.ETH,
@@ -299,8 +312,22 @@ const ADDRESSES: ReserveCrypto[] = [
       RESERVE_MULTISIG_CELO,
       RESERVE_ADDRESS,
       wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
     ],
     tokenAddress: tokensAddresses.USDT_ON_CELO,
+    network: Network.CELO,
+    shouldDisplay: false,
+  },
+  {
+    assetType: AssetType.ERC20,
+    label: "USDC Celo Native",
+    token: "nativeUSDC",
+    decimals: 6,
+    addresses: [
+      wallets.ALTERNATE_RESERVE_HOLDINGS_ADDRESS_1,
+      wallets.RESERVE_REBALANCING_ADDRESS,
+    ],
+    tokenAddress: USDC_CELO_NATIVE_ADDRESS,
     network: Network.CELO,
     shouldDisplay: false,
   },
