@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
-
+import { getAnalyticsUrl } from "src/config/endpoints";
 interface ReserveTotalsResponse {
   collateralization_ratio: number;
   total_reserve_value_usd: number;
@@ -12,9 +12,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "GET") {
       const start = Date.now();
 
-      const response = await fetch(
-        "https://mento-analytics-api-12390052758.us-central1.run.app/api/v1/reserve/stats",
-      );
+      const response = await fetch(getAnalyticsUrl("reserveStats"));
       const result: ReserveTotalsResponse = await response.json();
 
       res.setHeader("Server-Timing", `ms;dur=${Date.now() - start}`);

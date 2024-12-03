@@ -2,13 +2,11 @@ import { Tokens } from "@/service/Data";
 import * as Sentry from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import StableValueTokensAPI from "src/interfaces/stable-value-tokens";
-
+import { getAnalyticsUrl } from "src/config/endpoints";
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method === "GET") {
-      const response = await fetch(
-        "https://mento-analytics-api-12390052758.us-central1.run.app/api/v1/stablecoins",
-      );
+      const response = await fetch(getAnalyticsUrl("stablecoins"));
       const result = await response.json();
 
       // Convert the result to the StableValueTokensAPI interface

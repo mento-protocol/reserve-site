@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Tokens } from "src/service/Data";
 import { HoldingsApi } from "src/service/holdings";
+import { getAnalyticsUrl } from "src/config/endpoints";
 
 interface AnalyticsApiResponse {
   total_holdings_usd: number;
@@ -18,10 +19,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       console.log("Reserve holdings API called at:", Date.now());
       const start = Date.now();
 
-      // Send request to analytics API
-      const response = await fetch(
-        "https://mento-analytics-api-12390052758.us-central1.run.app/api/v1/reserve/holdings/grouped",
-      );
+      const response = await fetch(getAnalyticsUrl("reserveHoldings"));
       const result: AnalyticsApiResponse = await response.json();
 
       // Convert the result to the HoldingsApi interface

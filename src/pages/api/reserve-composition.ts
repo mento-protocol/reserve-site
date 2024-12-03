@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import { SliceData } from "@/components/PieChart";
-
+import { getAnalyticsUrl } from "src/config/endpoints";
 interface CompositionResponse {
   composition: {
     symbol: string;
@@ -15,9 +15,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "GET") {
       const start = Date.now();
 
-      const response = await fetch(
-        "https://mento-analytics-api-12390052758.us-central1.run.app/api/v1/reserve/composition",
-      );
+      const response = await fetch(getAnalyticsUrl("reserveComposition"));
       const result: CompositionResponse = await response.json();
 
       const slices: SliceData[] = result.composition.map((item) => ({

@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Network } from "src/addresses.config";
+import { getAnalyticsUrl } from "src/config/endpoints";
 
 interface AnalyticsApiResponse {
   addresses: {
@@ -26,9 +27,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "GET") {
       const start = Date.now();
 
-      const response = await fetch(
-        "https://mento-analytics-api-12390052758.us-central1.run.app/api/v1/reserve/addresses",
-      );
+      const response = await fetch(getAnalyticsUrl("reserveAddresses"));
       const result: AnalyticsApiResponse = await response.json();
 
       const transformedAddresses: Record<string, TransformedAddress> = {};
