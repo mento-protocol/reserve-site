@@ -199,6 +199,7 @@ export interface HoldingsApi {
     custody: TokenModel;
   };
   otherAssets: TokenModel[];
+  totalReserveValue?: number;
 }
 
 export async function getHoldingsCelo() {
