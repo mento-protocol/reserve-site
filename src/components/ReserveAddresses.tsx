@@ -80,10 +80,6 @@ function AddressDisplay({ hex, network }: { hex: string; network: Network }) {
         ? `https://etherscan.io/address/${hex}`
         : `https://celoscan.io/address/${hex}`;
 
-  // TODO: Add a case for when the address is Uniswap V3 LP
-  // https://celoscan.io/nft/0x3d79EdAaBC0EaB6F08ED885C05Fc0B014290D95A/55551
-  // https://app.uniswap.org/pool/55551?chain=celo
-
   return (
     <div className="mb-2 flex justify-between">
       <a
