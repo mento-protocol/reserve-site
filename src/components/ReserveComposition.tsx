@@ -1,6 +1,6 @@
 import { CardBackground } from "@/components/CardBackground";
 import PieChart, { SliceData, TokenColor } from "@/components/PieChart";
-import { TokenModel } from "@/service/Data";
+import { TokenModel } from "@/types";
 import Heading from "./Heading";
 import { Skeleton } from "./TextSkeleton";
 import useSWR from "swr";

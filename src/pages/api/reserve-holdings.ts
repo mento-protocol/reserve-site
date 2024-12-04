@@ -1,7 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Tokens } from "src/service/Data";
-import { HoldingsApi } from "src/service/holdings";
+import { Tokens, HoldingsApi } from "@/types";
 import { getAnalyticsUrl } from "src/config/endpoints";
 
 interface AnalyticsApiResponse {

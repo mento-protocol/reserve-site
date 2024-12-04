@@ -1,8 +1,8 @@
-import { Tokens } from "@/service/Data";
 import * as Sentry from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import StableValueTokensAPI from "src/interfaces/stable-value-tokens";
 import { getAnalyticsUrl } from "src/config/endpoints";
+import { Tokens } from "@/types";
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method === "GET") {

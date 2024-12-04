@@ -1,5 +1,5 @@
-import { Tokens } from "src/service/Data";
-import { HoldingsApi } from "src/service/holdings";
+import { HoldingsApi } from "@/types";
+import { Tokens } from "@/types";
 import { fetcher } from "src/utils/fetcher";
 import useSWR from "swr";
 

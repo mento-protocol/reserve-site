@@ -2,10 +2,10 @@ import { CardBackground } from "@/components/CardBackground";
 import { centerEllipsis } from "@/helpers/Strings";
 import { cn } from "@/styles/helpers";
 import * as React from "react";
-import { Network, generateLink } from "src/addresses.config";
 import CopyIcon from "src/components/CopyIcon";
 import Heading from "./Heading";
 import { useReserveAddresses } from "src/hooks/useReserveAddresses";
+import { Network } from "@/types";
 
 export default function ReserveAddresses() {
   const { addresses, isLoading } = useReserveAddresses();

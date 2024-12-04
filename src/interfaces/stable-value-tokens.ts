@@ -1,4 +1,4 @@
-import { TokenModel } from "src/service/Data";
+import { TokenModel } from "@/types";
 
 export default interface StableValueTokensAPI {
   totalStableValueInUSD: number;

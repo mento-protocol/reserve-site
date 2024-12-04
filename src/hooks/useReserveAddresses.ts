@@ -1,4 +1,4 @@
-import { Network } from "@/addresses.config";
+import { Network } from "@/types";
 import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
 

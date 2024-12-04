@@ -1,6 +1,6 @@
+import { Network } from "@/types";
 import * as Sentry from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Network } from "src/addresses.config";
 import { getAnalyticsUrl } from "src/config/endpoints";
 
 interface AnalyticsApiResponse {
