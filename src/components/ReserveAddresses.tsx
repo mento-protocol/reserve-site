@@ -72,7 +72,6 @@ const AssetDisplay = React.memo(function _TokenDisplay({
 
 function AddressDisplay({ hex, network }: { hex: string; network: Network }) {
   const { onPress } = useCopy(hex);
-
   const explorerLink =
     network === Network.BTC
       ? `https://blockchain.info/address/${hex}`
