@@ -48,8 +48,7 @@ jobs:
           root: .
           paths:
             - node_modules
-            - .env.localACE
-      - run: yarn test
+            - .env.local
 
       # Build
   next-build:
