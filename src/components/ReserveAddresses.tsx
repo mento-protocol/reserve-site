@@ -6,6 +6,7 @@ import CopyIcon from "src/components/CopyIcon";
 import Heading from "./Heading";
 import { useReserveAddresses } from "src/hooks/useReserveAddresses";
 import { Network } from "@/types";
+import { UNIV3_POSITION_TOKEN_ADDRESS } from "@/contract-addresses";
 
 export default function ReserveAddresses() {
   const { addresses, isLoading } = useReserveAddresses();
@@ -52,7 +53,7 @@ const AssetDisplay = React.memo(function _TokenDisplay({
   addresses,
 }: {
   label: string;
-  addresses: Array<{ address: string; network: Network }>;
+  addresses: Array<{ address: string; network: Network; category: string }>;
 }) {
   return (
     <div>
@@ -64,20 +65,31 @@ const AssetDisplay = React.memo(function _TokenDisplay({
           key={`${label}-${addr.address}`}
           hex={addr.address}
           network={addr.network}
+          category={addr.category}
         />
       ))}
     </div>
   );
 });
 
-function AddressDisplay({ hex, network }: { hex: string; network: Network }) {
+function AddressDisplay({
+  hex,
+  network,
+  category,
+}: {
+  hex: string;
+  network: Network;
+  category: string;
+}) {
   const { onPress } = useCopy(hex);
   const explorerLink =
     network === Network.BTC
       ? `https://blockchain.info/address/${hex}`
       : network === Network.ETH
         ? `https://etherscan.io/address/${hex}`
-        : `https://celoscan.io/address/${hex}`;
+        : network === Network.CELO && category === "Uniswap V3 Pool"
+          ? `https://celoscan.io/token/${UNIV3_POSITION_TOKEN_ADDRESS}?a=${hex}`
+          : `https://celoscan.io/address/${hex}`;
 
   return (
     <div className="mb-2 flex justify-between">

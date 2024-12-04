@@ -19,6 +19,7 @@ interface TransformedAddress {
   addresses: Array<{
     address: string;
     network: Network;
+    category: string;
   }>;
 }
 
@@ -52,6 +53,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             transformedAddresses[displayName].addresses.push({
               address: addr.address,
               network,
+              category: group.category,
             });
           }
         });

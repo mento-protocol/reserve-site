@@ -4,7 +4,7 @@ import useSWR from "swr";
 
 interface AddressGroup {
   label: string;
-  addresses: Array<{ address: string; network: Network }>;
+  addresses: Array<{ address: string; network: Network; category: string }>;
 }
 
 export const useReserveAddresses = () => {
