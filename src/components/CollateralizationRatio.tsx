@@ -1,10 +1,10 @@
-import { useReserveTotals } from "@/hooks/useReserveTotals";
+import { useReserveStats } from "@/hooks/useReserveStats";
 import { Skeleton } from "./TextSkeleton";
 import { CardBackground } from "./CardBackground";
 import Heading from "./Heading";
 
 export function CollateralizationRatio() {
-  const { collateralisationRatio, isLoading } = useReserveTotals();
+  const { collateralisationRatio, isLoading } = useReserveStats();
 
   return (
     <CardBackground className="p-0">
@@ -23,7 +23,7 @@ export function CollateralizationRatio() {
 
         <div className="flex h-full flex-1 items-center justify-center">
           {!isLoading && collateralisationRatio ? (
-            <span className="flex font-fg text-6xl font-medium md:m-0 ">
+            <span className="flex font-fg text-6xl font-medium md:m-0">
               {collateralisationRatio}
             </span>
           ) : (

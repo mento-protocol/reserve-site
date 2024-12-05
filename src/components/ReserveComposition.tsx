@@ -1,45 +1,29 @@
 import { CardBackground } from "@/components/CardBackground";
 import PieChart, { SliceData, TokenColor } from "@/components/PieChart";
-import { sumCeloTotal, sumNonCelo } from "@/helpers/holdings";
-import useHoldings from "@/hooks/useHoldings";
-import { TokenModel } from "@/service/Data";
-import { HoldingsApi } from "@/service/holdings";
+import { TokenModel } from "@/types";
 import Heading from "./Heading";
 import { Skeleton } from "./TextSkeleton";
-
-function getPercents(holdings: HoldingsApi): SliceData[] {
-  const celoTotal = sumCeloTotal(holdings);
-  const total = celoTotal + sumNonCelo(holdings);
-
-  function toPercent(value: number) {
-    return (value * 100) / total;
-  }
-
-  return [{ token: "CELO", percent: toPercent(celoTotal) }].concat(
-    holdings.otherAssets
-      .map((asset) => {
-        return {
-          token: asset.token,
-          percent: toPercent(asset.value),
-        };
-      })
-      .filter((asset) => asset.percent > 0)
-      .sort((a, b) => b.percent - a.percent),
-  );
-}
+import useSWR from "swr";
+import { fetcher } from "@/utils/fetcher";
 
 export const ReserveComposition = () => {
-  const { data, error, isLoadingCelo, isLoadingOther } = useHoldings();
+  const {
+    data: slices,
+    error,
+    isLoading,
+  } = useSWR<SliceData[]>("/api/reserve-composition", fetcher);
 
-  if (isLoadingCelo || isLoadingOther || error) {
+  if (isLoading || error || !slices) {
     return (
       <ReserveCompositionSkeleton
-        assets={[...data.otherAssets, data.celo.custody]}
+        assets={[
+          { token: "CELO", units: 0, value: 0, updated: Date.now() },
+          { token: "BTC", units: 0, value: 0, updated: Date.now() },
+          { token: "ETH", units: 0, value: 0, updated: Date.now() },
+        ]}
       />
     );
   }
-
-  const percentages = getPercents(data);
 
   return (
     <div>
@@ -53,7 +37,7 @@ export const ReserveComposition = () => {
           </Heading>
           <section className="flex flex-col-reverse items-center justify-center md:flex-row">
             <div className="grid grid-cols-2 gap-x-16 gap-y-4">
-              {percentages.map((item) => (
+              {slices.map((item) => (
                 <div
                   key={item.token}
                   className="flex flex-row items-center justify-start"
@@ -70,10 +54,7 @@ export const ReserveComposition = () => {
               ))}
             </div>
             <div className="mb-8 ml-0 max-h-[300px] max-w-[300px] md:mb-0 md:ml-[64px] lg:ml-[128px]">
-              <PieChart
-                slices={percentages}
-                isLoading={isLoadingCelo || isLoadingOther}
-              />
+              <PieChart slices={slices} isLoading={isLoading} />
             </div>
           </section>
         </article>

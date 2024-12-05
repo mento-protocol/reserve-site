@@ -1,3 +1,13 @@
+export interface HoldingsApi {
+  celo: {
+    unfrozen: TokenModel;
+    frozen: TokenModel;
+    custody: TokenModel;
+  };
+  otherAssets: TokenModel[];
+  totalReserveValue?: number;
+}
+
 import { StableToken, Token } from "@celo/contractkit";
 
 export type Tokens =
@@ -39,4 +49,10 @@ export interface TokenModel {
   value: number;
   updated: number;
   hasError?: boolean;
+}
+
+export enum Network {
+  ETH = "ethereum",
+  CELO = "celo",
+  BTC = "btc",
 }

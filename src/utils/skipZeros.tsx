@@ -1,3 +1,3 @@
-import { TokenModel } from "src/service/Data";
+import { TokenModel } from "@/types";
 
 export const skipZeros = (token: TokenModel) => token.value != 0;
