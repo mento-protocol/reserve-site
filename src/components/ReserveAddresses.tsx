@@ -2,27 +2,18 @@ import { CardBackground } from "@/components/CardBackground";
 import { centerEllipsis } from "@/helpers/Strings";
 import { cn } from "@/styles/helpers";
 import * as React from "react";
-import {
-  generateLink,
-  ReserveAssetByLabel,
-  ReserveCrypto,
-} from "src/addresses.config";
 import CopyIcon from "src/components/CopyIcon";
 import Heading from "./Heading";
+import { useReserveAddresses } from "src/hooks/useReserveAddresses";
+import { Network } from "@/types";
+import { UNIV3_POSITION_TOKEN_ADDRESS } from "@/contract-addresses";
 
-interface Props {
-  reserveAssets: ReserveAssetByLabel;
-}
+export default function ReserveAddresses() {
+  const { addresses, isLoading } = useReserveAddresses();
 
-export default function ReserveAddresses({ reserveAssets }: Props) {
-  const filteredAssets = Object.fromEntries(
-    Object.entries(reserveAssets)
-      .map(([label, assets]) => [
-        label,
-        assets.filter((asset) => asset.shouldDisplay),
-      ])
-      .filter(([, assets]) => assets.length > 0),
-  ) as ReserveAssetByLabel;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -30,8 +21,12 @@ export default function ReserveAddresses({ reserveAssets }: Props) {
       <CardBackground className="px-4 pb-6 pt-4 md:p-[40px]">
         <Heading className="mb-8 hidden md:block">Reserve addresses</Heading>
         <section className="grid md:grid-cols-2 md:gap-x-8">
-          {Object.entries(filteredAssets).map(([label, assets]) => (
-            <AssetDisplay key={label} label={label} assets={assets} />
+          {Object.entries(addresses).map(([label, asset]) => (
+            <AssetDisplay
+              key={label}
+              label={label}
+              addresses={asset.addresses}
+            />
           ))}
         </section>
       </CardBackground>
@@ -55,48 +50,60 @@ function useCopy(hex: string) {
 
 const AssetDisplay = React.memo(function _TokenDisplay({
   label,
-  assets,
+  addresses,
 }: {
   label: string;
-  assets: ReserveCrypto[];
+  addresses: Array<{ address: string; network: Network; category: string }>;
 }) {
   return (
     <div>
       <h5 className="mb-2.5 mt-[10px] font-fg text-[18px] font-medium md:mb-4 md:text-[22px] [&_a]:no-underline">
         {label}
       </h5>
-      {assets
-        .map((asset) =>
-          asset.addresses.map((address) => (
-            <AddressDisplay
-              key={`${asset.label}-${address}-${asset.token}`}
-              asset={asset}
-              hex={address}
-            />
-          )),
-        )
-        .flat()}
+      {addresses.map((addr) => (
+        <AddressDisplay
+          key={`${label}-${addr.address}`}
+          hex={addr.address}
+          network={addr.network}
+          category={addr.category}
+        />
+      ))}
     </div>
   );
 });
 
-function AddressDisplay({ hex, asset }: { asset: ReserveCrypto; hex: string }) {
+function AddressDisplay({
+  hex,
+  network,
+  category,
+}: {
+  hex: string;
+  network: Network;
+  category: string;
+}) {
   const { onPress } = useCopy(hex);
+  const explorerLink =
+    network === Network.BTC
+      ? `https://blockchain.info/address/${hex}`
+      : network === Network.ETH
+        ? `https://etherscan.io/address/${hex}`
+        : network === Network.CELO && category === "Uniswap V3 Pool"
+          ? `https://celoscan.io/token/${UNIV3_POSITION_TOKEN_ADDRESS}?a=${hex}`
+          : `https://celoscan.io/address/${hex}`;
 
   return (
     <div className="mb-2 flex justify-between">
       <a
         className="block font-fg text-mento-blue no-underline hover:underline md:hidden md:text-[22px]"
-        href={generateLink(asset, hex)}
+        href={explorerLink}
         target="_blank"
         rel="noopener noreferrer"
       >
         {centerEllipsis(hex, 16, 16)}
-        {asset.isWrappedAsset === true ? ` (as ${asset.token})` : null}
       </a>
       <a
         className="hidden font-fg text-mento-blue no-underline hover:underline md:block md:text-[22px]"
-        href={generateLink(asset, hex)}
+        href={explorerLink}
         target="_blank"
         rel="noopener noreferrer"
       >
