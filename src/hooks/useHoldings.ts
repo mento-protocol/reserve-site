@@ -1,5 +1,5 @@
-import { HoldingsApi } from "@/types";
-import { Tokens } from "@/types";
+import { Tokens } from "src/service/Data";
+import { HoldingsApi } from "src/service/holdings";
 import { fetcher } from "src/utils/fetcher";
 import useSWR from "swr";
 
@@ -19,7 +19,7 @@ const initialOtherToken = {
   updated: 0,
 } as const;
 
-const INITIAL_DATA: HoldingsApi = {
+const INITAL_DATA: HoldingsApi = {
   celo: {
     custody: initialToken,
     unfrozen: initialToken,
@@ -37,7 +37,6 @@ const INITIAL_DATA: HoldingsApi = {
     { ...initialOtherToken, token: "USDT" },
     { ...initialOtherToken, token: "USDGLO" },
   ],
-  totalReserveValue: 0,
 };
 
 export default function useHoldings(): {
@@ -46,19 +45,26 @@ export default function useHoldings(): {
   isLoadingCelo: boolean;
   isLoadingOther: boolean;
 } {
-  const { data, error, isLoading } = useSWR<HoldingsApi>(
-    "/api/reserve-holdings",
-    fetcher,
-    {
-      fallbackData: INITIAL_DATA,
-      revalidateOnMount: true,
-    },
-  );
+  const {
+    data: celoHoldings,
+    error: celoError,
+    isLoading: isLoadingCelo,
+  } = useSWR<Pick<HoldingsApi, "celo">>("/api/holdings/celo", fetcher, {
+    fallbackData: { celo: INITAL_DATA.celo },
+    revalidateOnMount: true,
+  });
+  const {
+    data: otherHoldings,
+    error: otherError,
+    isLoading: isLoadingOther,
+  } = useSWR<Pick<HoldingsApi, "otherAssets">>("/api/holdings/other", fetcher, {
+    fallbackData: { otherAssets: INITAL_DATA.otherAssets },
+    revalidateOnMount: true,
+  });
+  const error = celoError || otherError;
+  //TODO: Refactor holdings data return to avoid conditional chaining & undefined values
+  // See: https://github.com/mento-protocol/reserve-site/issues/107
+  const data: HoldingsApi = { ...celoHoldings, ...otherHoldings };
 
-  return {
-    data: data || INITIAL_DATA,
-    error,
-    isLoadingCelo: isLoading,
-    isLoadingOther: isLoading,
-  };
+  return { data, error, isLoadingCelo, isLoadingOther };
 }

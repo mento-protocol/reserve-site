@@ -4,6 +4,10 @@ import Holdings from "src/components/Holdings";
 import { StableTokens } from "@/components/StableTokens";
 import { CollateralizationRatio } from "src/components/CollateralizationRatio";
 
+import {
+  combineTokenAddressesByLabel,
+  ReserveAssetByLabel,
+} from "src/addresses.config";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/Footer";
 import { ReserveComposition } from "@/components/ReserveComposition";
@@ -22,6 +26,7 @@ interface Props {
   ATTESTATIONS: FrontMatterResult<ContentShape>;
   RFP: FrontMatterResult<ContentShape>;
   year: string;
+  reserveCryptos: ReserveAssetByLabel;
 }
 
 export default function Home(props: Props) {
@@ -39,7 +44,7 @@ export default function Home(props: Props) {
           <CollateralizationRatio />
           <Holdings />
           <ReserveComposition />
-          <ReserveAddresses />
+          <ReserveAddresses reserveAssets={props.reserveCryptos} />
         </div>
         <DisclaimerText />
       </main>
@@ -81,15 +86,26 @@ const GradientPrimaryLightMobile = ({
 
 export async function getStaticProps() {
   try {
-    const [about, attestations, rfp, initialTarget, intro, matter] =
-      await Promise.all([
-        import("src/content/home/about.md").then((mod) => mod.default),
-        import("src/content/home/attestations.md").then((mod) => mod.default),
-        import("src/content/home/rfp.md").then((mod) => mod.default),
-        import("src/content/home/initial-target.md").then((mod) => mod.default),
-        import("src/content/home/intro.md").then((mod) => mod.default),
-        import("front-matter").then((mod) => mod.default),
-      ]);
+    const [
+      about,
+      attestations,
+      rfp,
+      initialTarget,
+      intro,
+      matter,
+      fetchAddresses,
+    ] = await Promise.all([
+      import("src/content/home/about.md").then((mod) => mod.default),
+      import("src/content/home/attestations.md").then((mod) => mod.default),
+      import("src/content/home/rfp.md").then((mod) => mod.default),
+      import("src/content/home/initial-target.md").then((mod) => mod.default),
+      import("src/content/home/intro.md").then((mod) => mod.default),
+      import("front-matter").then((mod) => mod.default),
+      import("src/service/addresses").then((mod) => mod.default),
+    ]);
+    const addresses = await fetchAddresses();
+
+    const tokensCombinedByLabels = combineTokenAddressesByLabel(addresses);
 
     const INTRO = matter<ContentShape>(intro);
     const INITIAL_TARGET = matter<ContentShape>(initialTarget);
@@ -98,6 +114,7 @@ export async function getStaticProps() {
     const RFP = matter<ContentShape>(rfp);
     return {
       props: {
+        reserveCryptos: tokensCombinedByLabels,
         INTRO,
         INITIAL_TARGET,
         ABOUT,

@@ -1,3 +1,4 @@
+import { useReserveTotals } from "@/hooks/useReserveTotals";
 import { cn } from "@/styles/helpers";
 import Head from "next/head";
 import Amount from "src/components/Amount";
@@ -13,7 +14,13 @@ export default function Holdings() {
       <Head>
         <link
           rel="preload"
-          href="/api/reserve-holdings"
+          href="/api/holdings/celo"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/api/holdings/other"
           as="fetch"
           crossOrigin="anonymous"
         />
@@ -59,12 +66,7 @@ const ReserveAssetGrid = () => {
 };
 
 const TotalReserveHoldings = () => {
-  const {
-    data: { totalReserveValue },
-    isLoadingCelo,
-    isLoadingOther,
-  } = useHoldings();
-  const isLoading = isLoadingCelo || isLoadingOther;
+  const { isLoading, totalReserveValue } = useReserveTotals();
   const displayValue =
     totalReserveValue && Math.round(totalReserveValue).toLocaleString();
 
