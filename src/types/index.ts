@@ -33,6 +33,7 @@ export type Tokens =
   | "PUSO"
   | "cCOP"
   | "USDGLO"
+  | "cGHS"
   | Token
   | StableToken;
 
