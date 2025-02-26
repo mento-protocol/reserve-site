@@ -13,8 +13,6 @@ export const useReserveStats = () => {
     fetcher,
   );
 
-  console.log(data);
-
   return {
     collateralisationRatio: data?.collateralization_ratio.toFixed(2),
     totalReserveValue: data?.total_reserve_value || 1,

@@ -1,12 +1,12 @@
 import { CardBackground } from "@/components/CardBackground";
+import { UNIV3_POSITION_TOKEN_ADDRESS } from "@/config";
 import { centerEllipsis } from "@/helpers/Strings";
 import { cn } from "@/styles/helpers";
+import { Network } from "@/types";
 import * as React from "react";
 import CopyIcon from "src/components/CopyIcon";
-import Heading from "./Heading";
 import { useReserveAddresses } from "src/hooks/useReserveAddresses";
-import { Network } from "@/types";
-import { UNIV3_POSITION_TOKEN_ADDRESS } from "@/contract-addresses";
+import Heading from "./Heading";
 
 export default function ReserveAddresses() {
   const { addresses, isLoading } = useReserveAddresses();

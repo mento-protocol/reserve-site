@@ -18,7 +18,7 @@ export type Tokens =
   | "cMCO2"
   | "USDC"
   | "nativeUSDC"
-  | "EUROC"
+  | "EURC"
   | "WBTC"
   | "WETH"
   | "stEUR"
