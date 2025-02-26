@@ -1,5 +1,4 @@
-import { HoldingsApi } from "@/types";
-import { Tokens } from "@/types";
+import { HoldingsApi, Tokens } from "@/types";
 import { fetcher } from "src/utils/fetcher";
 import useSWR from "swr";
 
@@ -30,7 +29,7 @@ const INITIAL_DATA: HoldingsApi = {
     { ...initialOtherToken, token: "ETH" },
     { ...initialOtherToken, token: "DAI" },
     { ...initialOtherToken, token: "USDC" },
-    { ...initialOtherToken, token: "EUROC" },
+    { ...initialOtherToken, token: "EURC" },
     { ...initialOtherToken, token: "stEUR" },
     { ...initialOtherToken, token: "sDAI" },
     { ...initialOtherToken, token: "stETH" },
