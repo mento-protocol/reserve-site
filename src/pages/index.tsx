@@ -10,6 +10,8 @@ import { ReserveComposition } from "@/components/ReserveComposition";
 import ReserveAddresses from "@/components/ReserveAddresses";
 import { LearnMore } from "@/components/LearnMore";
 import { ReactNode } from "react";
+import StatusBanner from "@/components/StatusBanner";
+import { STATUS_CONFIG } from "@/config/status";
 
 interface ContentShape {
   title: string;
@@ -28,6 +30,7 @@ export default function Home(props: Props) {
   return (
     <div className="relative max-w-full overflow-x-hidden">
       <Head />
+      <StatusBanner message={STATUS_CONFIG.message} type={STATUS_CONFIG.type} />
       <main className="mx-auto w-full max-w-[calc(100vw_-_32px)] content:max-w-[1120px]">
         <Header />
         <section className="mb-8 mt-6 flex flex-col items-center justify-center md:mb-[56px]">
