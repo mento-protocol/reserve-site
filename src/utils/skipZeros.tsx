@@ -1,3 +1,3 @@
 import { TokenModel } from "@/types";
 
-export const skipZeros = (token: TokenModel) => token.units > 50;
+export const skipZeros = (token: TokenModel) => token.value != 0;
