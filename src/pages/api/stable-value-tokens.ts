@@ -18,6 +18,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
           value: stablecoin.supply.usd_value,
           updated: Date.now(),
           hasError: false,
+          iconUrl: stablecoin.icon_url,
         })),
       };
 
