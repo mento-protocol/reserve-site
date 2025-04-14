@@ -50,6 +50,7 @@ export interface TokenModel {
   value: number;
   updated: number;
   hasError?: boolean;
+  iconUrl?: string;
 }
 
 export enum Network {

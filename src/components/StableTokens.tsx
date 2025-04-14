@@ -46,7 +46,7 @@ const StableTokenContent = () => {
               <Amount
                 loading={isLoading}
                 key={token.token}
-                iconSrc={`/assets/tokens/${token.token}.svg`}
+                iconSrc={token.iconUrl ?? `/assets/tokens/${token.token}.svg`}
                 label={token.token}
                 units={token.units}
                 value={token.value}
